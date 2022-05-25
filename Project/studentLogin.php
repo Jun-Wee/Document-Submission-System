@@ -1,3 +1,8 @@
+<!-- Description: Student Login Page in PHP -->
+<!-- Author: Xin Zhe Chong -->
+<!-- Date: 25th May 2022 -->
+<!-- Validated: =-->
+
 <?php
     include "system_functions.php";
 	include "classes/database.php";
@@ -25,11 +30,6 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<!-- Description: Student Login Page in PHP -->
-<!-- Author: Xin Zhe Chong -->
-<!-- Date: 25th May 2022 -->
-<!-- Validated: =-->
-
 <head>
 	<title>Student Login</title>
 	<meta name="language" content="english" />
