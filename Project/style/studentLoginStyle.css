@@ -22,7 +22,7 @@
 }
 
 body {
-    background-image: url("swinburne-login.jpg");
+    background-image: url("../src/images/swinburne-login.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }

@@ -13,7 +13,7 @@
 	<meta name="description" content="Document Submission System">
 	<meta name="keywords" content="assignment, submission, document">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="images/companylogo.png">
+	<link rel="icon" href="src/images/logo.png">
 
 
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
@@ -29,7 +29,7 @@
 		<a href="studentLogin.html" class="btn btn-danger float-end col-sm-1" role="button">Student Sign in</a>
 	</div>
 	<div class="jumbotron text-center">
-		<img src="swinburne.png" style="width: 300px; height: 150px; margin-left: 130px;">
+		<img src="src/images/logo.png" style="width: 200px; height: 150px; margin-left: 130px;">
 	</div>
 	<div class="login-form">
 		<form action="login.php" method="post">
