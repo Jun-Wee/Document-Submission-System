@@ -25,8 +25,7 @@
 
 <body>
 	<div class="jumbotron text-center text-dark">
-		<h1>Document Submission System (Admin)</h1>
-		<a href="studentLogin.html" class="btn btn-danger float-end col-sm-1" role="button">Student Sign in</a>
+		<a href="studentLogin.php" class="btn btn-danger float-end col-sm-1" role="button">Student</a>
 	</div>
 	<div class="jumbotron text-center">
 		<img src="src/images/logo.png" style="width: 200px; height: 150px; margin-left: 130px;">
