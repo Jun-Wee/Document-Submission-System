@@ -12,59 +12,8 @@ include_once 'dbconnect.php';
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="style/studentIndexStyle.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	
-	<style>
-		#signin {
-		background-color: grey;
-		width: 800px;
-		color: #fff;
-		height: 450px;
-		}
-		#signin a {
-			color: green;
-		}
-		
-		#btn-docSubmit {
-			width: 300px;
-			height: 400px;
-		}
-		
-		.drag-area {
-			border: 2px dashed;
-			height: 200px;
-			width: 700px;
-			border-radius: 5px;
-			display: flex;
-			align-items: center;
-			flex-direction: column;
-		}
-		
-		.drag-area.active {
-			border: 2px solid #fff;
-		}
-		
-		.drag-area header {
-			font-size: 30px;
-			font-weight: 500;
-			color: #fff;
-		}
-		
-		body {
-			background-image: url("submit-wallpaper.jpg");
-			background-size: cover;
-		}
-		
-		.container {
-			background-color: #9932CC;
-			border-radius: 5px;
-		}
-		
-		.upload {
-			
-		}
-
-	</style>
 </head>
 <body>
 	<div class="jumbotron text-center">
