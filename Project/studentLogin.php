@@ -1,3 +1,27 @@
+<?php
+    include "system_functions.php";
+	include "classes/database.php";
+	include "classes/user.php";
+
+    $btnclicked = false;
+	$db = new Database();
+    if (!empty($_POST["login"])) {
+        $btnclicked = true;
+        [$login_msg, $loginOk, $email_previous, $errorfield, $profile] =
+            ChkEmailPasswordForLogin($_POST["email"], $_POST["password"], $db);
+
+        if ($loginOk) {
+            session_start();
+            // Set session variables
+			$student = new Student($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
+            $_SESSION['student'] = serialize($student);
+            header('Location: submission.php');
+        }
+    } else {
+        $btnclicked = false;
+    }
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -7,7 +31,7 @@
 <!-- Validated: =-->
 
 <head>
-	<title>Student Login | Document Submission System</title>
+	<title>Student Login</title>
 	<meta name="language" content="english" />
 	<meta charset="utf-8">
 	<meta name="author" content="Xin Zhe Chong">
@@ -32,13 +56,19 @@
 		<img src="src/images/logo.png" style="width: 200px; height: 150px; margin-left: 130px;">
 	</div>
 	<div class="login-form">
-		<form action="login.php" method="post">
+		<form action="studentLogin.php" method="post">
 			<h2 class="text-center">Sign in</h2>
 			<div class="form-group">
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-user"></i></span>
 					<input type="text" class="form-control" name="email" placeholder="StudentID@student.swin.edu.au"
-						required="required">
+						required="required" <?php
+                                                                                                            if ($btnclicked) {
+                                                                                                                if (!$loginOk) {
+                                                                                                                    echo "value = '" . $email_previous . "'";
+                                                                                                                }
+                                                                                                            }
+                                                                                                            ?>/>
 				</div>
 			</div>
 			<br>
@@ -46,12 +76,26 @@
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-lock"></i></span>
 					<input type="password" class="form-control" name="password" placeholder="SIMS Password"
-						required="required">
+						required="required"/>
 				</div>
 			</div>
+			<?php
+            if ($btnclicked) {
+                if ($errorfield == "email") {
+                    echo "<div><p>" . $login_msg . "</p></div>";
+                }
+            }
+            ?>
+						<?php
+						if ($btnclicked) {
+							if ($errorfield == "password") {
+								echo "<div><p>" . $login_msg . "</p></div>";
+							}
+						}
+					?>
 			<br>
 			<div class="form-group">
-				<button type="submit" class="btn btn-primary login-btn btn-block">Sign in</button>
+				<input type="submit" name="login" class="btn btn-primary login-btn btn-block" value="Sign In"/>
 			</div>
 </body>
 
