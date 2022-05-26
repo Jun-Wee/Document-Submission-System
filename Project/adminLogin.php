@@ -18,7 +18,7 @@
         if ($loginOk) {
             session_start();
             // Set session variables
-			$student = new Admin($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
+			$admin = new Admin($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
             $_SESSION['admin'] = serialize($student);
             header('Location: adminManagement.php');
         }
