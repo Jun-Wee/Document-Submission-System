@@ -1,0 +1,48 @@
+/* student Index page */
+#signin {
+    background-color: grey;
+    width: 800px;
+    color: #fff;
+    height: 450px;
+}
+
+#signin a {
+    color: green;
+}
+
+#btn-docSubmit {
+    width: 300px;
+    height: 400px;
+}
+
+.drag-area {
+    border: 2px dashed;
+    height: 200px;
+    width: 700px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.drag-area.active {
+    border: 2px solid #fff;
+}
+
+.drag-area header {
+    font-size: 30px;
+    font-weight: 500;
+    color: #fff;
+}
+
+body {
+    background-image: url("../src/images/submit-wallpaper.jpg");
+    background-size: cover;
+}
+
+.container {
+    background-color: #9932CC;
+    border-radius: 5px;
+}
+
+.upload {}
