@@ -62,13 +62,14 @@
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-user"></i></span>
 					<input type="text" class="form-control" name="email" placeholder="StudentID@student.swin.edu.au"
-						required="required" <?php
-                                                                                                            if ($btnclicked) {
-                                                                                                                if (!$loginOk) {
-                                                                                                                    echo "value = '" . $email_previous . "'";
-                                                                                                                }
-                                                                                                            }
-                                                                                                            ?>/>
+						required="required" 
+						<?php
+						if ($btnclicked) {
+							if (!$loginOk) {
+								echo "value = '" . $email_previous . "'";
+							}
+						}
+						?>/>
 				</div>
 			</div>
 			<br>

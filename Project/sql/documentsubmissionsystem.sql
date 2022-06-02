@@ -68,7 +68,7 @@ INSERT INTO `users` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`) VA
 ('102849357', 'Sandali Jayasinghe', '102849357@student.swin.edu.au', 'swin', 'Student', 'Female'),
 ('103340644', 'Richard Ly', '103340644@student.swin.edu.au', 'swin', 'Student', 'Male'),
 ('103698851', 'Xin Zhe', '103698851@student.swin.edu.au', 'swin', 'Student', 'Male'),
-('A101', 'Admin', 'admin101@admin.swin.edu.au', 'swin', 'Admin', 'Male'),
+('A101', 'Admin', 'admin101@swin.edu.au', 'swin', 'Admin', 'Male'),
 ('C101', 'Jun Han', 'jhan@swin.edu.au', 'swin', 'Convenor', 'Male'),
 ('C102', 'Bao Quoc Vo', 'bvo@swin.edu.au', 'swin', 'Convenor', 'Male'),
 ('C103', 'Karola von Baggo', 'kvonbaggo@swin.edu.au', 'swin', 'Convenor', 'Female'),

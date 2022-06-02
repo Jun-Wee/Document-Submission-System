@@ -43,7 +43,7 @@ if (!isset($_SESSION['student'])) {
 		</div>
 	</nav>
 	<div class="container-fluid mb-3 w-25 float-end" id="upload">
-		<label for="formFile" class="form-label">Upload Document</label>
+		<label for="formFile" class="form-label"><strong>Upload Document</strong></label>
 		<input class="form-control" type="file" id="submit">
 	</div>
 	
@@ -53,11 +53,11 @@ if (!isset($_SESSION['student'])) {
 				<div class="drag-area">
 					<div class="icon"></div>
 					<header>Drag Document Here to Upload</header>
-					<p>Accepted file extensions: .pdf, .docx, .doc</p>
+					<p><strong>Accepted file extensions: .pdf</strong></p>
 					<script src="script.js"></script>
 				</div>
 				<br>
-				<label for="dataList" class="form-label">Select unit</label>
+				<label for="dataList" class="form-label"><strong>Select unit: </strong></label>
 				<input class="form-control" list="datalistOptions" id="convenor" placeholder="Example: COS10002 / Convenor Name" required="required">
 				<datalist id="datalistOptions">
 					<option value="SWE40001 Data Visualisation">Convenor A</option>
