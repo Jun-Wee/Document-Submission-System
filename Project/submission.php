@@ -1,5 +1,6 @@
 <!-- Description: Submission Page in PHP -->
 <!-- Author: Adrian Sim Huan Tze -->
+<!-- Contributor: Jun Wee Tan -->
 <!-- Date: 25th May 2022 -->
 <!-- Validated: =-->
 
@@ -38,7 +39,7 @@ if (!isset($_SESSION['student'])) {
 			<ul class="nav navbar-nav navbar-right">
 				<li><p class="navbar-text"><?php echo date("d M Y")?></p></li>
 				<li>...</li>
-				<li><a href="logout.php" class="btn btn-danger navbar-btn" role="button">Log out</a></li>
+				<li><a href="studentLogout.php" class="btn btn-danger navbar-btn" role="button">Log out</a></li>
 			</ul>
 		</div>
 	</nav>

@@ -57,11 +57,13 @@
 	</div>
 	<div class="login-form">
 		<form action="studentLogin.php" method="post">
+
 			<h2 class="text-center">Sign in</h2>
+
 			<div class="form-group">
 				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-user"></i></span>
-					<input type="text" class="form-control" name="email" placeholder="StudentID@student.swin.edu.au"
+					<span style="padding-top: 6px" class="input-group-addon"><i class="fa fa-user"></i></span>
+					<input type="text" style="margin-left: 10px;" class="form-control" name="email" placeholder="StudentID@student.swin.edu.au"
 						required="required" 
 						<?php
 						if ($btnclicked) {
@@ -72,14 +74,17 @@
 						?>/>
 				</div>
 			</div>
+
 			<br>
+
 			<div class="form-group">
 				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-					<input type="password" class="form-control" name="password" placeholder="SIMS Password"
+					<span style="padding-top: 6px" class="input-group-addon"><i class="fa fa-lock"></i></span>
+					<input type="password" style="margin-left: 10px;" class="form-control" name="password" placeholder="SIMS Password"
 						required="required"/>
 				</div>
 			</div>
+
 			<?php
             if ($btnclicked) {
                 if ($errorfield == "email") {
@@ -87,16 +92,12 @@
                 }
             }
             ?>
-						<?php
-						if ($btnclicked) {
-							if ($errorfield == "password") {
-								echo "<div><p>" . $login_msg . "</p></div>";
-							}
-						}
-					?>
+
+			<!--button-->
 			<br>
 			<div class="form-group">
 				<input type="submit" name="login" class="btn btn-primary login-btn btn-block" value="Sign In"/>
+				<input type="reset" name="resetall" class="btn btn-danger" value="Reset">
 			</div>
 </body>
 

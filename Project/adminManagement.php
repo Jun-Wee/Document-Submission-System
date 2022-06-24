@@ -1,5 +1,6 @@
 <!-- Description: Admin Login Page in PHP -->
 <!-- Author: Adrian Sim Huan Tze -->
+<!-- Contributor: Jun Wee Tan -->
 <!-- Date: 26th May 2022 -->
 <!-- Validated: =-->
 

@@ -58,10 +58,12 @@
 		<form action="adminLogin.php" method="post">
 			<h2 class="text-center">Sign in</h2>
 			<h3 class="text-center">Admin</h3>
+			
 			<div class="form-group">
 				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-user"></i></span>
-					<input type="text" class="form-control" name="email" placeholder="Name@swin.edu.au"
+					<span style="padding-top: 6px" class="input-group-addon"><i class="fa fa-user"></i></span>
+					
+					<input type="text" style="margin-left: 10px;" class="form-control" name="email" placeholder="Name@swin.edu.au"
 						required="required" 
 						<?php
 							if ($btnclicked) {
@@ -75,8 +77,8 @@
 			<br>
 			<div class="form-group">
 				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-					<input type="password" class="form-control" name="password" placeholder="Password"
+					<span style="padding-top: 6px" class="input-group-addon"><i class="fa fa-lock"></i></span>
+					<input type="password"  style="margin-left: 10px;" class="form-control" name="password" placeholder="Password"
 						required="required">
 				</div>
 			</div>
@@ -96,9 +98,11 @@
 				}
 			?>
 
+			<!--button-->
 			<br>
 			<div class="form-group">
 				<input type="submit" name="login" class="btn btn-primary login-btn btn-block" value="Sign In"/>
+				<input type="reset" name="resetall" class="btn btn-danger" value="Reset">
 			</div>
 </body>
 
