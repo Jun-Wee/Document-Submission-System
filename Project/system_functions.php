@@ -79,12 +79,12 @@
             $login_password = substr($login_password, 0, 20);
 
             // check if the input email already exists or not by getting them from the database
-            $sql = "SELECT * FROM users WHERE (Role = 'Admin' OR Role = 'Convenor') AND Email = ?";
+            $sql = "SELECT * FROM convenors WHERE Email = ? UNION SELECT * FROM admin WHERE Email = ?";
 
-            $prepared_stmt = @mysqli_prepare($db->getConnection(), $sql);
+            $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
 
             //Bind input variables to prepared statement
-            @mysqli_stmt_bind_param($prepared_stmt, 's', $email);
+            mysqli_stmt_bind_param($prepared_stmt, 'ss', $email, $email);
 
             //Execute prepared statement
             @mysqli_stmt_execute($prepared_stmt);
@@ -139,7 +139,7 @@
             $login_password = substr($login_password, 0, 20);
 
             // check if the input email already exists or not by getting them from the database
-            $sql = "SELECT * FROM users WHERE Role = 'Student' AND Email = ?";
+            $sql = "SELECT * FROM students WHERE Email = ?";
 
             $prepared_stmt = @mysqli_prepare($db->getConnection(), $sql);
 
