@@ -43,34 +43,47 @@ if (!isset($_SESSION['student'])) {
 			</ul>
 		</div>
 	</nav>
-	<div class="container-fluid mb-3 w-25 float-end" id="upload">
+
+	<!--Upload document by button-->
+	<!-- <div class="container-fluid mb-3 w-25 float-end" id="upload">
 		<label for="formFile" class="form-label"><strong>Upload Document</strong></label>
 		<input class="form-control" type="file" id="submit">
-	</div>
+	</div> -->
 	
+	<!--Upload document by drag-->
 	<div class="container w-50 p-3">
-		<form action="submit.php" method="post">
+
+		<form action="upload.php" method="POST" enctype="multipart/form-data">
 			<div class="mb-3">
-				<div class="drag-area">
+				<!-- <div class="drag-area">
 					<div class="icon"></div>
 					<header>Drag Document Here to Upload</header>
 					<p><strong>Accepted file extensions: .pdf</strong></p>
 					<script src="script.js"></script>
+				</div> -->
+
+				<div class="row mx-auto" name="upload">
+					<label for="formFile" class="form-label" style="margin-left: -11px;"><strong style="color: white">Upload Document</strong></label>
+					<input class="form-control" type="file" name="file">
 				</div>
 				<br>
+				
+				<!--Select List-->
 				<label for="dataList" class="form-label"><strong>Select unit: </strong></label>
-				<input class="form-control" list="datalistOptions" id="convenor" placeholder="Example: COS10002 / Convenor Name" required="required">
+				<input class="form-control" list="datalistOptions" id="convenor" placeholder="Example: COS10002 / Convenor Name">
 				<datalist id="datalistOptions">
 					<option value="SWE40001 Data Visualisation">Convenor A</option>
 					<option value="COS30045 Software Engineering Project A">Convenor B</option>
 				</datalist>
 				<br>
+
+				<!--Buttons-->
 				<div class="row">
 					<div class="col-sm-10">
-						<button type="submit" class="btn btn-success btn-block float-end" name="btn-docSubmit">Submit Document</button>
+						<button type="submit" class="btn btn-success btn-block float-end" name="submit">Submit Document
 					</div>
 					<div class="col-sm-2">
-						<a href="studentLogin.php" class="btn btn-danger" role="button">Cancel</a>
+						<button type="reset" class="btn btn-danger" name="reset"> Cancel
 					</div>
 				</div>
 			</div>
