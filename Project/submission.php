@@ -26,44 +26,42 @@ if (!isset($_SESSION['student'])) {
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="style/studentIndexStyle.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="script/script.js"></script>
 </head>
-<body>
-	<div class="jumbotron text-center">
+
+<body onload="startTIME();">
+	
+	<!--Title-->
+	<div class="jumbotron text-center" style="color:white;">
 		<h1>Document Submission System</h1>
 	</div>
-	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+	<!--nav bar-->
+	<nav class="navbar navbar-expand-sm navbar-dark" id="navbar" style="background-color: rgb(23 14 41);">
 		<div class="container-fluid">
-			<li class="navbar-brand" href="#"><span class="glyphicon glyphicon-user"></span>
-				Hello, <?php echo $student->getName(); ?>
-			</li>
-			<ul class="nav navbar-nav navbar-right">
-				<li><p class="navbar-text"><?php echo date("d M Y")?></p></li>
-				<li>...</li>
-				<li><a href="studentLogout.php" class="btn btn-danger navbar-btn" role="button">Log out</a></li>
-			</ul>
+			<div class="collapse navbar-collapse" id="mynavbar">
+				<li class="navbar-brand" href="#"><span class="glyphicon glyphicon-user"></span>
+					Hello, <?php echo $student->getName(); ?>
+				</li>
+				<ul class="navbar-nav me-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="">MCQ question</a>
+					</li>
+				</ul>
+			</div>
+			<span class="navbar-text">
+				<h5 style="color: white;" id="time"></h6>
 		</div>
 	</nav>
 
-	<!--Upload document by button-->
-	<!-- <div class="container-fluid mb-3 w-25 float-end" id="upload">
-		<label for="formFile" class="form-label"><strong>Upload Document</strong></label>
-		<input class="form-control" type="file" id="submit">
-	</div> -->
 	
-	<!--Upload document by drag-->
+	<!--Upload document by button-->
 	<div class="container w-50 p-3">
-
 		<form action="upload.php" method="POST" enctype="multipart/form-data">
 			<div class="mb-3">
-				<!-- <div class="drag-area">
-					<div class="icon"></div>
-					<header>Drag Document Here to Upload</header>
-					<p><strong>Accepted file extensions: .pdf</strong></p>
-					<script src="script.js"></script>
-				</div> -->
 
 				<div class="row mx-auto" name="upload">
-					<label for="formFile" class="form-label" style="margin-left: -11px;"><strong style="color: white">Upload Document</strong></label>
+					<label for="formFile" class="form-label" style="margin-left: -11px;"><strong>Upload Document</strong></label>
 					<input class="form-control" type="file" name="file">
 				</div>
 				<br>
@@ -88,7 +86,16 @@ if (!isset($_SESSION['student'])) {
 				</div>
 			</div>
 		</form>
+		<button class="btn btn-danger" name="reset"> <a href="studentLogout.php">Log Out</a>
+		
 	</div>
-	
 </body>
+
+<!--abondon (drag area)-->
+<!-- <div class="drag-area">
+	<div class="icon"></div>
+	<header>Drag Document Here to Upload</header>
+	<p><strong>Accepted file extensions: .pdf</strong></p>
+	<script src="script.js"></script>
+</div> -->
 </html>

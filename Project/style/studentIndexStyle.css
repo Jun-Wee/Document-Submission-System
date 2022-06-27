@@ -41,8 +41,9 @@ body {
 }
 
 .container {
-    background-color: #9932CC;
+    background-color: rgba(255, 255, 255, 0.15);
     border-radius: 5px;
+    margin-top: 50px;
 }
 
 .upload {}
