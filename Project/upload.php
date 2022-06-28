@@ -41,16 +41,16 @@ if (isset($_POST['submit'])) {
                     header("Location: submission.php?uploadsuccess");  //success upload indicator
                 }else 
                 {
-                    echo "Exceed file size limit!";
+                    echo "<script type='text/javascript'>alert('Exceed file size limit!');</script>";
                 }
             }
             else
             {
-                echo "There was an error uploading your file, Please try again.";
+                echo "<script type='text/javascript'>alert('There was an error uploading your file, Please try again.');</script>";
             }
     }else
     {
-        echo "Error file type uploaded!";
+        echo "<script type='text/javascript'>alert('Error file type uploaded!');</script>";
     }
 
 }
