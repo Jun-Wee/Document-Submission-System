@@ -59,21 +59,21 @@ if (!isset($_SESSION['student'])) {
 				<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
 						<li class="nav-item">
-							<a href="submission.php" class="nav-link align-middle px-0 ">
-								<i class="fs-2 bi bi-file-earmark-pdf" style="color: white;"></i> 
-								<span class="ms-1 d-none d-sm-inline" style="font-size: 20px; color: white;">Submission</span>
+							<a href="submission.php" class="nav-link align-middle px-0" id="active">
+								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i> 
+								<span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-								<i class="fs-2 bi bi-question-circle" style="color: white;"></i> 
-								<span class="ms-1 d-none d-sm-inline" style="font-size: 20px; color: white;">FAQ</span>
+								<i class="fs-2 bi bi-question-circle" id="navicon"></i> 
+								<span class="ms-1 d-none d-sm-inline" id="navtext">FAQ</span>
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-								<i class="fs-2 bi bi-pencil-square" style="color: white;"></i> 
-								<span class="ms-1 d-none d-sm-inline" style="font-size: 20px; color: white;">MCQ Question</span>
+								<i class="fs-2 bi bi-pencil-square" id="navicon"></i> 
+								<span class="ms-1 d-none d-sm-inline" id="navtext">MCQ Question</span>
 							</a>
 						</li>
 					</ul>

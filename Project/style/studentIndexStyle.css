@@ -1,5 +1,38 @@
 /* student Index page */
-#signin {
+body {
+    background-image: url("../src/images/submit-wallpaper.jpg");
+    background-size: cover;
+}
+
+/* navigation bar */
+#navicon{
+    color:white;
+}
+
+#navtext{
+    font-size: 20px;
+    color: white;
+}
+
+#navicon-active{
+    color: aqua;
+}
+
+#navtext-active{
+    font-size: 20px;
+    color: aqua;
+}
+
+#navtext:hover{
+    color: aqua;
+}
+
+
+
+
+/*abondon*/
+
+/* #signin {
     background-color: grey;
     width: 800px;
     color: #fff;
@@ -33,11 +66,4 @@
     font-size: 30px;
     font-weight: 500;
     color: #fff;
-}
-
-body {
-    background-image: url("../src/images/submit-wallpaper.jpg");
-    background-size: cover;
-}
-
-.upload {}
+} */
