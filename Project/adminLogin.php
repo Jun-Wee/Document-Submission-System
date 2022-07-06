@@ -12,14 +12,19 @@
 	$db = new Database();
     if (!empty($_POST["login"])) {
         $btnclicked = true;
-        [$login_msg, $loginOk, $email_previous, $errorfield, $profile] =
+        [$login_msg, $loginOk, $email_previous, $errorfield, $profile, $role] =
             ChkAdminEmailPasswordForLogin($_POST["email"], $_POST["password"], $db);
 
         if ($loginOk) {
             session_start();
             // Set session variables
-			$admin = new Admin($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
-            $_SESSION['admin'] = serialize($student);
+			if($role == "Admin"){
+				$admin = new Admin($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
+				$_SESSION['admin'] = serialize($admin);
+			}else if($role == "Convenor"){
+				$convenor = new Convenor($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
+				$_SESSION['convenor'] = serialize($convenor);
+			}
             header('Location: adminManagement.php');
         }
     } else {
