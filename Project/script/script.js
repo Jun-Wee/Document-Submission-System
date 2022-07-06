@@ -42,3 +42,27 @@ function showFile(){
     dragText.textContent = "Drag & Drop to Upload File";
   }
 }
+
+
+// show time and date 
+var timeInterval;
+  function convertTZ(date, tzString) {
+      return new Date(date.toLocaleString("en-US", { timeZone: tzString }));  //returns a locale-specific string that is adjusted to the provided time zone (us-english, australia time zone)
+  }
+  function melbourneTime() {
+    var today = convertTZ(new Date(), "Australia/Melbourne");  //Mon Jun 27 2022 17:20:54 GMT+1000 (Australian Eastern Standard Time)
+    var year = ("0" + today.getFullYear()).substr(-2,2);  
+    var month = ("0" + (today.getMonth()+1)).substr(-2,2); 
+    var date = ("0" + today.getDate()).substr(-2,2);
+    var hour = ("0" + today.getHours()).substr(-2,2);
+    var minute = ("0" + today.getMinutes()).substr(-2,2);
+    var second = ("0" + today.getSeconds()).substr(-2,2);  //002 second take 0"02"
+    document.getElementById("time").innerHTML = `${hour}:${minute}:${second} ${date}-${month}-${year}`;
+  }
+
+  function startTIME() {
+      timeInterval = setInterval(melbourneTime, 1);  //display time every 1 milliseconds
+  }
+
+
+  
