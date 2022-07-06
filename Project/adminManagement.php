@@ -6,6 +6,7 @@
 
 <?php
 include "classes/user.php";
+include "classes/database.php";
 
 session_start();
 if (!isset($_SESSION['admin'])) {
@@ -33,7 +34,7 @@ if (!isset($_SESSION['admin'])) {
 </head>
 <body>
 	<div class="jumbotron text-center text-light bg-dark">
-		<h1 class="mb-0 py-2">Document Submission System (Admin)</h1>
+		<h2 class="mb-0 py-2">Document Submission System (Admin)</h2>
 	</div>
 	
     <!--Content body-->
