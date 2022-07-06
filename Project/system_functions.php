@@ -108,6 +108,7 @@
                 if ($row[3] == $login_password) {
                     $LoginOK = true;
                     $profile = array($row[0], $row[1], $row[2], $row[3], $row[5]);
+                    $role = $row[4];
                 } else {
                     $error = "password";
                     $login_msg = "Incorrect Password. Please try again.";
@@ -116,7 +117,7 @@
             }
             $db->closeConnection();
         }
-        return [$login_msg, $LoginOK, $email, $error, $profile];
+        return [$login_msg, $LoginOK, $email, $error, $profile, $role];
     }
 
      function ChkEmailPasswordForLogin($emailInput, $passwordInput, $db)

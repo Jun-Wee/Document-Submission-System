@@ -9,8 +9,14 @@ include "classes/user.php";
 include "classes/database.php";
 
 session_start();
+$admin = null;
+$convenor = null;
 if (!isset($_SESSION['admin'])) {
-    header("Location: adminLogin.php");
+	if(!isset($_SESSION['convenor'])){
+		header("Location: adminLogin.php");
+	}else{
+		$convenor = unserialize($_SESSION['convenor']);
+	}
 } else {
     $admin = unserialize($_SESSION['admin']);
 }
@@ -45,7 +51,7 @@ if (!isset($_SESSION['admin'])) {
 				<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
 						<li class="nav-item">
-							<a href="submission.php" class="nav-link align-middle px-0" id="active">
+							<a href="adminManagement.php" class="nav-link align-middle px-0" id="active">
 								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i> 
 								<span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
 							</a>
@@ -79,7 +85,13 @@ if (!isset($_SESSION['admin'])) {
 					<div class="dropdown" >
 						<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fs-2 bi bi-person"></i>
-							<span class="d-none d-sm-inline mx-2"><?php //echo $admin->getName()?></span>
+							<span class="d-none d-sm-inline mx-2"><?php 
+							if($admin != null){
+								echo $admin->getName();
+							}else{
+								echo $convenor->getName();
+								
+							}?></span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
 							<li><a class="dropdown-item" href="#">Profile</a></li>
@@ -126,10 +138,12 @@ if (!isset($_SESSION['admin'])) {
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
-								<th>Assignment</th>
-								<th>Written by</th>
-								<th>Submission date</th>
+								<th>Id</th>
+								<th>Student Id</th>
+								<th>Submission Datetime</th>
 								<th>MCQ Score</th>
+								<th>Unit Code</th>
+								<th>Document</th>
 							<tr>
 						</thead>
 						<tbody></tbody>
