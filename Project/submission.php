@@ -70,12 +70,6 @@ if (!isset($_SESSION['student'])) {
 								<span class="ms-1 d-none d-sm-inline" id="navtext">FAQ</span>
 							</a>
 						</li>
-						<li class="nav-item">
-							<a href="#" class="nav-link align-middle px-0">
-								<i class="fs-2 bi bi-pencil-square" id="navicon"></i> 
-								<span class="ms-1 d-none d-sm-inline" id="navtext">MCQ Question</span>
-							</a>
-						</li>
 					</ul>
 				
 					<div class="dropdown" >
