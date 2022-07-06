@@ -6,12 +6,45 @@
 
 <?php
 include "classes/user.php";
+include "classes/database.php";
+include "system_functions.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
     header("Location: studentLogin.php");
 } else {
+	$db = new Database();
     $student = unserialize($_SESSION['student']);
+	$student->fetchEnrolledUnits($db);
+	// foreach ($student->enrolledUnits as $unit) {
+	// 	echo $unit['code'] . " " . $unit['description'] . " " . $unit['cp'] . " " . $unit['type'] . " " . $unit['convenorID'] . " " . $unit['convenorName'] . "\n";
+	// }
+
+	$unitSelected = false;
+	$fileUploadErrorMsg = "";
+	if (isset($_POST['submit'])) {
+		if(isset($_POST['unit'])){
+			if(checkNotEmpty($_POST['unit'])){
+				$unitSelected = true;
+				$submission_unit = $_POST['unit'];
+				$code = explode(" ", $submission_unit);
+				//gets all the info from the uploaded file
+				//print_r($file); //testing for file superglobal
+				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student);
+				if($fileUploadErrorMsg == ""){
+					$student->submitDocument($db, $code[0], $path);
+					$_SESSION['student'] = serialize($student);
+            		header('Location: question.php');
+				} 
+			}else{
+				$unitSelected = false;
+			}
+		}else{
+			$unitSelected = false;
+		}
+	}else{
+		$fileUploadErrorMsg = "";
+	}
 }
 ?>
 
@@ -53,7 +86,7 @@ if (!isset($_SESSION['student'])) {
 	<!--Upload document by drag-->
 	<div class="container w-50 p-3">
 
-		<form action="upload.php" method="POST" enctype="multipart/form-data">
+		<form action="submission.php" method="POST" enctype="multipart/form-data">
 			<div class="mb-3">
 				<!-- <div class="drag-area">
 					<div class="icon"></div>
@@ -67,14 +100,29 @@ if (!isset($_SESSION['student'])) {
 					<input class="form-control" type="file" name="file">
 				</div>
 				<br>
+
+				<?php
+					if ($fileUploadErrorMsg != "") {
+						echo "<div><p>" . $fileUploadErrorMsg . "</p></div>";
+					}
+				?>
 				
 				<!--Select List-->
 				<label for="dataList" class="form-label"><strong>Select unit: </strong></label>
-				<input class="form-control" list="datalistOptions" id="convenor" placeholder="Example: COS10002 / Convenor Name">
-				<datalist id="datalistOptions">
-					<option value="SWE40001 Data Visualisation">Convenor A</option>
-					<option value="COS30045 Software Engineering Project A">Convenor B</option>
+				<input list="unitOptions" name="unit" class="form-control" id="convenor" placeholder="COS10009 Intro to Programming / Convenor">
+				<datalist id="unitOptions">
+					<?php
+						foreach ($student->enrolledUnits as $unit) {
+							echo "<option value='".$unit['code']." ".$unit['description']."'>". $unit['convenorName'] . "</option>";
+						}
+					?>
 				</datalist>
+
+				<?php
+					if (!$unitSelected && isset($_POST['submit'])) {
+						echo "<div><p>Please indicate the unit of this submission!</p></div>";
+					}
+				?>
 				<br>
 
 				<!--Buttons-->
