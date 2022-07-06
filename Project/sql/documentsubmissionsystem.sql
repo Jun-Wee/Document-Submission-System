@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 25, 2022 at 09:05 AM
+-- Generation Time: Jul 06, 2022 at 09:01 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -32,15 +32,16 @@ CREATE TABLE `admin` (
   `Name` varchar(50) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `Password` varchar(100) NOT NULL,
-  `Role` varchar(10) NOT NULL
+  `Role` varchar(10) NOT NULL,
+  `Gender` char(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`) VALUES
-('A101', 'Admin', 'admin101@swin.edu.au', 'swin', 'Admin');
+INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`) VALUES
+('A101', 'Admin', 'admin101@swin.edu.au', 'swin', 'Admin', NULL);
 
 -- --------------------------------------------------------
 
@@ -70,6 +71,47 @@ INSERT INTO `convenors` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `enrolment`
+--
+
+CREATE TABLE `enrolment` (
+  `studentId` varchar(10) NOT NULL,
+  `code` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `enrolment`
+--
+
+INSERT INTO `enrolment` (`studentId`, `code`) VALUES
+('101225244', 'ACC10007'),
+('101225244', 'ACC20014'),
+('101225244', 'COS10005'),
+('101225244', 'COS10009'),
+('101231636', 'COS20001'),
+('101231636', 'COS20016'),
+('101231636', 'ICT10001'),
+('101231636', 'INF10002'),
+('102426323', 'INF20003'),
+('102426323', 'INF20012'),
+('102426323', 'INF30001'),
+('102426323', 'TNE10005'),
+('102849357', 'ACC10007'),
+('102849357', 'ACC20014'),
+('102849357', 'COS10005'),
+('102849357', 'COS10009'),
+('103340644', 'COS20001'),
+('103340644', 'COS20016'),
+('103340644', 'ICT10001'),
+('103340644', 'INF10002'),
+('103698851', 'INF20003'),
+('103698851', 'INF20012'),
+('103698851', 'INF30001'),
+('103698851', 'TNE10005');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `students`
 --
 
@@ -93,6 +135,32 @@ INSERT INTO `students` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`)
 ('102849357', 'Sandali Jayasinghe', '102849357@student.swin.edu.au', 'swin', 'Student', 'Female'),
 ('103340644', 'Richard Ly', '103340644@student.swin.edu.au', 'swin', 'Student', 'Male'),
 ('103698851', 'Xin Zhe', '103698851@student.swin.edu.au', 'swin', 'Student', 'Male');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `submission`
+--
+
+CREATE TABLE `submission` (
+  `Id` int(11) NOT NULL,
+  `stuId` varchar(10) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `score` int(11) NOT NULL,
+  `unitCode` varchar(50) NOT NULL,
+  `filepath` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `submission`
+--
+
+INSERT INTO `submission` (`Id`, `stuId`, `datetime`, `score`, `unitCode`, `filepath`) VALUES
+(100001, '101225244', '2022-06-30 12:59:59', 0, 'COS10005', 'StuSubmission/AdrianSim.pdf'),
+(100002, '101225244', '2022-07-06 03:51:09', 0, 'ACC10007', 'StuSubmission/Adrian Sim.1155.F&B_resume.pdf'),
+(100003, '101225244', '2022-07-06 06:33:12', 0, 'COS10005', 'StuSubmission/Adrian Sim.1850.F&B_resume.pdf'),
+(100004, '101225244', '2022-07-06 07:01:38', 0, 'ACC10007', 'StuSubmission/Adrian Sim.1025.F&B_resume.pdf'),
+(100005, '101225244', '2022-07-06 08:55:15', 0, 'COS10005', 'StuSubmission/Adrian Sim.1445.F&B_resume.pdf');
 
 -- --------------------------------------------------------
 
@@ -143,10 +211,25 @@ ALTER TABLE `convenors`
   ADD PRIMARY KEY (`UserId`);
 
 --
+-- Indexes for table `enrolment`
+--
+ALTER TABLE `enrolment`
+  ADD PRIMARY KEY (`studentId`,`code`),
+  ADD KEY `code` (`code`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`UserId`);
+
+--
+-- Indexes for table `submission`
+--
+ALTER TABLE `submission`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `stuId` (`stuId`),
+  ADD KEY `unitCode` (`unitCode`);
 
 --
 -- Indexes for table `unit`
@@ -156,8 +239,32 @@ ALTER TABLE `unit`
   ADD KEY `convenorID` (`convenorID`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `submission`
+--
+ALTER TABLE `submission`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100006;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `enrolment`
+--
+ALTER TABLE `enrolment`
+  ADD CONSTRAINT `enrolment_ibfk_1` FOREIGN KEY (`studentId`) REFERENCES `students` (`UserId`),
+  ADD CONSTRAINT `enrolment_ibfk_2` FOREIGN KEY (`code`) REFERENCES `unit` (`code`);
+
+--
+-- Constraints for table `submission`
+--
+ALTER TABLE `submission`
+  ADD CONSTRAINT `submission_ibfk_1` FOREIGN KEY (`stuId`) REFERENCES `students` (`UserId`),
+  ADD CONSTRAINT `submission_ibfk_2` FOREIGN KEY (`unitCode`) REFERENCES `unit` (`code`);
 
 --
 -- Constraints for table `unit`
