@@ -29,43 +29,74 @@ class User
     }
 }
 
-class Admin extends User{
-
+class Admin extends User
+{
 }
 
-class Convenor extends User{
+class Convenor extends User
+{
     // Child Properties
     public $teachingUnits;
 
-    function setTeachingUnits($units){
-        $this->$teachingUnits = $units;
+    function setTeachingUnits($units)
+    {
+        $this->teachingUnits = $units;
     }
 
-    function getTeachingUnits(){
-        return $this->$teachingUnits;
+    function getTeachingUnits()
+    {
+        return $this->teachingUnits;
     }
 }
 
-class Student extends User{
+class Student extends User
+{
     // Child Properties
     public $enrolledUnits;
-    public $unitConvenors;
 
-    function fetchEnrolledUnits($db){
+    function fetchEnrolledUnits($db)
+    {
         $unitsId = array();
         $fetchedUnits = array();
         $this->enrolledUnits = array();
 
         // Create connection
-            $db->createConnection();
+        $db->createConnection();
 
-            // retrieve all the units codes from the database based on student's ID
-            $sql = "SELECT * FROM enrolment WHERE studentId = ?";
+        // retrieve all the units codes from the database based on student's ID
+        $sql = "SELECT * FROM enrolment WHERE studentId = ?";
+
+        $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        mysqli_stmt_bind_param($prepared_stmt, 's', $this->id);
+
+        //Execute prepared statement
+        @mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  @mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        while ($row) {
+            // fetch the unit ids from the server and then store them in an array
+            array_push($unitsId, $row[1]);
+            $row = mysqli_fetch_row($queryResult);
+        }
+
+        foreach ($unitsId as $unitId) {
+            // retrieve all the units ids from the database based on student's ID
+            $sql = "SELECT * FROM unit WHERE code = ?";
 
             $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
 
             //Bind input variables to prepared statement
-            mysqli_stmt_bind_param($prepared_stmt, 's', $this->id);
+            mysqli_stmt_bind_param($prepared_stmt, 's', $unitId);
 
             //Execute prepared statement
             @mysqli_stmt_execute($prepared_stmt);
@@ -81,78 +112,54 @@ class Student extends User{
 
             while ($row) {
                 // fetch the unit ids from the server and then store them in an array
-                array_push($unitsId, $row[1]);
+                array_push($fetchedUnits, array("code" => $row[0], "description" => $row[1], "cp" => $row[2], "type" => $row[3], "convenorID" => $row[4]));
                 $row = mysqli_fetch_row($queryResult);
             }
+        }
 
-            foreach ($unitsId as $unitId) {
-                // retrieve all the units ids from the database based on student's ID
-                $sql = "SELECT * FROM unit WHERE code = ?";
+        foreach ($fetchedUnits as $unit) {
+            // retrieve convenor's name from the database based on convenor's ID
+            $sql = "SELECT * FROM convenors WHERE UserId = ?";
 
-                $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
+            $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
 
-                //Bind input variables to prepared statement
-                mysqli_stmt_bind_param($prepared_stmt, 's', $unitId);
+            //Bind input variables to prepared statement
+            mysqli_stmt_bind_param($prepared_stmt, 's', $unit['convenorID']);
 
-                //Execute prepared statement
-                @mysqli_stmt_execute($prepared_stmt);
+            //Execute prepared statement
+            @mysqli_stmt_execute($prepared_stmt);
 
-                // Get resultset
-                $queryResult =  @mysqli_stmt_get_result($prepared_stmt)
-                    or die("<p>Unable to select from database table</p>");
+            // Get resultset
+            $queryResult =  @mysqli_stmt_get_result($prepared_stmt)
+                or die("<p>Unable to select from database table</p>");
 
-                // Close the prepared statement
-                @mysqli_stmt_close($prepared_stmt);
+            // Close the prepared statement
+            @mysqli_stmt_close($prepared_stmt);
 
+            $row = mysqli_num_rows($queryResult);
+
+            if ($row == 1) {
                 $row = mysqli_fetch_row($queryResult);
-
-                while ($row) {
-                    // fetch the unit ids from the server and then store them in an array
-                    array_push($fetchedUnits, array("code"=>$row[0], "description"=>$row[1], "cp"=>$row[2], "type"=>$row[3], "convenorID"=>$row[4]));
-                    $row = mysqli_fetch_row($queryResult);
-                }
+                array_push($this->enrolledUnits, array("code" => $unit['code'], "description" => $unit['description'], "cp" => $unit['cp'], "type" => $unit['type'], "convenorID" => $unit['convenorID'], "convenorName" => $row[1]));
             }
-
-            foreach ($fetchedUnits as $unit) {
-                // retrieve convenor's name from the database based on convenor's ID
-                $sql = "SELECT * FROM convenors WHERE UserId = ?";
-
-                $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
-
-                //Bind input variables to prepared statement
-                mysqli_stmt_bind_param($prepared_stmt, 's', $unit['convenorID']);
-
-                //Execute prepared statement
-                @mysqli_stmt_execute($prepared_stmt);
-
-                // Get resultset
-                $queryResult =  @mysqli_stmt_get_result($prepared_stmt)
-                    or die("<p>Unable to select from database table</p>");
-
-                // Close the prepared statement
-                @mysqli_stmt_close($prepared_stmt);
-
-                $row = mysqli_num_rows($queryResult);
-
-                if ($row == 1) {
-                    $row = mysqli_fetch_row($queryResult);
-                    array_push($this->enrolledUnits, array("code"=>$unit['code'], "description"=>$unit['description'], "cp"=>$unit['cp'], "type"=>$unit['type'], "convenorID"=>$unit['convenorID'], "convenorName"=>$row[1]));
-                }
-            }
-            $db->closeConnection();
+        }
+        $db->closeConnection();
         return true;
     }
 
-    function setEnrolledUnits($units){
-        $this->$enrolledUnits = $units;
+    function setEnrolledUnits($units)
+    {
+        $this->enrolledUnits = $units;
     }
 
-    function getEnrolledUnits(){
-        return $this->$enrolledUnits;
+    function getEnrolledUnits()
+    {
+        return $this->enrolledUnits;
     }
 
-    function submitDocument($db, $code, $path){
-         // Add submission record to database
+    function submitDocument($db, $code, $path)
+    {
+        // Add submission record to database
 
         // Create connection
         $db->createConnection();

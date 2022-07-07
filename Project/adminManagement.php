@@ -6,24 +6,32 @@
 
 <?php
 include "classes/user.php";
+include "classes/submission.php";
+include "classes/submissionTable.php";
 include "classes/database.php";
 
 session_start();
 $admin = null;
 $convenor = null;
+$db = new Database();
+$submissionTable = new SubmissionTable($db);
+
 if (!isset($_SESSION['admin'])) {
-	if(!isset($_SESSION['convenor'])){
+	if (!isset($_SESSION['convenor'])) {
 		header("Location: adminLogin.php");
-	}else{
+	} else {
 		$convenor = unserialize($_SESSION['convenor']);
+		$submission_records = $submissionTable->GetAll($convenor->getId());
 	}
 } else {
-    $admin = unserialize($_SESSION['admin']);
+	$admin = unserialize($_SESSION['admin']);
+	$submission_records = $submissionTable->GetAll();
 }
 ?>
 
 <!DOCTYPE html>
-<html lang ="en">
+<html lang="en">
+
 <head>
 	<title>Administrator Home | Document Submission System</title>
 	<meta name="language" content="english" />
@@ -36,14 +44,15 @@ if (!isset($_SESSION['admin'])) {
 
 	<link href="style/adminManagementStyle.css" rel="stylesheet">
 	<script src="script/script.js"></script>
-	
+
 </head>
+
 <body>
 	<div class="jumbotron text-center text-light bg-dark">
 		<h2 class="mb-0 py-2">Document Submission System (Admin)</h2>
 	</div>
-	
-    <!--Content body-->
+
+	<!--Content body-->
 	<div class="container-fluid">
 		<div class="row">
 			<!--side bars-->
@@ -52,46 +61,45 @@ if (!isset($_SESSION['admin'])) {
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
 						<li class="nav-item">
 							<a href="adminManagement.php" class="nav-link align-middle px-0" id="active">
-								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i> 
+								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-                                <i class="fs-2 bi bi-people-fill" id="navicon"></i>
+								<i class="fs-2 bi bi-people-fill" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">Student</span>
 							</a>
 						</li>
-                        <li class="nav-item">
+						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-                                <i class="fs-2 bi bi-clipboard-check" id="navicon"></i>
+								<i class="fs-2 bi bi-clipboard-check" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">Question</span>
 							</a>
 						</li>
-                        <li class="nav-item">
+						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-								<i class="fs-2 bi bi-bar-chart-line" id="navicon"></i> 
+								<i class="fs-2 bi bi-bar-chart-line" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">Report Analysis</span>
 							</a>
 						</li>
-                        <li class="nav-item">
+						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-								<i class="fs-2 bi bi-question-circle" id="navicon"></i> 
+								<i class="fs-2 bi bi-question-circle" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">FAQ</span>
 							</a>
 						</li>
 					</ul>
-				
-					<div class="dropdown" >
+
+					<div class="dropdown">
 						<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fs-2 bi bi-person"></i>
-							<span class="d-none d-sm-inline mx-2"><?php 
-							if($admin != null){
-								echo $admin->getName();
-							}else{
-								echo $convenor->getName();
-								
-							}?></span>
+							<span class="d-none d-sm-inline mx-2"><?php
+																	if ($admin != null) {
+																		echo $admin->getName();
+																	} else {
+																		echo $convenor->getName();
+																	} ?></span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
 							<li><a class="dropdown-item" href="#">Profile</a></li>
@@ -106,17 +114,17 @@ if (!isset($_SESSION['admin'])) {
 
 			<!--show student document-->
 			<div class="col py-3">
-                <!--search/ filter bar-->
+				<!--search/ filter bar-->
 				<div class="row">
 					<div class="col">
-                        <h5>Total no of submission:</h5>
+						<h5>Total no of submission:</h5>
 						<h2 class="text-left" name="#">0</h2>
-                    </div>
-                    <div class="col">
-                        <h5>Total no of student:</h5>
+					</div>
+					<div class="col">
+						<h5>Total no of student:</h5>
 						<h2 class="text-left" name="#">0</h2>
-                    </div>
-                    <div class="col input-group mb-5 ">
+					</div>
+					<div class="col input-group mb-5 ">
 						<div class="row">
 							<!--Search Button date-->
 							<div class="col-12 d-flex pb-2">
@@ -132,9 +140,9 @@ if (!isset($_SESSION['admin'])) {
 						</div>
 					</div>
 				</div>
-                
-                <!--submision retrieve table-->
-                <div class="row">
+
+				<!--submision retrieve table-->
+				<div class="row">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
@@ -146,7 +154,20 @@ if (!isset($_SESSION['admin'])) {
 								<th>Document</th>
 							<tr>
 						</thead>
-						<tbody></tbody>
+						<tbody>
+							<?php
+							for ($i = 0; $i < count($submission_records); $i++) {
+								echo "<tr>";
+								echo "<td> " . $submission_records[$i]->getId() . "</td>";
+								echo "<td> " . $submission_records[$i]->getstuId() . "</td>";
+								echo "<td> " . $submission_records[$i]->getdatetime() . "</td>";
+								echo "<td> " . $submission_records[$i]->getMCQscore() . "</td>";
+								echo "<td> " . $submission_records[$i]->getUnitCode() . "</td>";
+								echo "<td> " . $submission_records[$i]->getfilepath() . "</td>";
+								echo "</tr>";
+							}
+							?>
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -154,4 +175,5 @@ if (!isset($_SESSION['admin'])) {
 		</div>
 	</div>
 </body>
+
 </html>
