@@ -108,6 +108,7 @@
                 if ($row[3] == $login_password) {
                     $LoginOK = true;
                     $profile = array($row[0], $row[1], $row[2], $row[3], $row[5]);
+                    $role = $row[4];
                 } else {
                     $error = "password";
                     $login_msg = "Incorrect Password. Please try again.";
@@ -116,7 +117,7 @@
             }
             $db->closeConnection();
         }
-        return [$login_msg, $LoginOK, $email, $error, $profile];
+        return [$login_msg, $LoginOK, $email, $error, $profile, $role];
     }
 
      function ChkEmailPasswordForLogin($emailInput, $passwordInput, $db)
@@ -177,5 +178,48 @@
             $db->closeConnection();
         }
         return [$login_msg, $LoginOK, $email, $error, $profile];
+    }
+
+    function checkUploadedFile($file, $filename, $fileTmpName, $fileError, $fileSize, $student){
+        // $file = $_FILES['file']; //gets all the info from the uploaded file
+		// //print_r($file); //testing for file superglobal
+		// $filename = $_FILES['file']['name'];
+		// $fileTmpName = $_FILES['file']['tmp_name'];
+		// $fileError = $_FILES['file']['error'];
+		// $fileSize = $_FILES['file']['size'];
+
+        $fileUploadErrorMsg = "";
+		$fileExtract = explode('.',$filename);  //split by dot
+		$fileActualExt = strtolower(end($fileExtract)); //take only the file extension
+        $fileDestination = "";
+
+		$allowedType = 'pdf';
+
+		//control submission properties
+		if ($fileActualExt == $allowedType) //check file type
+		{
+				if ($fileError === 0) //check file error
+				{  
+					if ($fileSize < 3000000) //limit file size to 3gb / 3000000kb
+					{ 
+						$fileNewName = $student->getName().".". rand(1000,2000).".".$filename;  //file format: studentname.random number.filename
+						$fileDestination = 'StuSubmission/'.$fileNewName;
+						move_uploaded_file($fileTmpName,$fileDestination);
+						header("Location: submission.php?uploadsuccess");  //success upload indicator
+					}else 
+					{
+						$fileUploadErrorMsg = "Exceed file size limit!";
+					}
+				}
+				else
+				{
+					$fileUploadErrorMsg = "There was an error uploading your file, Please try again.";
+				}
+		}else
+		{
+			$fileUploadErrorMsg = "Error file type uploaded!";
+		}
+
+        return [$fileUploadErrorMsg, $fileDestination];
     }
 ?>

@@ -2,7 +2,10 @@
 session_start();
 if (isset($_SESSION['admin'])) {
     unset($_SESSION['admin']);
-    session_unset();
-    session_destroy(); //Destroy session
-    header('Location: adminlogin.php'); //Brings user back to home page
 }
+if(isset($_SESSION['convenor'])){
+    unset($_SESSION['convenor']);
+}
+session_unset();
+session_destroy(); //Destroy session
+header('Location: adminLogin.php'); //Brings user back to home page
