@@ -20,14 +20,14 @@ class SubmissionTable
         if ($convenorId == 0) {
             $sql = "SELECT * FROM submission";
         } else {
-            $sql = "SELECT * FROM submission WHERE convenorID = ?";
+            $sql = "SELECT * FROM submission";
         }
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
-        if ($convenorId != 0) {
-            //Bind input variables to prepared statement
-            $prepared_stmt->bind_param("s", $convenorId);
-        }
+        // if ($convenorId != 0) {
+        //     //Bind input variables to prepared statement
+        //     $prepared_stmt->bind_param("s", $convenorId);
+        // }
 
         //Execute prepared statement
         mysqli_stmt_execute($prepared_stmt);
