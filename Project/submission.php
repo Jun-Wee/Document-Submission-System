@@ -11,10 +11,10 @@ include "system_functions.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
-    header("Location: studentLogin.php");
+	header("Location: studentLogin.php");
 } else {
 	$db = new Database();
-    $student = unserialize($_SESSION['student']);
+	$student = unserialize($_SESSION['student']);
 	$student->fetchEnrolledUnits($db);
 	// foreach ($student->enrolledUnits as $unit) {
 	// 	echo $unit['code'] . " " . $unit['description'] . " " . $unit['cp'] . " " . $unit['type'] . " " . $unit['convenorID'] . " " . $unit['convenorName'] . "\n";
@@ -23,33 +23,34 @@ if (!isset($_SESSION['student'])) {
 	$unitSelected = false;
 	$fileUploadErrorMsg = "";
 	if (isset($_POST['submit'])) {
-		if(isset($_POST['unit'])){
-			if(checkNotEmpty($_POST['unit'])){
+		if (isset($_POST['unit'])) {
+			if (checkNotEmpty($_POST['unit'])) {
 				$unitSelected = true;
 				$submission_unit = $_POST['unit'];
 				$code = explode(" ", $submission_unit);
 				//gets all the info from the uploaded file
 				//print_r($file); //testing for file superglobal
-				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student);
-				if($fileUploadErrorMsg == ""){
+				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student, $code[0]);
+				if ($fileUploadErrorMsg == "") {
 					$student->submitDocument($db, $code[0], $path);
 					$_SESSION['student'] = serialize($student);
-            		header('Location: question.php');
-				} 
-			}else{
+					header('Location: question.php');
+				}
+			} else {
 				$unitSelected = false;
 			}
-		}else{
+		} else {
 			$unitSelected = false;
 		}
-	}else{
+	} else {
 		$fileUploadErrorMsg = "";
 	}
 }
 ?>
 
 <!DOCTYPE html>
-<html lang ="en">
+<html lang="en">
+
 <head>
 	<title>Submission</title>
 	<meta name="language" content="english" />
@@ -65,7 +66,7 @@ if (!isset($_SESSION['student'])) {
 </head>
 
 <body onload="startTIME();">
-	
+
 	<!--Title-->
 	<div class="jumbotron text-center" style="color:white;">
 		<h1>Document Submission System</h1>
@@ -80,7 +81,8 @@ if (!isset($_SESSION['student'])) {
 				</li>
 			</div>
 			<span class="navbar-text">
-				<h5 style="color: white;" id="time"></h6>
+				<h5 style="color: white;" id="time">
+					</h6>
 		</div>
 	</nav>
 
@@ -93,22 +95,22 @@ if (!isset($_SESSION['student'])) {
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
 						<li class="nav-item">
 							<a href="submission.php" class="nav-link align-middle px-0" id="active">
-								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i> 
+								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="#" class="nav-link align-middle px-0">
-								<i class="fs-2 bi bi-question-circle" id="navicon"></i> 
+								<i class="fs-2 bi bi-question-circle" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">FAQ</span>
 							</a>
 						</li>
 					</ul>
-				
-					<div class="dropdown" >
+
+					<div class="dropdown">
 						<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fs-2 bi bi-person"></i>
-							<span class="d-none d-sm-inline mx-2"><?php echo $student->getName()?></span>
+							<span class="d-none d-sm-inline mx-2"><?php echo $student->getName() ?></span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
 							<li><a class="dropdown-item" href="#">Profile</a></li>
@@ -127,38 +129,38 @@ if (!isset($_SESSION['student'])) {
 					<div class="col-8 mx-auto">
 						<form action="submission.php" method="POST" enctype="multipart/form-data">
 							<div class="mb-3">
-								<label for="formFile" class="form-label" ><strong>Upload Document</strong></label>
+								<label for="formFile" class="form-label"><strong>Upload Document</strong></label>
 								<input class="form-control" type="file" name="file">
 								<br>
 
 								<?php
-									if ($fileUploadErrorMsg != "") {
-										echo "<div><p>" . $fileUploadErrorMsg . "</p></div>";
-									}
+								if ($fileUploadErrorMsg != "") {
+									echo "<div><p>" . $fileUploadErrorMsg . "</p></div>";
+								}
 								?>
-								
+
 								<!--Select List-->
 								<label for="dataList" class="form-label"><strong>Select unit: </strong></label>
 								<input list="unitOptions" name="unit" class="form-control" id="convenor" placeholder="COS10009 Intro to Programming / Convenor">
 								<datalist id="unitOptions">
 									<?php
-										foreach ($student->enrolledUnits as $unit) {
-											echo "<option value='".$unit['code']." ".$unit['description']."'>". $unit['convenorName'] . "</option>";
-										}
+									foreach ($student->enrolledUnits as $unit) {
+										echo "<option value='" . $unit['code'] . " " . $unit['description'] . "'>" . $unit['convenorName'] . "</option>";
+									}
 									?>
 								</datalist>
 
 								<?php
-									if (!$unitSelected && isset($_POST['submit'])) {
-										echo "<div><p>Please indicate the unit of this submission!</p></div>";
-									}
+								if (!$unitSelected && isset($_POST['submit'])) {
+									echo "<div><p>Please indicate the unit of this submission!</p></div>";
+								}
 								?>
 								<br>
 
 								<!--Buttons-->
 								<div class="d-flex justify-content-end">
-										<button type="submit" class="btn btn-success me-3" name="submit">Submit </button>									
-										<button type="reset" class="btn btn-danger" name="reset"> Cancel </button>
+									<button type="submit" class="btn btn-success me-3" name="submit">Submit </button>
+									<button type="reset" class="btn btn-danger" name="reset"> Cancel </button>
 								</div>
 							</div>
 						</form>
@@ -168,7 +170,8 @@ if (!isset($_SESSION['student'])) {
 
 		</div>
 	</div>
-	
-	
+
+
 </body>
+
 </html>
