@@ -38,6 +38,45 @@ class Convenor extends User
     // Child Properties
     public $teachingUnits;
 
+    function fetchTeachingUnits($db)
+    {
+        $this->teachingUnits = array();
+
+        // Create connection
+        $db->createConnection();
+
+        // retrieve all the units codes from the database based on convenor's ID
+        $sql = "SELECT * FROM unit WHERE convenorID = ?";
+
+        $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        mysqli_stmt_bind_param($prepared_stmt, 's', $this->id);
+
+        //Execute prepared statement
+        @mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  @mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        while ($row) {
+            // fetch the unit records from the server and then store them in an array
+            array_push($this->teachingUnits, array("code" => $row[0], "description" => $row[1], "cp" => $row[2], "type" => $row[3], "convenorID" => $row[4]));
+            $row = mysqli_fetch_row($queryResult);
+        }
+        foreach ($this->teachingUnits as $unit) {
+            echo $unit['code'] . " " . $unit['description'] . " " . $unit['cp'] . " " . $unit['type'] . " " . $unit['convenorID'] . "\n";
+        }
+        $db->closeConnection();
+        return true;
+    }
+
     function setTeachingUnits($units)
     {
         $this->teachingUnits = $units;
@@ -173,6 +212,7 @@ class Student extends User
 
         $stuId = $this->getId();
         // 2022-06-30 12:59:5
+        date_default_timezone_set("Australia/Melbourne");
         $datetime = date("Y-m-d H:i:s");
         $score = 0;
         $unitCode =  $code;
