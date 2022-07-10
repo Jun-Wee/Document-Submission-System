@@ -21,7 +21,8 @@ if (!isset($_SESSION['admin'])) {
 		header("Location: adminLogin.php");
 	} else {
 		$convenor = unserialize($_SESSION['convenor']);
-		$submission_records = $submissionTable->GetAll($convenor->getId());
+		$convenor->fetchTeachingUnits($db);
+		$submission_records = $submissionTable->GetAll($convenor->getTeachingUnits());
 	}
 } else {
 	$admin = unserialize($_SESSION['admin']);
@@ -163,7 +164,11 @@ if (!isset($_SESSION['admin'])) {
 								echo "<td> " . $submission_records[$i]->getdatetime() . "</td>";
 								echo "<td> " . $submission_records[$i]->getMCQscore() . "</td>";
 								echo "<td> " . $submission_records[$i]->getUnitCode() . "</td>";
-								echo "<td> " . $submission_records[$i]->getfilepath() . "</td>";
+								$filepath_array = explode("/", $submission_records[$i]->getfilepath());
+								$filename = end($filepath_array);
+								echo "<td> <a href='" . $submission_records[$i]->getfilepath() . "' target='_blank'>"
+									. $filename .
+									"</a> </td>";
 								echo "</tr>";
 							}
 							?>
