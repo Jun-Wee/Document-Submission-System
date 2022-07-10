@@ -1,5 +1,5 @@
 <?php 
-include "../classes/fpdfHeader.php";
+include "../classes/MyPDF.php";
 include "../classes/database.php";
 
 //Connect to database
