@@ -42,10 +42,9 @@ if (!isset($_SESSION['admin'])) {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
 	<link href="style/adminManagementStyle.css" rel="stylesheet">
 	<script src="script/script.js"></script>
-
+	<link rel="icon" href="src/images/logo.png">
 </head>
 
 <body>
@@ -119,7 +118,7 @@ if (!isset($_SESSION['admin'])) {
 				<div class="row">
 					<div class="col">
 						<h5>Total no of submission:</h5>
-						<h2 class="text-left" name="#">0</h2>
+						<h2 class="text-left" name="#"><?php echo count($submission_records) ?></h2>
 					</div>
 					<div class="col">
 						<h5>Total no of student:</h5>
@@ -169,6 +168,8 @@ if (!isset($_SESSION['admin'])) {
 								echo "<td> <a href='" . $submission_records[$i]->getfilepath() . "' target='_blank'>"
 									. $filename .
 									"</a> </td>";
+								echo "<td><button type='submit' class='btn btn-success me-3' name='edit'>Edit</button></td>
+									<td><button type='submit' class='btn btn-danger' name='delete'>Delete</button></td>";
 								echo "</tr>";
 							}
 							?>

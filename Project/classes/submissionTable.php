@@ -77,6 +77,30 @@ class SubmissionTable
         return $this->submissions;
     }
 
+    function GetTotalNum()
+    {
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM submission";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_num_rows($queryResult);
+
+        return $row;
+    }
+
     function Get($subId)
     {
     }
