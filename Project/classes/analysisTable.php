@@ -9,9 +9,14 @@ class AnalysisTable {
         $this->db = $db;
     }
 
-    function getAll() {
+    function getAll() {                         
+        //Retrieve all analysis records of the submission from database using database object
+        
         //Create connection to database
         $this->db->createConnection();
+        $this->db->closeConnection();
+
+        return $this->db->analysis;
     }
 
     function get($analysisId) {
