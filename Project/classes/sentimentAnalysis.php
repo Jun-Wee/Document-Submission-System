@@ -9,7 +9,7 @@ class SentimentAnalysis {
 
     }
 
-    function evaluate($annotationS) {
+    function evaluate($annotationS) {               //Fill this spot with return values
         //Determine the sentiment value from score and magnitude
         //Score = Positive/Negative statement
         //Magnitude = Severity of emotion put into the sentence
