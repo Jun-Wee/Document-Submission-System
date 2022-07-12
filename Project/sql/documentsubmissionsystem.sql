@@ -46,6 +46,20 @@ INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`) VA
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `analysis`
+--
+
+CREATE TABLE `analysis` (
+  `subId` int(10) NOT NULL,
+  `summary` varchar(200) NOT NULL,
+  `keywords` varchar(200) NOT NULL,
+  `matchedTitles` varchar(200) NOT NULL,
+  `sentimentAnalysis` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `convenors`
 --
 
@@ -205,6 +219,12 @@ ALTER TABLE `admin`
   ADD PRIMARY KEY (`UserId`);
 
 --
+-- Indexes for table `analysis`
+--
+ALTER TABLE `analysis`
+  ADD PRIMARY KEY (`subId`);
+
+--
 -- Indexes for table `convenors`
 --
 ALTER TABLE `convenors`
@@ -241,6 +261,12 @@ ALTER TABLE `unit`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `analysis`
+--
+ALTER TABLE `analysis`
+  MODIFY `subId` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `submission`
