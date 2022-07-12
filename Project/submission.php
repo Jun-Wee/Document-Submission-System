@@ -8,6 +8,7 @@
 include "classes/user.php";
 include "classes/database.php";
 include "system_functions.php";
+include "vendor/autoload.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
@@ -31,10 +32,15 @@ if (!isset($_SESSION['student'])) {
 				//gets all the info from the uploaded file
 				//print_r($file); //testing for file superglobal
 				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student);
-				if($fileUploadErrorMsg == ""){
+				if($fileUploadErrorMsg == "") {
 					$student->submitDocument($db, $code[0], $path);
 					$_SESSION['student'] = serialize($student);
-            		header('Location: question.php');
+					//$parser = new \Smalot\PdfParser\Parser();
+					$pdf = $parser->parseFile($_FILES['file']['name']);
+					$text = $pdf->getText();
+					echo $text;
+					
+					header('Location: question.php');
 				} 
 			}else{
 				$unitSelected = false;
