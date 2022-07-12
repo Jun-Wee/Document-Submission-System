@@ -14,6 +14,8 @@ class AnalysisTable {
         
         //Create connection to database
         $this->db->createConnection();
+
+        //Close connection to database
         $this->db->closeConnection();
 
         return $this->db->analysis;
@@ -24,15 +26,22 @@ class AnalysisTable {
     }
 
     function edit($analysisId, $analysis) {
-
+        //Edit existing records of the analysis in the database
     }
 
     function add($analysis) {
+        //Add a new record of the analysis to the database
 
+        //Create connection to database
+        $this->db->createConnection();
+        
+        
+        //Close connection to database
+        $this->db->closeConnection();
     }
 
     function delete($analysis) {
-        
+        //Remove an existing record of the analysis from the database
     }
 }
 
