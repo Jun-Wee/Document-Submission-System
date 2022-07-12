@@ -1,6 +1,7 @@
 <?php
 require "vendor/autoload.php";
 require "classes/analysis.php";
+require "classes/database.php";
 require "classes/sentimentAnalysis.php";
 
 use Google\Cloud\Language\LanguageClient;   
@@ -12,32 +13,27 @@ try {
 
     //Sentiment Analysis---------------------------------------------------------------------------------------------------
 
-    $annotationS = $language->analyzeSentiment('Google Cloud Platform is a powerful tool.');
-    echo "Sample sentence: Google Cloud Platform is a powerful tool.";
+    $extractedText = 'Google Cloud Platform is a powerful tool.';
+    $annotationS = $language->analyzeSentiment($extractedText);
+    echo "Extracted text: " . $extractedText;
     echo "<pre>";print_r($annotationS->sentiment()); echo "</pre>";
 
     $sentimentAnalysis = new SentimentAnalysis();
-    $sentimentAnalysis->evaluate($annotationS);
+    $sentimentAnalysis->evaluate($annotationS);                 //Call the sentiment evaluation function
 
     //Entity Analysis-----------------------------------------------------------------------------------------------------
 
-    $annotationE = $language->analyzeEntities('Google Cloud Platform is a powerful tool.');
+    $annotationE = $language->analyzeEntities($extractedText);
     echo "<pre>"; print_r($annotationE->entities()); echo "</pre>";
 
     foreach ($annotationE->entities() as $entity) {
         echo $entity['type'];
     }
 
-    //Sending the results to a database required!-------------------------------------------------------------------------
-    /*$db = new Database;
-    $db->createConnection();                                    //Create the connection to the database
-    
-    //Create variables to be stored in the database
-    $resultSentimentScore = $annotationS->sentiment()['score'];
-    $resultSentimentMagnitude = $annotationS->sentiment()['magnitude'];
-    $resultEntity[] = $annotationE->entities();
+    //Function to call analysis table interface in the sentiment analysis class
+    $db = new Database();
+    $sentimentAnalysis->storeSentiment($db);
 
-    $db->closeConnection();*/
 }
 
 catch(Exception $e) {
