@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 06, 2022 at 09:01 AM
+-- Generation Time: Jul 12, 2022 at 06:57 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -156,11 +156,15 @@ CREATE TABLE `submission` (
 --
 
 INSERT INTO `submission` (`Id`, `stuId`, `datetime`, `score`, `unitCode`, `filepath`) VALUES
-(100001, '101225244', '2022-06-30 12:59:59', 0, 'COS10005', 'StuSubmission/AdrianSim.pdf'),
-(100002, '101225244', '2022-07-06 03:51:09', 0, 'ACC10007', 'StuSubmission/Adrian Sim.1155.F&B_resume.pdf'),
-(100003, '101225244', '2022-07-06 06:33:12', 0, 'COS10005', 'StuSubmission/Adrian Sim.1850.F&B_resume.pdf'),
-(100004, '101225244', '2022-07-06 07:01:38', 0, 'ACC10007', 'StuSubmission/Adrian Sim.1025.F&B_resume.pdf'),
-(100005, '101225244', '2022-07-06 08:55:15', 0, 'COS10005', 'StuSubmission/Adrian Sim.1445.F&B_resume.pdf');
+(100019, '103698851', '2022-07-10 18:13:04', 0, 'INF20003', 'StuSubmission/INF20003/Xin Zhe/Xin Zhe.1356.(Feedback) SQAP_v1.1.pdf'),
+(100020, '103698851', '2022-07-10 18:15:50', 0, 'INF20003', 'StuSubmission/INF20003/Xin Zhe/Xin Zhe.1791.(DUE WK5) SEP-Project Plan S1 2022.pdf'),
+(100021, '102426323', '2022-07-10 18:17:49', 0, 'INF20003', 'StuSubmission/INF20003/Yovinma Konara/Yovinma Konara.1434.(Feedback) Software Design and Research Report.pdf'),
+(100022, '102426323', '2022-07-10 18:18:16', 0, 'INF20003', 'StuSubmission/INF20003/Yovinma Konara/Yovinma Konara.1763.[SEPA28]-Test Plan.pdf'),
+(100023, '101225244', '2022-07-10 18:18:50', 0, 'COS10009', 'StuSubmission/COS10009/Adrian Sim/Adrian Sim.1030.SEP-28-Project Plan S1 2022-jh.pdf'),
+(100024, '102426323', '2022-07-11 02:26:15', 0, 'TNE10005', 'StuSubmission/TNE10005/Yovinma Konara/Yovinma Konara.1977.Software Prototype.pdf'),
+(100025, '101231636', '2022-07-11 02:38:02', 0, 'ICT10001', 'StuSubmission/ICT10001/Jun Wee/Jun Wee.1560.(Feedback) SQAP_v1.1.pdf'),
+(100026, '101225244', '2022-07-11 02:52:34', 0, 'ACC10007', 'StuSubmission/ACC10007/Adrian Sim/Adrian Sim.1859.Software Requirements Specification (SRS)-SEP28-jh.pdf'),
+(100027, '101231636', '2022-07-12 14:34:43', 0, 'ICT10001', 'StuSubmission/ICT10001/Jun Wee/Jun Wee.1610.(DUE WK5) SEP-Project Plan S1 2022.pdf');
 
 -- --------------------------------------------------------
 
@@ -246,7 +250,7 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `submission`
 --
 ALTER TABLE `submission`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100006;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100028;
 
 --
 -- Constraints for dumped tables
