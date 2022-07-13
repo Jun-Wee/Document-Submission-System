@@ -23,10 +23,10 @@ if (!isset($_SESSION['student'])) {
 	$unitSelected = false;
 	$fileUploadErrorMsg = "";
 	if (isset($_POST['submit'])) {
-		if (isset($_POST['unit'])) {
-			if (checkNotEmpty($_POST['unit'])) {
+		if (isset($_POST['unitOptions'])) {
+			if (checkNotEmpty($_POST['unitOptions'])) {
 				$unitSelected = true;
-				$submission_unit = $_POST['unit'];
+				$submission_unit = $_POST['unitOptions'];
 				$code = explode(" ", $submission_unit);
 				//gets all the info from the uploaded file
 				//print_r($file); //testing for file superglobal
@@ -140,15 +140,15 @@ if (!isset($_SESSION['student'])) {
 								?>
 
 								<!--Select List-->
-								<label for="dataList" class="form-label"><strong>Select unit: </strong></label>
-								<input list="unitOptions" name="unit" class="form-control" id="convenor" placeholder="COS10009 Intro to Programming / Convenor">
-								<datalist id="unitOptions">
+								<label for="unitOptions" class="form-label"><strong>Select unit </strong></label>
+								<select id="unitOptions" name="unitOptions" class="form-select form-select-md">
+									<option disabled selected value>Select a unit</option>
 									<?php
 									foreach ($student->enrolledUnits as $unit) {
-										echo "<option value='" . $unit['code'] . " " . $unit['description'] . "'>" . $unit['convenorName'] . "</option>";
+										echo "<option value='" . $unit['code'] . " " . $unit['description'] . "'>" . $unit['code'] . " " . $unit['description'] . " - " . $unit['convenorName'] . "</option>";
 									}
 									?>
-								</datalist>
+								</select>
 
 								<?php
 								if (!$unitSelected && isset($_POST['submit'])) {
