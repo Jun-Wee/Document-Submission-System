@@ -34,6 +34,33 @@ if (!isset($_SESSION['admin'])) {
 }
 ?>
 
+<!-- create a pagination for submission records -------------------------------------->
+<?php
+// define how many results you want per page
+$results_per_page = 8;
+
+// find out the number of results stored in database
+$number_of_results = count($submission_records);
+
+// determine number of total pages available
+$number_of_pages = ceil($number_of_results / $results_per_page);
+
+// determine which page number visitor is currently on
+if (!isset($_GET['page'])) {
+	$current_page = 1;
+} else {
+	$current_page = $_GET['page'];
+}
+
+// determine the starting number for the results on the displaying page
+$this_page_first_result = ($current_page - 1) * $results_per_page;
+
+// slice the selected results from database
+$submission_records_subset = array_slice($submission_records, $this_page_first_result, $results_per_page);
+?>
+
+<!----------------------------------------------------------------------------------------->
+
 <!-- delete a submission record -->
 <?php
 if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
@@ -174,26 +201,38 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 						</thead>
 						<tbody>
 							<?php
-							for ($i = 0; $i < count($submission_records); $i++) {
+							for ($i = 0; $i < count($submission_records_subset); $i++) {
 								echo "<tr>";
-								echo "<td> " . $submission_records[$i]->getId() . "</td>";
-								echo "<td> " . $submission_records[$i]->getstuId() . "</td>";
-								echo "<td> " . $submission_records[$i]->getdatetime() . "</td>";
-								echo "<td> " . $submission_records[$i]->getMCQscore() . "</td>";
-								echo "<td> " . $submission_records[$i]->getUnitCode() . "</td>";
-								$filepath_array = explode("/", $submission_records[$i]->getfilepath());
+								echo "<td> " . $submission_records_subset[$i]->getId() . "</td>";
+								echo "<td> " . $submission_records_subset[$i]->getstuId() . "</td>";
+								echo "<td> " . $submission_records_subset[$i]->getdatetime() . "</td>";
+								echo "<td> " . $submission_records_subset[$i]->getMCQscore() . "</td>";
+								echo "<td> " . $submission_records_subset[$i]->getUnitCode() . "</td>";
+								$filepath_array = explode("/", $submission_records_subset[$i]->getfilepath());
 								$filename = end($filepath_array);
-								echo "<td> <a href='" . $submission_records[$i]->getfilepath() . "' target='_blank'>"
+								echo "<td> <a class='text-decoration-none' href='" . $submission_records_subset[$i]->getfilepath() . "' target='_blank'>"
 									. substr($filename, 0, -4) .
 									" <span class='bi bi-file-pdf red-color'></span></a> </td>";
 								echo "<td><a class='btn btn-secondary me-3' href='edit'>Edit</button></td>
-									<td><a class='btn btn-danger' href='./submissionManagement.php?delete=true&id=" . $submission_records[$i]->getId() . "&filepath=" . $submission_records[$i]->getfilepath() . "'>Delete</button></td>";
+									<td><a class='btn btn-danger' href='./submissionManagement.php?delete=true&id=" . $submission_records_subset[$i]->getId() . "&filepath=" . $submission_records_subset[$i]->getfilepath() . "'>Delete</button></td>";
 								echo "</tr>";
 							}
 							?>
 						</tbody>
 					</table>
 				</div>
+				<?php
+				// pagination page links --------------------------------------------------------------------------------------------------------------------
+				// display the links to the pages
+				for ($page = 1; $page <= $number_of_pages; $page++) {
+					if ($current_page == $page) {
+						echo "<a class='btn btn-dark' id='navtext-active' href='submissionManagement.php?page=" . $page . "'>" . $page . "</a> ";
+					} else {
+						echo "<a class='btn btn-dark' href='submissionManagement.php?page=" . $page . "'>" . $page . "</a> ";
+					}
+				}
+				// pagination page links --------------------------------------------------------------------------------------------------------------------
+				?>
 			</div>
 
 		</div>
