@@ -4,36 +4,37 @@
 <!-- Validated: =-->
 
 <?php
-    include "system_functions.php";
-	include "classes/database.php";
-	include "classes/user.php";
+include "system_functions.php";
+include "classes/database.php";
+include "classes/user.php";
 
-    $btnclicked = false;
-	$db = new Database();
-    if (!empty($_POST["login"])) {
-        $btnclicked = true;
-        [$login_msg, $loginOk, $email_previous, $errorfield, $profile, $role] =
-            ChkAdminEmailPasswordForLogin($_POST["email"], $_POST["password"], $db);
+$btnclicked = false;
+$db = new Database();
+if (!empty($_POST["login"])) {
+	$btnclicked = true;
+	[$login_msg, $loginOk, $email_previous, $errorfield, $profile, $role] =
+		ChkAdminEmailPasswordForLogin($_POST["email"], $_POST["password"], $db);
 
-        if ($loginOk) {
-            session_start();
-            // Set session variables
-			if($role == "Admin"){
-				$admin = new Admin($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
-				$_SESSION['admin'] = serialize($admin);
-			}else if($role == "Convenor"){
-				$convenor = new Convenor($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
-				$_SESSION['convenor'] = serialize($convenor);
-			}
-            header('Location: adminManagement.php');
-        }
-    } else {
-        $btnclicked = false;
-    }
+	if ($loginOk) {
+		session_start();
+		// Set session variables
+		if ($role == "Admin") {
+			$admin = new Admin($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
+			$_SESSION['admin'] = serialize($admin);
+		} else if ($role == "Convenor") {
+			$convenor = new Convenor($profile[0], $profile[1], $profile[2], $profile[3], $profile[4]);
+			$_SESSION['convenor'] = serialize($convenor);
+		}
+		header('Location: submissionManagement.php');
+	}
+} else {
+	$btnclicked = false;
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>Administrator Login</title>
 	<meta name="language" content="english" />
@@ -63,50 +64,47 @@
 		<form action="adminLogin.php" method="post">
 			<h2 class="text-center">Sign in</h2>
 			<h3 class="text-center">Admin</h3>
-			
+
 			<div class="form-group">
 				<div class="input-group">
 					<span style="padding-top: 6px" class="input-group-addon"><i class="fa fa-user"></i></span>
-					
-					<input type="text" style="margin-left: 10px;" class="form-control" name="email" placeholder="Name@swin.edu.au"
-						required="required" 
-						<?php
-							if ($btnclicked) {
-								if (!$loginOk) {
-									echo "value = '" . $email_previous . "'";
-								}
-							}
-						?>/>
+
+					<input type="text" style="margin-left: 10px;" class="form-control" name="email" placeholder="Name@swin.edu.au" required="required" <?php
+																																						if ($btnclicked) {
+																																							if (!$loginOk) {
+																																								echo "value = '" . $email_previous . "'";
+																																							}
+																																						}
+																																						?> />
 				</div>
 			</div>
 			<br>
 			<div class="form-group">
 				<div class="input-group">
 					<span style="padding-top: 6px" class="input-group-addon"><i class="fa fa-lock"></i></span>
-					<input type="password"  style="margin-left: 10px;" class="form-control" name="password" placeholder="Password"
-						required="required">
+					<input type="password" style="margin-left: 10px;" class="form-control" name="password" placeholder="Password" required="required">
 				</div>
 			</div>
 
 			<?php
-				if ($btnclicked) {
-					if ($errorfield == "email") {
-						echo "<div><p>" . $login_msg . "</p></div>";
-					}
+			if ($btnclicked) {
+				if ($errorfield == "email") {
+					echo "<div><p>" . $login_msg . "</p></div>";
 				}
-            ?>
+			}
+			?>
 			<?php
-				if ($btnclicked) {
-					if ($errorfield == "password") {
-						echo "<div><p>" . $login_msg . "</p></div>";
-					}
+			if ($btnclicked) {
+				if ($errorfield == "password") {
+					echo "<div><p>" . $login_msg . "</p></div>";
 				}
+			}
 			?>
 
 			<!--button-->
 			<br>
 			<div class="form-group">
-				<input type="submit" name="login" class="btn btn-primary login-btn btn-block" value="Sign In"/>
+				<input type="submit" name="login" class="btn btn-primary login-btn btn-block" value="Sign In" />
 				<input type="reset" name="resetall" class="btn btn-danger" value="Reset">
 			</div>
 </body>

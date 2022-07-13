@@ -9,8 +9,12 @@ include "classes/user.php";
 include "classes/submission.php";
 include "classes/submissionTable.php";
 include "classes/database.php";
+include "system_functions.php";
 
+// start the session
 session_start();
+
+// declare all the variables to be used in this
 $admin = null;
 $convenor = null;
 $db = new Database();
@@ -27,6 +31,20 @@ if (!isset($_SESSION['admin'])) {
 } else {
 	$admin = unserialize($_SESSION['admin']);
 	$submission_records = $submissionTable->GetAll();
+}
+?>
+
+<!-- delete a submission record -->
+<?php
+if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
+	// If the user file in existing directory already exist, delete it
+	if (file_exists($_GET['filepath'])) {
+		if (unlink($_GET['filepath'])) {
+			if ($submissionTable->Delete($_GET['id']) == 1) {
+				header("Location: submissionManagement.php");
+			}
+		}
+	}
 }
 ?>
 
@@ -60,7 +78,7 @@ if (!isset($_SESSION['admin'])) {
 				<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
 					<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
 						<li class="nav-item">
-							<a href="adminManagement.php" class="nav-link align-middle px-0" id="active">
+							<a href="submissionManagement.php" class="nav-link align-middle px-0" id="active">
 								<i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
 							</a>
@@ -166,10 +184,10 @@ if (!isset($_SESSION['admin'])) {
 								$filepath_array = explode("/", $submission_records[$i]->getfilepath());
 								$filename = end($filepath_array);
 								echo "<td> <a href='" . $submission_records[$i]->getfilepath() . "' target='_blank'>"
-									. $filename .
-									"</a> </td>";
-								echo "<td><button type='submit' class='btn btn-success me-3' name='edit'>Edit</button></td>
-									<td><button type='submit' class='btn btn-danger' name='delete'>Delete</button></td>";
+									. substr($filename, 0, -4) .
+									" <span class='bi bi-file-pdf red-color'></span></a> </td>";
+								echo "<td><a class='btn btn-secondary me-3' href='edit'>Edit</button></td>
+									<td><a class='btn btn-danger' href='./submissionManagement.php?delete=true&id=" . $submission_records[$i]->getId() . "&filepath=" . $submission_records[$i]->getfilepath() . "'>Delete</button></td>";
 								echo "</tr>";
 							}
 							?>
