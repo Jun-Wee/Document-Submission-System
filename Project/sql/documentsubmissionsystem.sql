@@ -50,11 +50,13 @@ INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`) VA
 --
 
 CREATE TABLE `analysis` (
+  `analysisId` int(10) NOT NULL,
   `subId` int(10) NOT NULL,
   `summary` varchar(200) NOT NULL,
   `keywords` varchar(200) NOT NULL,
   `matchedTitles` varchar(200) NOT NULL,
-  `sentimentAnalysis` varchar(20) NOT NULL
+  `sentimentScore` float DEFAULT NULL,
+  `sentimentMagnitude` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -222,7 +224,8 @@ ALTER TABLE `admin`
 -- Indexes for table `analysis`
 --
 ALTER TABLE `analysis`
-  ADD PRIMARY KEY (`subId`);
+  ADD PRIMARY KEY (`analysisId`),
+  ADD KEY `subId` (`subId`);
 
 --
 -- Indexes for table `convenors`
@@ -266,7 +269,7 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `analysis`
 --
 ALTER TABLE `analysis`
-  MODIFY `subId` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `analysisId` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `submission`
