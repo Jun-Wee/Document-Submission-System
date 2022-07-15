@@ -56,7 +56,10 @@ CREATE TABLE `analysis` (
   `keywords` varchar(200) NOT NULL,
   `matchedTitles` varchar(200) NOT NULL,
   `sentimentScore` float DEFAULT NULL,
-  `sentimentMagnitude` float DEFAULT NULL
+  `sentimentMagnitude` float DEFAULT NULL,
+  `entity` varchar(50) NOT NULL,
+  `salience` float NOT NULL,
+  `link` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
