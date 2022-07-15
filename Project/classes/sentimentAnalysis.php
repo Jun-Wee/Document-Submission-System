@@ -73,14 +73,6 @@ class SentimentAnalysis {
             }
         }
     }
-
-    //Function to call the analysis table interface to store new analysis records
-    function storeSentiment($db) {
-        //$storeSentiment = new AnalysisTable();
-        //$storeSentiment->add();
-
-    }
-    
 }
 
 ?>
