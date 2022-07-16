@@ -56,10 +56,7 @@ CREATE TABLE `analysis` (
   `keywords` varchar(200) NOT NULL,
   `matchedTitles` varchar(200) NOT NULL,
   `sentimentScore` float DEFAULT NULL,
-  `sentimentMagnitude` float DEFAULT NULL,
-  `entity` varchar(50) NOT NULL,
-  `salience` float NOT NULL,
-  `link` varchar(200) DEFAULT NULL
+  `sentimentMagnitude` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -127,6 +124,20 @@ INSERT INTO `enrolment` (`studentId`, `code`) VALUES
 ('103698851', 'INF20012'),
 ('103698851', 'INF30001'),
 ('103698851', 'TNE10005');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `entity`
+--
+
+CREATE TABLE `entity` (
+  `entityId` int(10) NOT NULL,
+  `subId` int(10) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `salience` double DEFAULT NULL,
+  `link` varchar(300) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -244,6 +255,13 @@ ALTER TABLE `enrolment`
   ADD KEY `code` (`code`);
 
 --
+-- Indexes for table `entity`
+--
+ALTER TABLE `entity`
+  ADD PRIMARY KEY (`entityId`),
+  ADD KEY `subId` (`subId`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
@@ -273,6 +291,12 @@ ALTER TABLE `unit`
 --
 ALTER TABLE `analysis`
   MODIFY `analysisId` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `entity`
+--
+ALTER TABLE `entity`
+  MODIFY `entityId` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `submission`
