@@ -10,7 +10,7 @@ class AnalysisTable {
     }
 
     function getAll() {                         
-        //Retrieve all analysis records of the submission from database using database object
+        //Retrieve all analysis records of the analysis from database using database object
         
         //Create connection to database
         $this->db->createConnection();
