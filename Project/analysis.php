@@ -4,6 +4,7 @@ include "classes/analysis.php";
 include "classes/database.php";
 include "classes/sentimentAnalysis.php";
 include "classes/analysisTable.php";
+include "classes/entityTable.php";
 
 use Google\Cloud\Language\LanguageClient;   
 
@@ -15,7 +16,7 @@ try {
     //Locate the submission ID
     //$id = $_POST["submit"];
 
-    //Sentiment Analysis---------------------------------------------------------------------------------------------------
+    //Sentiment Analysis-------------------------------------------------------------------------------------------------
 
     $extractedText = 'Google Cloud Platform, table, chair, bus, bottle, Elon Musk, Marvel and car is a powerful tool.';
     $annotationS = $language->analyzeSentiment($extractedText);
@@ -26,33 +27,40 @@ try {
     $magnitude = $annotationS->sentiment()['magnitude'];
 
     $sentimentAnalysis = new SentimentAnalysis();
-    $emotion = $sentimentAnalysis->evaluate($annotationS);                 //Call the sentiment evaluation function
+    $emotion = $sentimentAnalysis->evaluate($annotationS);          //Call the sentiment evaluation function
 
-    //Entity Analysis------------------------------------------------------------------------------------------------------
+    //Entity Analysis----------------------------------------------------------------------------------------------------
 
     $annotationE = $language->analyzeEntities($extractedText);
 
-    $myEntities = array_slice($annotationE->entities(), 0, 3);
+    $myEntities = array_slice($annotationE->entities(), 0, 3);      //Limit the entities to 3 based on salience score
 
     echo "<pre>"; print_r($myEntities); echo "</pre>";
 
-    foreach ($myEntities as $entity) {                         //Limit the freq
-        echo $entity['name'];
-        echo $entity['salience'];
+    foreach ($myEntities as $entity) {   
+        //echo $entity['name'];
+        //echo $entity['salience'];
 
-        if (isset($entity['metadata']['wikipedia_url'])) {
-            echo $entity['metadata']['wikipedia_url'];
+        //Call entity table interface to store results-------------------------------------------------------------
+        $db2 = new Database();
+        $entityTable = new EntityTable($db2);
+
+        if (isset($entity['metadata']['wikipedia_url'])) {          //Store wikipedia url if exists
+            //echo $entity['metadata']['wikipedia_url'];
+            $entityTable->add($entity['name'], $entity['salience'], $entity['metadata']['wikipedia_url']);
         }
+
+        else {                                                      //Store only name and salience otherwise
+            $entityTable->add($entity['name'], $entity['salience'], null);
+        }
+
     }
 
-    //Function to call analysis table interface to store results-----------------------------------------------------------
+    //Call analysis table interface to store results-----------------------------------------------------------
     $db = new Database();
     $analysisTable = new AnalysisTable($db);
 
-    $analysisTable->add($emotion, $score, $magnitude);  //Call the add function
-
-    //$sql = "INSERT INTO `analysis`(`entity`, `salience`, `link`)";        //cannot store more than 1 entity
-
+    $analysisTable->add($emotion, $score, $magnitude);              //Call the add function
 }
 
 catch(Exception $e) {
