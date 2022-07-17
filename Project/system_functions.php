@@ -181,6 +181,44 @@ function ChkEmailPasswordForLogin($emailInput, $passwordInput, $db)
     return [$login_msg, $LoginOK, $email, $error, $profile];
 }
 
+function checkNewUploadedFile($filename, $fileTmpName, $fileError, $fileSize, $studentName, $unitCode)
+{
+    $fileUploadErrorMsg = "";
+    $fileExtract = explode('.', $filename);  //split by dot
+    $fileActualExt = strtolower(end($fileExtract)); //take only the file extension
+    $fileDestination = "";
+
+    $allowedType = 'pdf';
+
+    //control submission properties
+    if ($fileActualExt == $allowedType) //check file type
+    {
+        if ($fileError === 0) //check file error
+        {
+            if ($fileSize < 3000000) //limit file size to 3gb / 3000000kb
+            {
+                $fileNewName = $studentName . "." . rand(1000, 2000) . "." . $filename;  //file format: studentname.random number.filename
+
+                $file_directory = 'StuSubmission/' . $unitCode . '/' . $studentName;
+                if (!file_exists($file_directory)) {
+                    mkdir($file_directory, 0777, true);
+                }
+
+                $fileDestination = $file_directory . '/' . $fileNewName;
+                move_uploaded_file($fileTmpName, $fileDestination);
+            } else {
+                $fileUploadErrorMsg = "Exceed file size limit!";
+            }
+        } else {
+            $fileUploadErrorMsg = "There was an error uploading your file, Please try again.";
+        }
+    } else {
+        $fileUploadErrorMsg = "Error file type uploaded!";
+    }
+
+    return [$fileUploadErrorMsg, $fileDestination];
+}
+
 function checkUploadedFile($file, $filename, $fileTmpName, $fileError, $fileSize, $student, $unitCode)
 {
     // $file = $_FILES['file']; //gets all the info from the uploaded file
