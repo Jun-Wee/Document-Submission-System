@@ -103,10 +103,63 @@ class SubmissionTable
 
     function Get($subId)
     {
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM submission WHERE `Id` = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("i", $subId);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $this->db->closeConnection();
+
+        return new Submission($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
     }
 
     function Edit($subId, $submission)
     {
+        // Edit submission record from database
+
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "UPDATE `submission` SET `datetime`=?,`score`=?,`unitCode`=?,`filepath`=? WHERE `Id`=?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("sissi", $datetime, $score, $unitCode, $filepath, $subId);
+
+        $subId = $subId;
+        $datetime = $submission->getdatetime();
+        $score = $submission->getMCQscore();
+        $unitCode =  $submission->getUnitCode();
+        $filepath = $submission->getfilepath();
+
+        //Execute prepared statement
+        $status = $prepared_stmt->execute();
+
+        $prepared_stmt->close();
+
+        $this->db->closeConnection();
+
+        echo $status;
+
+        return $status;
     }
 
     function Add($submission)
