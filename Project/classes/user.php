@@ -31,6 +31,41 @@ class User
 
 class Admin extends User
 {
+    function fetchAllUnits($db)
+    {
+        $allUnits = array();
+
+        // Create connection
+        $db->createConnection();
+
+        // retrieve all the units codes from the database based on convenor's ID
+        $sql = "SELECT * FROM unit";
+
+        $prepared_stmt = mysqli_prepare($db->getConnection(), $sql);
+
+        //Execute prepared statement
+        @mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  @mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        while ($row) {
+            // fetch the unit records from the server and then store them in an array
+            array_push($allUnits, array("code" => $row[0], "description" => $row[1], "cp" => $row[2], "type" => $row[3], "convenorID" => $row[4]));
+            $row = mysqli_fetch_row($queryResult);
+        }
+        // foreach ($allUnits as $unit) {
+        //     echo $unit['code'] . " " . $unit['description'] . " " . $unit['cp'] . " " . $unit['type'] . " " . $unit['convenorID'] . "\n";
+        // }
+        $db->closeConnection();
+        return $allUnits;
+    }
 }
 
 class Convenor extends User
@@ -70,9 +105,9 @@ class Convenor extends User
             array_push($this->teachingUnits, array("code" => $row[0], "description" => $row[1], "cp" => $row[2], "type" => $row[3], "convenorID" => $row[4]));
             $row = mysqli_fetch_row($queryResult);
         }
-        foreach ($this->teachingUnits as $unit) {
-            echo $unit['code'] . " " . $unit['description'] . " " . $unit['cp'] . " " . $unit['type'] . " " . $unit['convenorID'] . "\n";
-        }
+        // foreach ($this->teachingUnits as $unit) {
+        //     echo $unit['code'] . " " . $unit['description'] . " " . $unit['cp'] . " " . $unit['type'] . " " . $unit['convenorID'] . "\n";
+        // }
         $db->closeConnection();
         return true;
     }
