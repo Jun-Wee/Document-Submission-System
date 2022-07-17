@@ -94,7 +94,7 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 
 <body>
 	<div class="jumbotron text-center text-light bg-dark">
-		<h2 class="mb-0 py-2">Document Submission System (Admin)</h2>
+		<h2 class="mb-0 py-2">Document Submission System</h2>
 	</div>
 
 	<!--Content body-->
@@ -193,7 +193,7 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 							<tr>
 								<th>Id</th>
 								<th>Student Id</th>
-								<th>Submission Datetime</th>
+								<th>Date and Time</th>
 								<th>MCQ Score</th>
 								<th>Unit Code</th>
 								<th>Document</th>
@@ -213,7 +213,7 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 								echo "<td> <a class='text-decoration-none' href='" . $submission_records_subset[$i]->getfilepath() . "' target='_blank'>"
 									. substr($filename, 0, -4) .
 									" <span class='bi bi-file-pdf red-color'></span></a> </td>";
-								echo "<td><a class='btn btn-secondary me-3' href='edit'>Edit</button></td>
+								echo "<td><a class='btn btn-secondary me-3' href='./submissionEdit.php?subId=" . $submission_records_subset[$i]->getId() . "'>Edit</button></td>
 									<td><a class='btn btn-danger' href='./submissionManagement.php?delete=true&id=" . $submission_records_subset[$i]->getId() . "&filepath=" . $submission_records_subset[$i]->getfilepath() . "'>Delete</button></td>";
 								echo "</tr>";
 							}
