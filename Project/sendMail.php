@@ -10,10 +10,11 @@ require 'src/library/phpmailer/vendor/autoload.php';
 
 //include
 include "classes/database.php";
+include "classes/MailTable.php";
 
 $db = new Database();
-$db->createConnection();
-$sql = "";
+$mailtable = new MailTable($db);
+$mailtable->getStudentInfo();
 
 //Create an instance; passing `true` enables exceptions
 $mail = new PHPMailer(true);
@@ -37,62 +38,24 @@ try {
     $mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Daily Summary Report';
     
-    
     $mail->Body= 
-    'Hi<?php $Convenor->getName()?>,
+    'Hi,
     <br>
-
     This is an auto generated response email. Please do not reply to this email as it will not be received. 
     <br>
-    
-    <strong>Below is the daily summary of students MCQ results : </strong>
+    Feel free to visit document submission <a href="https://www.youtube.com">System Admin Protal</a> for more detail information. 
+    <br>
+    <br>
+    Below is the daily summary of students MCQ results :
     <br>
     COS10009 Introduction to Programming
     <br>
-    <table>
-        <tr>
-            <td>1.</td>
-            <td>101231636</td>
-            <td>Jun Wee Tan</td>
-            <td>document.pdf</td>
-            <td>5/5</td>
-            <td>12/7/2022</td>
-        </tr>
-        <tr>
-            <td>2.</td>
-            <td>101231636</td>
-            <td>Jun Wee Tan</td>
-            <td>plagirise.pdf</td>
-            <td>0/5</td>
-            <td>12/7/2022</td>
-        </tr>
-    </table>
+    '. $mailtable->printInfomation() .'
 
     <br>
     COS20001 User-Centred Design
     <br>
-    <table>
-        <tr>
-            <td>1.</td>
-            <td>101231636</td>
-            <td>Jun Wee Tan</td>
-            <td>document.pdf</td>
-            <td>5/5</td>
-            <td>12/7/2022</td>
-        </tr>
-        <tr>
-            <td>2.</td>
-            <td>101231636</td>
-            <td>Jun Wee Tan</td>
-            <td>plagiarise.pdf</td>
-            <td>0/5</td>
-            <td>12/7/2022</td>
-        </tr>
-    </table>
-
-    <br>
-    Feel free to visit document submission <a href="https://www.youtube.com">System Admin Protal</a> for more detail information. 
-    <br>
+    '. $mailtable->printInfomation() .'
     <br>
 
     Cheers,
