@@ -1,46 +1,26 @@
 <?php
-include "classes/MailTable.php";
 include "classes/database.php";
+include "classes/SubscribeManager.php";
+include "classes/MailTable.php";
 
 $db = new Database();
 $mailtable = new MailTable($db);
-$maillist = $mailtable->getStudentInfo();
+$subscriberEmail  = $mailtable->getSubscribeConvenor();  //retrieve convenor email
 
+echo "Subscriber List";
 echo "<pre>";
-print_r($maillist);
-echo "<pre>";
+echo print_r($subscriberEmail);
+echo "</pre>";
 
-//formal
-echo "<table>";
-for ($i=0; $i < count($maillist); $i++) {
-    echo "<tr>";
-    echo "<td> " . $maillist[$i]['UserId']. "</td>";
-    echo "<td> " . $maillist[$i]['Name']. "</td>";
-    echo "<td> " . $maillist[$i]['Email']. "</td>";
-    echo "</tr>";
+for ($i=0; $i < count($subscriberEmail); $i++) {  
+    $mailtable->getConvenorUnit($subscriberEmail[$i]['Email']);
 }
-echo "</table>";
 
 
-//test in MailTable.php
-// $count = 0;
-// while ($row = mysqli_fetch_row($queryResult)) {
-//     $this->mailList[] = $row[1]; 
-//     $count += 1;
-// }
-// $this->db->closeConnection();
+// echo "<pre>";
+// echo print_r($mailList);
+// echo "</pre>";
 
-// test
-// echo "<table>";
-// for ($i=0; $i < count($maillist); $i++) { 
-//     echo "<tr>";
-//     echo "<td> " . $maillist[$i][0] . "</td>";
-//     echo "<td> " . $maillist[$i][1] . "</td>";
-//     echo "<td> " . $maillist[$i][2] . "</td>";
-//     echo "</tr>";
-    
-// }
-// echo "</table>";
 
 
 ?>

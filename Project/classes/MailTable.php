@@ -1,31 +1,85 @@
+<!-- Description: Send Mail function -->
+<!-- Author: Jun Wee Tan -->
+<!-- Date: 12th July 2022 -->
+<!-- Validated: =-->
 <?php
-
 class MailTable
 {
     private $db;
     private $mailList;
+    private $subscribeconvenor;
+    private $subscribeconvenorEmail;
+    private $unitList;
 
     //constructor
     function __construct($db)
     {
         $this->db = $db;
         $this->mailList = array();
+        $this->subscribeconvenor = array();
+        $this->subscribeconvenorEmail = array();
+        $this->unitList = array();
     }
 
-    //function for sendMail.php
-    function getStudentInfo()
+    //function to get subscribe convenor
+    function getSubscribeConvenor(){
+        $this->db->createConnection();
+        $sql = "SELECT Name, Email FROM convenors WHERE isSubscribe = 1";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        mysqli_stmt_execute($prepared_stmt);
+        $queryResult = mysqli_stmt_get_result($prepared_stmt)
+        or die("<p>Unable to select from database table</p>");
+
+        mysqli_stmt_close($prepared_stmt);
+
+        while ($row = mysqli_fetch_row($queryResult)) {
+            $this->subscribeconvenor[] = [  //assign every row of retrieve result to subscribeconvenor[] array
+                'Name'=>$row[0],
+                'Email'=>$row[1]
+            ];
+        }
+        $this->db->closeConnection();
+        return $this->subscribeconvenor;
+    }
+
+    
+
+    //function for get student info to show in email content and save in array
+    function getStudentInfo($convenoremail,$unitcode)
     {
         //create connection   
         $this->db->createConnection();
 
         $sql=
-        "SELECT S.userid, S.name, B.unitCode, B.id, B.score
+        "SELECT DISTINCT S.userid, S.name, B.unitCode, B.Id, B.score
         from STUDENTS S
+        
         INNER JOIN SUBMISSION B
         ON S.UserId = B.stuId
-        WHERE B.isSendMail = 0";
+        
+        INNER JOIN ENROLMENT E
+        ON E.studentId = S.UserId
+        
+        INNER JOIN UNIT U
+        ON U.code = E.code
+        
+        INNER JOIN CONVENORS C
+        ON C.UserId = U.convenorID
+        
+        WHERE B.isSendMail = 0
+        AND C.Email = ?
+        AND B.unitCode = ?
+        
+        ORDER BY B.unitCode";
 
         $prepared_stmt = mysqli_prepare($this->db->getConnection(),$sql);
+
+        //Bind input variables to prepared statement
+        $convenorEmail = $convenoremail;
+        $unitCode = $unitcode;
+        $prepared_stmt->bind_param('ss', $convenorEmail, $unitCode);
 
         mysqli_stmt_execute($prepared_stmt);
 
@@ -50,10 +104,11 @@ class MailTable
             ];
         }
         $this->db->closeConnection();
-        return $this->mailList; //return the mailList array
+        //return $this->mailList;
     }
 
-    function printInfomation(){
+    //function for printing result array to email body
+    function printInfomation(){  
         $tableMsg = "<table>";
         $tableMsg .= 
         "<tr>
@@ -77,15 +132,74 @@ class MailTable
         return $tableMsg;
     }
 
-    function getConvenorInfo($Convenoremail){
+    function getConvenorUnit($convenoremail){
         $this->db->createConnection();
-        $sql = "SELECT Name FROM convenors WHERE Email = ?";
+        $sql = "SELECT C.Name, C.Email, U.code 
+        FROM CONVENORS C 
+        INNER JOIN UNIT U
+        ON C.UserId = U.convenorID
+        WHERE isSubscribe = 1
+        AND C.Email = ?
+        ORDER BY U.code";
+
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
-        $prepared_stmt->bind_param('s',$email);
-        $email = $Convenoremail;
+        
+        $convenorEmail = $convenoremail;
+        $prepared_stmt->bind_param('s', $convenorEmail);
+
         mysqli_stmt_execute($prepared_stmt);
+        $queryResult = mysqli_stmt_get_result($prepared_stmt)
+        or die("<p>Unable to select from database table</p>");
+
         mysqli_stmt_close($prepared_stmt);
-        $db->closeConnection();
+
+        while ($row = mysqli_fetch_row($queryResult)) {
+            $this->unitList[] = [  
+                'Name'=>$row[0],
+                'ConvenorEmail'=>$row[1],
+                'UnitCode'=>$row[2]
+            ];
+        }
+        $this->db->closeConnection();
+        //return $this->unitList;
+
+        echo "<pre>";
+        echo print_r($this->unitList);
+        echo "</pre>";
+
+        for ($i=0; $i < count($this->unitList); $i++) { 
+            $this->getStudentInfo($this->unitList[$i]['ConvenorEmail'],$this->unitList[$i]['UnitCode']);
+            $this->printInfomation();
+            echo "success";
+            echo "<br>";
+        }
+    }
+
+    ///abondon
+    function getAllUnit(){
+        $this->db->createConnection();
+        $sql = "SELECT DISTINCT code, convenorID FROM UNIT";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        mysqli_stmt_execute($prepared_stmt);
+        $queryResult = mysqli_stmt_get_result($prepared_stmt)
+        or die("<p>Unable to select from database table</p>");
+
+        mysqli_stmt_close($prepared_stmt);
+
+        while ($row = mysqli_fetch_row($queryResult)) {
+            $this->unitList[] = [  
+                'UnitCode'=>$row[0],
+                'ConvenorId'=>$row[1],
+            ];
+        }
+        $this->db->closeConnection();
+        return $this->unitList;
+        //invoke the print function
+        // foreach ($unitList as $value) {
+        //     $value->printInfomation($value);
+        // }
     }
 
     function updateMailInfo($mailernumber, $submissionid){
