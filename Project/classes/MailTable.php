@@ -10,6 +10,7 @@ class MailTable
     private $subscribeconvenor;
     private $subscribeconvenorEmail;
     private $unitList;
+    private $all_table_with_unicode = "";
 
     //constructor
     function __construct($db)
@@ -34,11 +35,14 @@ class MailTable
 
         mysqli_stmt_close($prepared_stmt);
 
+        $i=0;
         while ($row = mysqli_fetch_row($queryResult)) {
-            $this->subscribeconvenor[] = [  //assign every row of retrieve result to subscribeconvenor[] array
+            $this->subscribeconvenor[$i] = 
+            [  
                 'Name'=>$row[0],
                 'Email'=>$row[1]
             ];
+            $i++;
         }
         $this->db->closeConnection();
         return $this->subscribeconvenor;
@@ -47,7 +51,7 @@ class MailTable
     
 
     //function for get student info to show in email content and save in array
-    function getStudentInfo($convenoremail,$unitcode)
+    function getStudentInfo($convenoremail, $unitcode)
     {
         //create connection   
         $this->db->createConnection();
@@ -61,9 +65,9 @@ class MailTable
         
         INNER JOIN ENROLMENT E
         ON E.studentId = S.UserId
-        
+
         INNER JOIN UNIT U
-        ON U.code = E.code
+        ON U.code = B.unitCode
         
         INNER JOIN CONVENORS C
         ON C.UserId = U.convenorID
@@ -94,15 +98,20 @@ class MailTable
         //     [Name] => Jun Wee Tan
         //     [Email] => 101231636@student.swin.edu.au
         // )...
+        $i = 0;
         while ($row = mysqli_fetch_row($queryResult)) {
-            $this->mailList[] = [  //assign every row of retrieve result to mailList[] array
+            print_r($row);
+            
+            $this->mailList[$i] = [  //assign every row of retrieve result to mailList[] array
                 'UserId'=>$row[0],
                 'Name'=>$row[1],
                 'unitCode'=> $row[2],
                 'SubmissionId'=>$row[3],
                 'score'=>$row[4]
             ];
+            $i++;
         }
+        print_r($this->mailList);
         $this->db->closeConnection();
         //return $this->mailList;
     }
@@ -138,7 +147,7 @@ class MailTable
         FROM CONVENORS C 
         INNER JOIN UNIT U
         ON C.UserId = U.convenorID
-        WHERE isSubscribe = 1
+        WHERE C.isSubscribe = 1
         AND C.Email = ?
         ORDER BY U.code";
 
@@ -152,13 +161,14 @@ class MailTable
         or die("<p>Unable to select from database table</p>");
 
         mysqli_stmt_close($prepared_stmt);
-
+        $i = 0;
         while ($row = mysqli_fetch_row($queryResult)) {
-            $this->unitList[] = [  
+            $this->unitList[$i] = [  
                 'Name'=>$row[0],
                 'ConvenorEmail'=>$row[1],
                 'UnitCode'=>$row[2]
             ];
+            $i++;
         }
         $this->db->closeConnection();
         //return $this->unitList;
@@ -166,13 +176,27 @@ class MailTable
         echo "<pre>";
         echo print_r($this->unitList);
         echo "</pre>";
-
-        for ($i=0; $i < count($this->unitList); $i++) { 
-            $this->getStudentInfo($this->unitList[$i]['ConvenorEmail'],$this->unitList[$i]['UnitCode']);
-            $this->printInfomation();
-            echo "success";
-            echo "<br>";
+        for ($i=0; $i < count($this->unitList); $i++) { //4
+            $this->all_table_with_unicode .= "<h3>".$this->unitList[$i]['UnitCode']."</h3>";
+            $this->getStudentInfo($convenoremail, $this->unitList[$i]['UnitCode']);
+            $this->all_table_with_unicode .= $this->printInfomation();
+            // echo "success";
+            // echo "<br>";
         }
+        $this->unsetFullList();
+        //unset($this->unitList); //reset the unitList after the use of one convenor
+    }
+
+    function unsetFullList(){
+        $this->unitList = array();
+    }
+
+    function getFullTable() {
+        return $this->all_table_with_unicode;
+    }
+    
+    function unsetFullTable() {
+        $this->all_table_with_unicode = "";
     }
 
     ///abondon
@@ -189,7 +213,7 @@ class MailTable
         mysqli_stmt_close($prepared_stmt);
 
         while ($row = mysqli_fetch_row($queryResult)) {
-            $this->unitList[] = [  
+            $this->unitList = [  
                 'UnitCode'=>$row[0],
                 'ConvenorId'=>$row[1],
             ];

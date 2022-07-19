@@ -21,10 +21,20 @@ $db = new Database();
 $mailtable = new MailTable($db);
 $subscriberEmail  = $mailtable->getSubscribeConvenor();  //retrieve convenor email
 
+$uni_by_convenor = array();
+for ($i=0; $i < count($subscriberEmail); $i++) {    //2
+    $mailtable->getConvenorUnit($subscriberEmail[$i]['Email']);
+    $uni_by_convenor[$i] = [
+        "name" => $subscriberEmail[$i]['Name'],
+        "email" => $subscriberEmail[$i]['Email'],
+        "table" => $mailtable->getFullTable()
+    ];
+    $mailtable->unsetFullTable();
+}
 
 $mail = new PHPMailer(true);
 
-for ($i=0; $i < count($subscriberEmail); $i++) {  //2 ppl , 2loop
+for ($i=0; $i < count($uni_by_convenor); $i++) {  //2 ppl , 2loop
     try {
         //Server settings
         $mail->SMTPDebug = 0;                                       //Enable verbose debug output
@@ -38,7 +48,7 @@ for ($i=0; $i < count($subscriberEmail); $i++) {  //2 ppl , 2loop
 
         //Recipients
         $mail->setFrom('documentsubmissionsystem@hotmail.com', '(Noreply) Daily Summary Report');
-        $mail->addBCC($subscriberEmail[$i]['Email'], $subscriberEmail[$i]['Name']);     //Add a recipient
+        $mail->addBCC("101231636@student.swin.edu.au", $uni_by_convenor[$i]["name"]);     //Add a recipient
 
         
         //Content
@@ -46,7 +56,7 @@ for ($i=0; $i < count($subscriberEmail); $i++) {  //2 ppl , 2loop
         $mail->Subject = 'Daily Summary Report';
         
         $mail->Body= 
-        'Dear Sir/Madam '. $subscriberEmail[$i]['Name'].',
+        'Dear Sir/Madam '. $uni_by_convenor[$i]["name"].',
         <br>
         This is an auto generated response email. Please do not reply to this email as it will not be received. 
         <br>
@@ -55,7 +65,7 @@ for ($i=0; $i < count($subscriberEmail); $i++) {  //2 ppl , 2loop
         <br>
         Below is the daily summary of students MCQ results :
         <br>
-        '.$mailtable->getConvenorUnit($subscriberEmail[$i]['Email']).'
+        '.$uni_by_convenor[$i]["table"].'
         
                
         Cheers,

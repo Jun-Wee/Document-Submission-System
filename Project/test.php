@@ -12,9 +12,20 @@ echo "<pre>";
 echo print_r($subscriberEmail);
 echo "</pre>";
 
-for ($i=0; $i < count($subscriberEmail); $i++) {  
+$student_result_by_unit = array();
+
+for ($i=0; $i < count($subscriberEmail); $i++) {    //2
     $mailtable->getConvenorUnit($subscriberEmail[$i]['Email']);
+
+    $student_result_by_unit[$i] = [  //each convenor's unit table that content student results
+        "name" => $subscriberEmail[$i]['Name'],
+        "email" => $subscriberEmail[$i]['Email'],
+        "table" => $mailtable->getFullTable()
+    ];
+    $mailtable->unsetFullTable();
 }
+print_r($student_result_by_unit);
+
 
 
 // echo "<pre>";
