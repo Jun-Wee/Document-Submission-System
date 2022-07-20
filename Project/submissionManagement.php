@@ -1,13 +1,14 @@
-<!-- Description: Admin Login Page in PHP -->
+<!-- Description: Submission Management Page in PHP -->
 <!-- Author: Adrian Sim Huan Tze -->
-<!-- Contributor: Jun Wee Tan -->
-<!-- Date: 26th May 2022 -->
+<!-- Contributor: Adrian Sim Huan Tze -->
+<!-- Date: 17th July 2022 -->
 <!-- Validated: =-->
 
 <?php
 include "classes/user.php";
 include "classes/submission.php";
 include "classes/submissionTable.php";
+include "classes/studentTable.php";
 include "classes/database.php";
 include "system_functions.php";
 
@@ -18,6 +19,7 @@ session_start();
 $admin = null;
 $convenor = null;
 $db = new Database();
+$studentTable = new StudentTable($db);
 $submissionTable = new SubmissionTable($db);
 
 if (!isset($_SESSION['admin'])) {
@@ -26,10 +28,12 @@ if (!isset($_SESSION['admin'])) {
 	} else {
 		$convenor = unserialize($_SESSION['convenor']);
 		$convenor->fetchTeachingUnits($db);
+		$student_records = $studentTable->GetAll($convenor->getTeachingUnits());
 		$submission_records = $submissionTable->GetAll($convenor->getTeachingUnits());
 	}
 } else {
 	$admin = unserialize($_SESSION['admin']);
+	$student_records = $studentTable->GetAll();
 	$submission_records = $submissionTable->GetAll();
 }
 ?>
@@ -111,7 +115,7 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="#" class="nav-link align-middle px-0">
+							<a href="studentManagement.php" class="nav-link align-middle px-0">
 								<i class="fs-2 bi bi-people-fill" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">Student</span>
 							</a>
@@ -162,12 +166,12 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 				<!--search/ filter bar-->
 				<div class="row">
 					<div class="col">
-						<h5>Total no of submission:</h5>
+						<h5>Total no of submissions:</h5>
 						<h2 class="text-left" name="#"><?php echo count($submission_records) ?></h2>
 					</div>
 					<div class="col">
-						<h5>Total no of student:</h5>
-						<h2 class="text-left" name="#">0</h2>
+						<h5>Total no of students:</h5>
+						<h2 class="text-left" name="#"><?php echo count($student_records) ?></h2>
 					</div>
 					<div class="col input-group mb-5 ">
 						<div class="row">

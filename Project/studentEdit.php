@@ -6,8 +6,8 @@
 
 <?php
 include "classes/user.php";
-include "classes/studentTable.php";
 include "classes/submission.php";
+include "classes/studentTable.php";
 include "classes/submissionTable.php";
 include "classes/database.php";
 include "system_functions.php";
@@ -39,59 +39,59 @@ if (!isset($_SESSION['admin'])) {
     $allUnits = $admin->fetchAllUnits($db);
 }
 
-if (isset($_GET['subId'])) {
-    if (!empty($_GET['subId'])) {
-        $submissionId = $_GET['subId'];
-        $existing_submission = $submissionTable->Get($submissionId);
+if (isset($_GET['stuId'])) {
+    if (!empty($_GET['stuId'])) {
+        $studentId = $_GET['stuId'];
+        $existing_student = $studentTable->Get($studentId);
     }
 }
 ?>
 
-<!-- Cancel Submission Edit -->
+<!-- Cancel Student Edit -->
 <?php
 if (isset($_GET['cancel'])) {
     if (!empty($_GET['cancel'])) {
-        header("Location: submissionManagement.php");
+        header("Location: studentManagement.php");
     }
 }
 ?>
 
-<!-- Edit Submission -->
+<!-- Edit Student -->
 <?php
-if (isset($_POST['submit'])) {
-    $submissionId = $_POST['subId'];
-    $existing_submission = $submissionTable->Get($submissionId);
-    $submission_unit = $_POST['unitOption'];
-    $code = explode(" ", $submission_unit);
-    // update the details of existing submission with new info
-    $existing_submission->setUnitCode($code[0]);
-    $existing_submission->setMCQscore($_POST['mcqScore']);
-    $existing_submission->setdatetime($_POST['submissionDatetime']);
+// if (isset($_POST['submit'])) {
+//     $submissionId = $_POST['subId'];
+//     $existing_student = $submissionTable->Get($submissionId);
+//     $submission_unit = $_POST['unitOption'];
+//     $code = explode(" ", $submission_unit);
+//     // update the details of existing submission with new info
+//     $existing_student->setUnitCode($code[0]);
+//     $existing_student->setMCQscore($_POST['mcqScore']);
+//     $existing_student->setdatetime($_POST['submissionDatetime']);
 
-    $file = $_FILES['newfile']; //gets all the info from the uploaded file
-    if (isset($file)) {
-        if (!empty($file['name'])) {
-            $filepath_arr = explode("/", $existing_submission->getfilepath());
-            $filename = end($filepath_arr);
-            $filename_arr = explode(".", $filename);
-            $studentName = $filename_arr[0];
-            echo $studentName;
-            [$fileUploadErrorMsg, $path] = checkNewUploadedFile($file['name'], $file['tmp_name'], $file['error'], $file['size'], $studentName, $code[0]);
-            if ($fileUploadErrorMsg == "") {
-                // delete the existing file after successfully adding the new file as a replacement
-                if (file_exists($existing_submission->getfilepath())) {
-                    if (unlink($existing_submission->getfilepath())) {
-                        $existing_submission->setfilepath($path);
-                    }
-                }
-            }
-        }
-    }
-    // Delegate the edit task to SubmissionTable class
-    if ($submissionTable->Edit($submissionId, $existing_submission) == 1) {
-        header("Location: submissionManagement.php");
-    }
-}
+//     $file = $_FILES['newfile']; //gets all the info from the uploaded file
+//     if (isset($file)) {
+//         if (!empty($file['name'])) {
+//             $filepath_arr = explode("/", $existing_student->getfilepath());
+//             $filename = end($filepath_arr);
+//             $filename_arr = explode(".", $filename);
+//             $studentName = $filename_arr[0];
+//             echo $studentName;
+//             [$fileUploadErrorMsg, $path] = checkNewUploadedFile($file['name'], $file['tmp_name'], $file['error'], $file['size'], $studentName, $code[0]);
+//             if ($fileUploadErrorMsg == "") {
+//                 // delete the existing file after successfully adding the new file as a replacement
+//                 if (file_exists($existing_student->getfilepath())) {
+//                     if (unlink($existing_student->getfilepath())) {
+//                         $existing_student->setfilepath($path);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     // Delegate the edit task to SubmissionTable class
+//     if ($submissionTable->Edit($submissionId, $existing_student) == 1) {
+//         header("Location: submissionManagement.php");
+//     }
+// }
 ?>
 
 <!DOCTYPE html>
@@ -125,14 +125,14 @@ if (isset($_POST['submit'])) {
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
                         <li class="nav-item">
                             <a href="submissionManagement.php" class="nav-link align-middle px-0" id="active">
-                                <i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i>
-                                <span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
+                                <i class="fs-2 bi bi-file-earmark-pdf" id="navicon"></i>
+                                <span class="ms-1 d-none d-sm-inline" id="navtext">Submission</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="studentManagement.php" class="nav-link align-middle px-0">
-                                <i class="fs-2 bi bi-people-fill" id="navicon"></i>
-                                <span class="ms-1 d-none d-sm-inline" id="navtext">Student</span>
+                                <i class="fs-2 bi bi-people-fill" id="navicon-active"></i>
+                                <span class="ms-1 d-none d-sm-inline" id="navtext-active">Student</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -205,76 +205,42 @@ if (isset($_POST['submit'])) {
                     </div>
                 </div>
 
-                <form action="submissionEdit.php" method="POST" enctype="multipart/form-data">
-                    <legend class=" col-form-label-lg col-sm-2"><strong>Submission <?php echo $existing_submission->getId() ?></strong></legend>
+                <form action="studentEdit.php" method="POST" enctype="multipart/form-data">
+                    <legend class=" col-form-label-lg col-sm-2"><strong>Student <?php echo $existing_student->getId() ?></strong></legend>
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="Id" class="col-sm-2 col-form-label col-form-label-md"><em>Id</em></label>
-                            <input name="subId" readonly type="text" class="form-control form-control-md" id="Id" aria-describedby="IdHelp" value="<?php echo $existing_submission->getId() ?>">
-                            <small id="IdHelp" class="form-text text-muted">Submission Id is unchangeable.</small>
+                            <input name="stuId" readonly type="text" class="form-control form-control-md" id="Id" aria-describedby="IdHelp" value="<?php echo $existing_student->getId() ?>">
+                            <small id="IdHelp" class="form-text text-muted">Student Id is unchangeable.</small>
                         </div>
 
                         <div class="form-group col-md-4">
-                            <label for="studentId" class="col-sm-4 col-form-label col-form-label-md"><em>Student Id</em></label>
-                            <input readonly type="text" class="form-control form-control-md" id="studentId" aria-describedby="IdHelp" value="<?php echo $existing_submission->getstuId() ?>">
-                            <small id="IdHelp" class="form-text text-muted">Student Id is unchangeable.</small>
+                            <label for="Name" class="col-sm-2 col-form-label col-form-label-md"><em>Name</em></label>
+                            <input name="stuName" type="text" class="form-control form-control-md" id="Name" value="<?php echo $existing_student->getName() ?>">
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-4">
-                            <label for="unitSubmission" class="col-sm-6 col-form-label col-form-label-md"><em>Unit Code</em></label>
-                            <select name="unitOption" id="unitSubmission" class="col-sm-2 form-control form-control-md">
+                            <label for="gender" class="col-sm-6 col-form-label col-form-label-md"><em>Gender</em></label>
+                            <select name="gender" id="gender" class="col-sm-2 form-control form-control-md">
                                 <?php
-                                if ($admin == null) {
-                                    foreach ($convenor->getTeachingUnits() as $unit) {
-                                        if ($existing_submission->getUnitCode() == $unit['code']) {
-                                            echo "<option selected>" . $unit['code'] . " " . $unit['description'] . "</option>";
-                                        } else {
-                                            echo "<option>" . $unit['code'] . " " . $unit['description'] . " " . "</option>";
-                                        }
-                                    }
+                                if ($existing_student->getGender() == "Male") {
+                                    echo "<option selected>Male</option>";
+                                    echo "<option>Female</option>";
                                 } else {
-                                    foreach ($allUnits as $unit) {
-                                        if ($existing_submission->getUnitCode() == $unit['code']) {
-                                            echo "<option selected>" . $unit['code'] . " " . $unit['description'] . "</option>";
-                                        } else {
-                                            echo "<option>" . $unit['code'] . " " . $unit['description'] . " " . "</option>";
-                                        }
-                                    }
+                                    echo "<option>Male</option>";
+                                    echo "<option selected>Female</option>";
                                 }
                                 ?>
                             </select>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="mcqScore" class="col-sm-6 col-form-label col-form-label-md"><em>MCQ Score</em></label>
-                            <input name="mcqScore" type="number" min="0" max="5" class="col-sm-2 form-control form-control-md" id="mcqScore" aria-describedby="IdHelp" value="<?php echo $existing_submission->getMCQscore() ?>">
-                            <small id="IdHelp" class="form-text text-muted">For each submission, the maximum score is 5.</small>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-group col-md-6">
-                            <label for="subtime" class="col-sm-6 col-form-label col-form-label-md"><em>Submission (Date and Time)</em></label>
-                            <input name="submissionDatetime" type="datetime-local" step="any" class="form-control form-control-md" id="subtime" name="subtime" value="<?php echo $existing_submission->getdatetime() ?>">
-                        </div>
+                            <label for="unitSubmission" class="col-sm-6 col-form-label col-form-label-md"><em>Enrolled Units</em></label>
+                            <select name="unitOption" id="unitSubmission" class="col-sm-2 form-control form-control-md">
 
-                        <div class="form-group col-md-10">
-                            <label for="formFile" class="col-sm-2 col-form-label col-form-label-md"><em>Submit new Document</em></label>
-                            <?php
-                            $filepath_array = explode("/", $existing_submission->getfilepath());
-                            $filename = end($filepath_array);
-                            ?>
-                            <a class='text-decoration-none col-form-label-md' href="<?php echo $existing_submission->getfilepath() ?>" target='_blank'><?php echo $filename ?><span class='bi bi-file-pdf red-color'></span></a>
+                                ?>
+                            </select>
                         </div>
-                        <div class="form-group col-md-8">
-                            <input class="form-control form-control-md" type="file" name="newfile">
-                        </div>
-                        <br>
-
-                        <?php
-                        if ($fileUploadErrorMsg != "" && isset($_POST['submit'])) {
-                            echo "<div><p>" . $fileUploadErrorMsg . "</p></div>";
-                        }
-                        ?>
                     </div>
                     <br>
                     <a class='btn btn-success me-3' href='submissionEdit.php?cancel=true'>Cancel</a>
