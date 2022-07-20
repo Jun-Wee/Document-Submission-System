@@ -157,8 +157,6 @@ class SubmissionTable
 
         $this->db->closeConnection();
 
-        echo $status;
-
         return $status;
     }
 

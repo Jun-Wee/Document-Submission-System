@@ -3,11 +3,11 @@
 class User
 {
     // Properties
-    public $name;
-    public $email;
-    public $password;
-    public $id;
-    public $gender;
+    protected $name;
+    protected $email;
+    protected $password;
+    protected $id;
+    protected $gender;
 
     function __construct($id, $name, $email, $password, $gender)
     {
@@ -23,9 +23,49 @@ class User
         return $this->id;
     }
 
+    function setId($id)
+    {
+        $this->$id = $id;
+    }
+
     function getName()
     {
         return $this->name;
+    }
+
+    function setName($name)
+    {
+        $this->$name = $name;
+    }
+
+    function getEmail()
+    {
+        return $this->email;
+    }
+
+    function setEmail($email)
+    {
+        $this->$email = $email;
+    }
+
+    function getPassword()
+    {
+        return $this->password;
+    }
+
+    function setPassword($password)
+    {
+        $this->$password = $password;
+    }
+
+    function getGender()
+    {
+        return $this->gender;
+    }
+
+    function setGender($gender)
+    {
+        $this->$gender = $gender;
     }
 }
 
