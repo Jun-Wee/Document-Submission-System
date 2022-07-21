@@ -15,16 +15,78 @@ class AnalysisTable {
         //Create connection to database
         $this->db->createConnection();
 
-        
+        $sql = "SELECT * FROM analysis";
 
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        //$prepared_stmt->bind_param("s", $analysis);           //Not needed if no value
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+
+            // fetch the record from the server and then store them in an object
+            $this->analysis[$item_count] = new Analysis($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
+            $row = mysqli_fetch_row($queryResult);
+            $item_count += 1;
+        }
+        
         //Close connection to database
         $this->db->closeConnection();
 
         return $this->analysis;
     }
 
-    function get($id) {
+    function get($subId) {     
+        //Retrieve all analysis results based on the submission ID / specific parameter given
 
+        //Create connection to database
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM analysis WHERE subId = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("i", $subId);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+         // Get resultset
+         $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+         or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+
+        // fetch the record from the server and then store them in an object
+        $this->analysis[$item_count] = new Analysis($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
+        $row = mysqli_fetch_row($queryResult);
+        $item_count += 1;
+     }
+
+        //Close connection to database
+        $this->db->closeConnection();
+
+        return $this->analysis;
     }
 
     /*function edit($id, $analysis) {
@@ -38,7 +100,7 @@ class AnalysisTable {
         $this->db->createConnection();
         
         //Insert the sentiment analysis value into the database
-        $sql = "INSERT INTO `analysis`(`summary`, `sentimentScore`, `sentimentMagnitude`) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO `analysis`(`summary`, `sentimentScore`, `sentimentMagnitude`) VALUES (?, ?, ?)";    //add subId
 
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
