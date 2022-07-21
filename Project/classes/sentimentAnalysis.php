@@ -15,19 +15,19 @@ class SentimentAnalysis {
 
         if ($score > 0) {                   //Positive messages----------------------------
             if ($magnitude >= 3) {
-                $emotion = "This is an extremely positive message!";
+                $emotion = "The overall document contains extremely positive messages!";                  //Edit message
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
 
             if ($magnitude >= 1.5 && $magnitude < 3) {
-                $emotion = "This is a very positive message.";
+                $emotion = "The overall document contains very positive messages.";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
 
             if ($magnitude< 1.5) {
-                $emotion = "This is a somewhat positive message.";
+                $emotion = "The overall document contains somewhat positive messages.";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
@@ -35,19 +35,19 @@ class SentimentAnalysis {
 
         if ($score < 0) {
             if ($magnitude >= 3) {          //Negative messages---------------------------
-                $emotion =  "This is an extremely negative message!";
+                $emotion =  "The overall document contains extremely negative messages!";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
 
             if ($magnitude >= 1.5 && $magnitude < 3) {
-                $emotion = "This is a very negative message.";
+                $emotion = "The overall document contains very negative messages.";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
 
             if ($magnitude < 1.5) {
-                $emotion = "This is a somewhat negative message.";
+                $emotion = "The overall document contains somewhat negative messages.";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
@@ -55,19 +55,19 @@ class SentimentAnalysis {
 
         if ($score == 0) {                  //Neutral messages--------------------------
             if ($magnitude >= 3) {
-                $emotion = "This message contains extremely mixed emotions!";
+                $emotion = "The overall document contains extremely mixed emotions!";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
 
             if ($magnitude >= 1.5 && $magnitude < 3) {
-                $emotion = "This message is very mixed.";
+                $emotion = "The message in the overall document is very mixed.";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
 
             if ($magnitude < 1.5) {
-                $emotion = "This is a somewhat neutral message.";
+                $emotion = "The overall document contains somewhat neutral message.";
                 echo $emotion;                              //To be deleted at final stage
                 return $emotion;
             }
