@@ -15,7 +15,7 @@ $analysisTable = new AnalysisTable($db);
 $entityTable = new EntityTable($db);
 
 //Instantiate and use the FPDF class
-$pdf = new FPDF();
+$pdf = new MyPDF();
 $pdf->AliasNbPages();
 
 //Add page title and author
@@ -26,8 +26,8 @@ $pdf->SetTitle('Analysis Report | Document Submission System');
 $pdf->AddPage();
 
 //Add an image
-//$image1 = "src/image/logo.png";
-//$pdf->Image($image1, 10, 8, 33);
+$image1 = "../src/images/logo.png";
+$pdf->Image($image1, 10, 8, 33);
 
 //Set the font
 $pdf->SetFont('Arial', 'B', '18');
@@ -57,10 +57,15 @@ $pdf->Cell(0, 10, 'Sentiment magnitude: ' . ($analysisOutput[0]->getSentimentMag
 $entityOutput = $entityTable->getAll();         //Obtain entity details
 //$entityOutput = $entityTable->get($subId)     //Obtain entity details     //Make it a table
 for ($i = 0; $i < count($entityOutput); $i++) {
-    $pdf->Cell(0, 10, 'Entities: ' . ($entityOutput[$i]->getName()), 0, 1);
+    $pdf->Cell(0, 10, 'Entity: ' . ($entityOutput[$i]->getName()), 0, 1);
     $pdf->Cell(0, 10, 'Salience: ' . ($entityOutput[$i]->getSalience()), 0, 1);
-    $pdf->Cell(0, 10, 'Wikipedia link: ' . ($entityOutput[$i]->getLink()), 0, 1);
+    $pdf->Cell(0, 10, 'Source: ' . ($entityOutput[$i]->getLink()), 0, 1);
 }
+
+//Create a PDF table
+/*$header = array('Entity', 'Salience', 'Source');
+$pdf->AddPage();
+$pdf->ImprovedTable($header, $entityOutput);*/
 
 //Return the generated output
 $pdf->Output();
