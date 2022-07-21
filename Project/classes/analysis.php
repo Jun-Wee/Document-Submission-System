@@ -1,21 +1,34 @@
 <?php
 
 class Analysis {
+    private $analysisId;
     private $subId;
     private $summary;
     private $keywords;
     private $matchedTitles;
-    private $sentimentAnalysis;
+    private $sentimentScore;
+    private $sentimentMagnitude;
 
-    function __construct($subId, $summary, $keywords, $matchedTitles, $sentimentAnalysis) {
+    //Constructor
+    function __construct($analysisId, $subId, $summary, $keywords, $matchedTitles, $sentimentScore, $sentimentMagnitude) {
+        $this->analysisId = $analysisId;
         $this->subId = $subId;
         $this->summary = $summary;
         $this->keywords = $keywords;
         $this->matchedTitles = $matchedTitles;
-        $this->sentimentAnalysis = $sentimentAnalysis;
+        $this->sentimentScore = $sentimentScore;
+        $this->sentimentMagnitude = $sentimentMagnitude;
     }
 
     //Getters and setters-----------------------------------------------------------------------------------
+    function getAnalysisId() {
+        return $this->analysisId;
+    }
+
+    function setAnalysisId($newAnalysisId) {
+        return $newAnalysisId;
+    }
+
     function getSubId() {
         return $this->subId;
     }
@@ -48,21 +61,21 @@ class Analysis {
         return $newMatchedTitles;
     }
 
-    function getSentimentAnalysis() {
-        return $this->sentimentAnalysis;
+    function getSentimentScore() {
+        return $this->sentimentScore;
     }
 
-    function setSentimentAnalysis($newSentimentAnalysis) {
-        return $newSentimentAnalysis;
+    function setSentimentScore($newSentimentScore) {
+        return $newSentimentScore;
     }
 
-    function analysis($subId, $wordCount, $keywords, $references, $matchedTitles) {
-
+    function getSentimentMagnitude() {
+        return $this->sentimentMagnitude;
     }
-}
 
-class EntityAnalysis extends Analysis {
-
+    function setSentimentMagnitude($newSentimentMagnitude) {
+        return $newSentimentMagnitude;
+    }
 }
 
 ?>
