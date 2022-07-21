@@ -35,12 +35,14 @@ if (!isset($_SESSION['student'])) {
 				if($fileUploadErrorMsg == "") {
 					$student->submitDocument($db, $code[0], $path);
 					$_SESSION['student'] = serialize($student);
-					//$parser = new \Smalot\PdfParser\Parser();
-					$pdf = $parser->parseFile($_FILES['file']['name']);
+					$parser = new \Smalot\PdfParser\Parser();
+					$file = $_FILES['file']['tmp_name'];
+					$pdf = $parser->parseFile($file);
 					$text = $pdf->getText();
-					echo $text;
+					$pdfText = nl2br($text);
+					echo $pdfText;
 					
-					header('Location: question.php');
+					//header('Location: analysis.php');						//Redirect to analysis page
 				} 
 			}else{
 				$unitSelected = false;
