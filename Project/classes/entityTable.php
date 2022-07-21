@@ -15,7 +15,30 @@ class EntityTable {
         //Create connection to database
         $this->db->createConnection();
 
-        
+        $sql = "SELECT * FROM entity";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+
+            // fetch the record from the server and then store them in an object
+            $this->entity[$item_count] = new Entity($row[0], $row[1], $row[2], $row[3], $row[4]);
+            $row = mysqli_fetch_row($queryResult);
+            $item_count += 1;
+        }
 
         //Close connection to database
         $this->db->closeConnection();
@@ -23,8 +46,42 @@ class EntityTable {
         return $this->entity;
     }
 
-    function get($id) {
+    function get($subId) {
+        //Create connection to database
+        $this->db->createConnection();
 
+        $sql = "SELECT * FROM entity WHERE subId = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("i", $subId);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+         // Get resultset
+         $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+         or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+
+        // fetch the record from the server and then store them in an object
+        $this->entity[$item_count] = new Entity($row[0], $row[1], $row[2], $row[3], $row[4]);
+        $row = mysqli_fetch_row($queryResult);
+        $item_count += 1;
+     }
+
+        //Close connection to database
+        $this->db->closeConnection();
+
+        return $this->entity;
     }
 
     function add($name, $salience, $link) {
@@ -34,7 +91,7 @@ class EntityTable {
         $this->db->createConnection();
         
         //Insert the sentiment analysis value into the database
-        $sql = "INSERT INTO `entity`(`name`, `salience`, `link`) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO `entity`(`name`, `salience`, `link`) VALUES (?, ?, ?)";     //Add subId
 
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
