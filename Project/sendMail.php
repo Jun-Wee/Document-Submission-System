@@ -1,6 +1,6 @@
 <!-- Description: Send Mail function -->
 <!-- Author: Jun Wee Tan -->
-<!-- Date: 5th July 2022 -->
+<!-- Date: 20th July 2022 -->
 <!-- Validated: =-->
 
 <?php
@@ -19,23 +19,23 @@ include "classes/MailTable.php";
 
 $db = new Database();
 $mailtable = new MailTable($db);
-$subscriberEmail  = $mailtable->getSubscribeConvenor();  //retrieve convenor email
+$subscriber = $mailtable->getSubscribeConvenor();  //retrieve convenor email
 
 $student_result_by_unit = array();
 $j =0;
-for ($i=0; $i < count($subscriberEmail); $i++) {    //2
-    $mailtable->getAll($subscriberEmail[$i]['Email']);
+for ($i=0; $i < count($subscriber); $i++) {    //2
+    $mailtable->getConvenorUnit($subscriber[$i]['Email']);
+    $mailtable->getAllStudentSubmission();
 
     if (!empty($mailtable->getFullTable())) {  //control only convenor that have student submission and result
         $student_result_by_unit[$j] = [  //each convenor's unit table that content student results
-            "name" => $subscriberEmail[$i]['Name'],
-            "email" => $subscriberEmail[$i]['Email'],
+            "name" => $subscriber[$j]['Name'],
+            "email" => $subscriber[$j]['Email'],
             "table" => $mailtable->getFullTable()
         ];    
         $j++;
     }
     $mailtable->unsetFullTable();
-
     //function to update the isSend mail in submission
 }
 
@@ -47,19 +47,20 @@ $mail = new PHPMailer(true);
 
 for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
     try {
+        echo 'start';
         //Server settings
         $mail->SMTPDebug = 0;                                       //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
         $mail->Host       = 'smtp.office365.com';                   //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'documentsubmissionsystem@hotmail.com'; //SMTP username
-        $mail->Password   = 'wmqejhjaegjckciw';                     //SMTP password  / App Password
+        $mail->Username   = 'testingforswin@hotmail.com'; //SMTP username
+        $mail->Password   = 'qlrqamniuynvlstg';                     //SMTP password  / App Password
         $mail->SMTPSecure = 'STARTTLS';                             //Enable implicit TLS encryption
         $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('documentsubmissionsystem@hotmail.com', '(Noreply) Daily Summary Report');
-        $mail->addBCC("101231636@student.swin.edu.au", $student_result_by_unit[$i]["name"]);     //Add a recipient
+        $mail->setFrom('testingforswin@hotmail.com', '(Noreply) Daily Summary Report');
+        $mail->addCC("101231636@student.swin.edu.au", $student_result_by_unit[$i]["name"]);     //Add a recipient
 
         
         //Content
@@ -71,10 +72,11 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
         <br>
         This is an auto generated response email. Please do not reply to this email as it will not be received. 
         <br>
-        Feel free to visit document submission <a href="https://www.youtube.com">System Admin Protal</a> for more detail information. 
+        Feel free to visit document submission <a href="https://ec2-35-170-80-216.compute-1.amazonaws.com">System Admin Protal</a> for more detail information. 
         <br>
         <br>
         Below is the daily summary of students MCQ results :
+        <br>
         <br>
         '.$student_result_by_unit[$i]["table"].'
         
@@ -103,7 +105,7 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 //Password
 // documentsubmissionsystem@hotmail.com  
 // mail pasword: swindocsub123456
-// App password: wmqejhjaegjckciw 
+// App password: fpeyzqvfqcbioxgp
 
 // testingforswin@hotmail.com 
 // mail pasword: swindocsub123456

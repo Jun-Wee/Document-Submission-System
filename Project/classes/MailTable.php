@@ -1,6 +1,6 @@
 <!-- Description: Send Mail function -->
 <!-- Author: Jun Wee Tan -->
-<!-- Date: 12th July 2022 -->
+<!-- Date: 20th July 2022 -->
 <!-- Validated: =-->
 <?php
 class MailTable
@@ -106,6 +106,8 @@ class MailTable
         print_r($this->studentListByUnit);
         echo "</pre>";
         $this->db->closeConnection();
+
+        $this->updateSubmissionIsSend($convenorEmail,$unitCode);  //update units's student submission to sent
         return $this->studentListByUnit;
     }
 
@@ -137,7 +139,7 @@ class MailTable
         return $tableMsg;
     }
 
-    function getAll($convenoremail){
+    function getConvenorUnit($convenoremail){
         $this->db->createConnection();
         $sql = "SELECT C.Name, C.Email, U.code 
         FROM CONVENORS C 
@@ -172,12 +174,13 @@ class MailTable
         echo "<pre>";
         echo print_r($this->unitList);
         echo "</pre>";
+    }
 
+    function getAllStudentSubmission(){
         for ($i=0; $i < count($this->unitList); $i++) { //4 units
-           // $this->all_table_with_unitcode .= "<h3>".$this->unitList[$i]['UnitCode']."</h3>";
-            $buffer = $this->getStudentInfo($convenoremail, $this->unitList[$i]['UnitCode']);
+            $buffer = $this->getStudentInfo( $this->unitList[$i]['ConvenorEmail'], $this->unitList[$i]['UnitCode']);
 
-            if (!empty($buffer)) {
+            if (!empty($buffer)) { // if student have submissions in the looping units, concate into the given variable
                 $this->all_table_with_unitcode .= $this->printInfomation($this->unitList[$i]['UnitCode']);
             }
             
@@ -192,6 +195,27 @@ class MailTable
     
     function unsetFullTable() {
         $this->all_table_with_unitcode = "";
+    }
+
+    function updateSubmissionIsSend($convenorEmail,$unitCode){
+        $this->db->createConnection();
+        $sql=
+        "UPDATE submission S, unit U, convenors C
+        SET S.isSendMail = 1
+        WHERE C.Email = ?
+        AND S.unitCode = ?
+        ";
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+        
+        $convenoremail = $convenorEmail;
+        $unitcode = $unitCode;
+
+        $prepared_stmt->bind_param('ss', $convenoremail, $unitcode);
+        mysqli_stmt_execute($prepared_stmt);
+
+        mysqli_stmt_close($prepared_stmt);
+        $this->db->closeConnection();
+
     }
 
     ///abondon
@@ -215,10 +239,6 @@ class MailTable
         }
         $this->db->closeConnection();
         return $this->unitList;
-        //invoke the print function
-        // foreach ($unitList as $value) {
-        //     $value->printInfomation($value);
-        // }
     }
 
     function updateMailInfo($mailernumber, $submissionid){

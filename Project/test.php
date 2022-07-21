@@ -5,33 +5,34 @@ include "classes/MailTable.php";
 
 $db = new Database();
 $mailtable = new MailTable($db);
-$subscriberEmail  = $mailtable->getSubscribeConvenor();  //retrieve convenor email
+$subscriber = $mailtable->getSubscribeConvenor();  //retrieve convenor email
 
 echo "Subscriber List";
 echo "<pre>";
-echo print_r($subscriberEmail);
+echo print_r($subscriber);
 echo "</pre>";
 
 $student_result_by_unit = array();
+$j =0;
+for ($i=0; $i < count($subscriber); $i++) {    //2
+    $mailtable->getConvenorUnit($subscriber[$i]['Email']);
+    $mailtable->getAllStudentSubmission();
 
-for ($i=0; $i < count($subscriberEmail); $i++) {    //2
-    $mailtable->getConvenorUnit($subscriberEmail[$i]['Email']);
-
-    $student_result_by_unit[$i] = [  //each convenor's unit table that content student results
-        "name" => $subscriberEmail[$i]['Name'],
-        "email" => $subscriberEmail[$i]['Email'],
-        "table" => $mailtable->getFullTable()
-    ];
+    if (!empty($mailtable->getFullTable())) {  //control only convenor that have student submission and result
+        $student_result_by_unit[$j] = [  //each convenor's unit table that content student results
+            "name" => $subscriber[$j]['Name'],
+            "email" => $subscriber[$j]['Email'],
+            "table" => $mailtable->getFullTable()
+        ];    
+        $j++;
+    }
     $mailtable->unsetFullTable();
+    //function to update the isSend mail in submission
 }
-print_r($student_result_by_unit);
 
-
-
-// echo "<pre>";
-// echo print_r($mailList);
-// echo "</pre>";
-
+echo "<pre>";
+print_r( $student_result_by_unit);
+echo "</pre>";
 
 
 ?>
