@@ -205,7 +205,6 @@
 						$fileNewName = $student->getName().".". rand(1000,2000).".".$filename;  //file format: studentname.random number.filename
 						$fileDestination = 'StuSubmission/'.$fileNewName;
 						move_uploaded_file($fileTmpName,$fileDestination);
-						header("Location: submission.php?uploadsuccess");  //success upload indicator
 					}else 
 					{
 						$fileUploadErrorMsg = "Exceed file size limit!";

@@ -8,7 +8,7 @@
 include "classes/user.php";
 include "classes/database.php";
 include "system_functions.php";
-include "vendor/autoload.php";
+include "vendor2/autoload.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
@@ -36,7 +36,7 @@ if (!isset($_SESSION['student'])) {
 					$student->submitDocument($db, $code[0], $path);
 					$_SESSION['student'] = serialize($student);
 					$parser = new \Smalot\PdfParser\Parser();
-					$file = $_FILES['file']['tmp_name'];
+					$file = $path;
 					$pdf = $parser->parseFile($file);
 					$text = $pdf->getText();
 					$pdfText = nl2br($text);
