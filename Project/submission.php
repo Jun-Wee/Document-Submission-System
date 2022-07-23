@@ -40,9 +40,11 @@ if (!isset($_SESSION['student'])) {
 					$pdf = $parser->parseFile($file);
 					$text = $pdf->getText();
 					$pdfText = nl2br($text);
-					echo $pdfText;
-					
-					//header('Location: analysis.php');						//Redirect to analysis page
+
+					//Save and send the text to analysis.php
+					$_SESSION['pdfText'] = $pdfText;
+
+					header('Location: analysis.php');						//Redirect to analysis page
 				} 
 			}else{
 				$unitSelected = false;
