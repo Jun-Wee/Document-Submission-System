@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2022 at 08:39 AM
+-- Generation Time: Jul 25, 2022 at 08:59 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -153,14 +153,14 @@ CREATE TABLE `submission` (
   `score` int(11) NOT NULL,
   `unitCode` varchar(50) NOT NULL,
   `filepath` varchar(255) NOT NULL,
-  `isSubscribe` tinyint(1) NOT NULL
+  `isSendMail` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `submission`
 --
 
-INSERT INTO `submission` (`Id`, `stuId`, `datetime`, `score`, `unitCode`, `filepath`, `isSubscribe`) VALUES
+INSERT INTO `submission` (`Id`, `stuId`, `datetime`, `score`, `unitCode`, `filepath`, `isSendMail`) VALUES
 (100040, '102849357', '2022-07-13 20:33:44', 0, 'COS10005', 'StuSubmission/COS10005/Sandali Jayasinghe/Sandali Jayasinghe.1088.(Feedback) SQAP_v1.1.pdf', 0),
 (100041, '102849357', '2022-07-13 20:33:47', 4, 'ICT10001', 'StuSubmission/ICT10001/Sandali Jayasinghe/Sandali Jayasinghe.1723.(Feedback)SEP-Project Plan S1 2022_v 1.2.pdf', 0),
 (100043, '102849357', '2022-07-13 20:33:52', 0, 'ACC10007', 'StuSubmission/ACC10007/Sandali Jayasinghe/Sandali Jayasinghe.1579.(Feedback) SQAP_v1.1.pdf', 0),
