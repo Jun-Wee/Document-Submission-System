@@ -72,7 +72,7 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
         <br>
         This is an auto generated response email. Please do not reply to this email as it will not be received. 
         <br>
-        Feel free to visit document submission <a href="https://ec2-35-170-80-216.compute-1.amazonaws.com">System Admin Protal</a> for more detail information. 
+        Feel free to visit document submission <a href="ec2-3-239-60-63.compute-1.amazonaws.com">System Admin Protal</a> for more detail information. 
         <br>
         <br>
         Below is the daily summary of students MCQ results :
