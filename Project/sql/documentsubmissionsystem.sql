@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2022 at 07:56 AM
+-- Generation Time: Jul 25, 2022 at 08:39 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -33,15 +33,16 @@ CREATE TABLE `admin` (
   `Email` varchar(100) NOT NULL,
   `Password` varchar(100) NOT NULL,
   `Role` varchar(10) NOT NULL,
-  `Gender` char(6) DEFAULT NULL
+  `Gender` char(6) DEFAULT NULL,
+  `isSubscribe` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`) VALUES
-('A101', 'Admin', 'admin101@swin.edu.au', 'swin', 'Admin', NULL);
+INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`, `isSubscribe`) VALUES
+('A101', 'Admin', 'admin101@swin.edu.au', 'swin', 'Admin', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -55,18 +56,19 @@ CREATE TABLE `convenors` (
   `Email` varchar(100) NOT NULL,
   `Password` varchar(100) NOT NULL,
   `Role` varchar(10) NOT NULL,
-  `Gender` char(6) DEFAULT NULL
+  `Gender` char(6) DEFAULT NULL,
+  `isSubscribe` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `convenors`
 --
 
-INSERT INTO `convenors` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`) VALUES
-('C101', 'Jun Han', 'jhan@swin.edu.au', 'swin', 'Convenor', 'Male'),
-('C102', 'Bao Quoc Vo', 'bvo@swin.edu.au', 'swin', 'Convenor', 'Male'),
-('C103', 'Karola von Baggo', 'kvonbaggo@swin.edu.au', 'swin', 'Convenor', 'Female'),
-('C104', 'Jason Sargent', 'jpsargent@swin.edu.au', 'swin', 'Convenor', 'Male');
+INSERT INTO `convenors` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`, `isSubscribe`) VALUES
+('C101', 'Jun Han', 'jhan@swin.edu.au', 'swin', 'Convenor', 'Male', 1),
+('C102', 'Bao Quoc Vo', 'bvo@swin.edu.au', 'swin', 'Convenor', 'Male', 1),
+('C103', 'Karola von Baggo', 'kvonbaggo@swin.edu.au', 'swin', 'Convenor', 'Female', 0),
+('C104', 'Jason Sargent', 'jpsargent@swin.edu.au', 'swin', 'Convenor', 'Male', 0);
 
 -- --------------------------------------------------------
 
@@ -150,38 +152,42 @@ CREATE TABLE `submission` (
   `datetime` datetime NOT NULL,
   `score` int(11) NOT NULL,
   `unitCode` varchar(50) NOT NULL,
-  `filepath` varchar(255) NOT NULL
+  `filepath` varchar(255) NOT NULL,
+  `isSubscribe` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `submission`
 --
 
-INSERT INTO `submission` (`Id`, `stuId`, `datetime`, `score`, `unitCode`, `filepath`) VALUES
-(100040, '102849357', '2022-07-13 20:33:44', 0, 'COS10005', 'StuSubmission/COS10005/Sandali Jayasinghe/Sandali Jayasinghe.1088.(Feedback) SQAP_v1.1.pdf'),
-(100041, '102849357', '2022-07-13 20:33:47', 4, 'ICT10001', 'StuSubmission/ICT10001/Sandali Jayasinghe/Sandali Jayasinghe.1237.(Feedback)SEP-Project Plan S1 2022_v 1.2.pdf'),
-(100043, '102849357', '2022-07-13 20:33:52', 0, 'ACC10007', 'StuSubmission/ACC10007/Sandali Jayasinghe/Sandali Jayasinghe.1579.(Feedback) SQAP_v1.1.pdf'),
-(100044, '102849357', '2022-07-13 20:33:56', 0, 'ACC20014', 'StuSubmission/ACC20014/Sandali Jayasinghe/Sandali Jayasinghe.1503.(Feedback) SQAP_v1.1.pdf'),
-(100045, '102849357', '2022-07-13 20:33:59', 0, 'COS10005', 'StuSubmission/COS10005/Sandali Jayasinghe/Sandali Jayasinghe.1476.(Feedback) SQAP_v1.1.pdf'),
-(100046, '102849357', '2022-07-13 20:34:02', 0, 'COS10009', 'StuSubmission/COS10009/Sandali Jayasinghe/Sandali Jayasinghe.1990.(Feedback) SQAP_v1.1.pdf'),
-(100047, '101225244', '2022-07-13 20:35:24', 0, 'ACC10007', 'StuSubmission/ACC10007/Adrian Sim/Adrian Sim.1261.(Feedback) Software Design and Research Report.pdf'),
-(100049, '101225244', '2022-07-13 20:35:32', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1519.(Feedback) Software Design and Research Report.pdf'),
-(100052, '101225244', '2022-07-13 20:35:41', 0, 'ACC20014', 'StuSubmission/ACC20014/Adrian Sim/Adrian Sim.1415.(Feedback) Software Design and Research Report.pdf'),
-(100053, '101225244', '2022-07-13 20:35:45', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1263.(Feedback) Software Design and Research Report.pdf'),
-(100055, '101231636', '2022-07-13 21:34:49', 0, 'ICT10001', 'StuSubmission/ICT10001/Jun Wee/Jun Wee.1100.(Feedback)SEP-Software Requirement Specification S1 2022.pdf'),
-(100056, '101231636', '2022-07-13 21:34:54', 0, 'COS20001', 'StuSubmission/COS20001/Jun Wee/Jun Wee.1230.(Feedback)SEP-Software Requirement Specification S1 2022.pdf'),
-(100057, '101231636', '2022-07-13 21:34:58', 0, 'COS20016', 'StuSubmission/COS20016/Jun Wee/Jun Wee.1148.(Feedback)SEP-Software Requirement Specification S1 2022.pdf'),
-(100058, '101231636', '2022-07-13 21:35:02', 0, 'ICT10001', 'StuSubmission/ICT10001/Jun Wee/Jun Wee.1418.(Feedback)SEP-Software Requirement Specification S1 2022.pdf'),
-(100059, '101231636', '2022-07-13 21:35:05', 0, 'INF10002', 'StuSubmission/INF10002/Jun Wee/Jun Wee.1150.(Feedback)SEP-Software Requirement Specification S1 2022.pdf'),
-(100060, '101231636', '2022-07-13 21:35:15', 0, 'INF10002', 'StuSubmission/INF10002/Jun Wee/Jun Wee.1122.(Feedback) Software Design and Research Report.pdf'),
-(100061, '101231636', '2022-07-16 01:39:23', 3, 'COS20001', 'StuSubmission/COS20001/Jun Wee/Jun Wee.1169.[SEPA28]-Test Plan.pdf'),
-(100062, '102426323', '2022-07-13 21:35:40', 0, 'INF20003', 'StuSubmission/INF20003/Yovinma Konara/Yovinma Konara.1863.(Feedback)SEP-Project Plan S1 2022_v 1.2.pdf'),
-(100063, '102426323', '2022-07-13 21:35:48', 0, 'INF20003', 'StuSubmission/INF20003/Yovinma Konara/Yovinma Konara.1529.(Feedback) SQAP_v1.1.pdf'),
-(100064, '102426323', '2022-07-13 21:35:52', 0, 'INF20012', 'StuSubmission/INF20012/Yovinma Konara/Yovinma Konara.1504.(Feedback) SQAP_v1.1.pdf'),
-(100065, '102426323', '2022-07-13 21:35:57', 0, 'INF30001', 'StuSubmission/INF30001/Yovinma Konara/Yovinma Konara.1935.(Feedback) SQAP_v1.1.pdf'),
-(100066, '102426323', '2022-07-13 21:36:01', 0, 'TNE10005', 'StuSubmission/TNE10005/Yovinma Konara/Yovinma Konara.1387.(Feedback) SQAP_v1.1.pdf'),
-(100067, '101225244', '2022-07-14 22:32:43', 0, 'ACC20014', 'StuSubmission/ACC20014/Adrian Sim/Adrian Sim.1042.(DUE WK5) SEP-Project Plan S1 2022.pdf'),
-(100068, '101225244', '2022-07-18 15:10:23', 0, 'ACC20014', 'StuSubmission/ACC20014/Adrian Sim/Adrian Sim.1125.(DUE WK5) SEP-Project Plan S1 2022.pdf');
+INSERT INTO `submission` (`Id`, `stuId`, `datetime`, `score`, `unitCode`, `filepath`, `isSubscribe`) VALUES
+(100040, '102849357', '2022-07-13 20:33:44', 0, 'COS10005', 'StuSubmission/COS10005/Sandali Jayasinghe/Sandali Jayasinghe.1088.(Feedback) SQAP_v1.1.pdf', 0),
+(100041, '102849357', '2022-07-13 20:33:47', 4, 'ICT10001', 'StuSubmission/ICT10001/Sandali Jayasinghe/Sandali Jayasinghe.1723.(Feedback)SEP-Project Plan S1 2022_v 1.2.pdf', 0),
+(100043, '102849357', '2022-07-13 20:33:52', 0, 'ACC10007', 'StuSubmission/ACC10007/Sandali Jayasinghe/Sandali Jayasinghe.1579.(Feedback) SQAP_v1.1.pdf', 0),
+(100044, '102849357', '2022-07-13 20:33:56', 0, 'ACC20014', 'StuSubmission/ACC20014/Sandali Jayasinghe/Sandali Jayasinghe.1503.(Feedback) SQAP_v1.1.pdf', 0),
+(100045, '102849357', '2022-07-13 20:33:59', 0, 'COS10005', 'StuSubmission/COS10005/Sandali Jayasinghe/Sandali Jayasinghe.1476.(Feedback) SQAP_v1.1.pdf', 0),
+(100046, '102849357', '2022-07-13 20:34:02', 0, 'COS10009', 'StuSubmission/COS10009/Sandali Jayasinghe/Sandali Jayasinghe.1990.(Feedback) SQAP_v1.1.pdf', 0),
+(100047, '101225244', '2022-07-13 20:35:24', 0, 'ACC10007', 'StuSubmission/ACC10007/Adrian Sim/Adrian Sim.1261.(Feedback) Software Design and Research Report.pdf', 0),
+(100049, '101225244', '2022-07-13 20:35:32', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1519.(Feedback) Software Design and Research Report.pdf', 0),
+(100052, '101225244', '2022-07-13 20:35:41', 0, 'ACC20014', 'StuSubmission/ACC20014/Adrian Sim/Adrian Sim.1415.(Feedback) Software Design and Research Report.pdf', 0),
+(100053, '101225244', '2022-07-13 20:35:45', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1263.(Feedback) Software Design and Research Report.pdf', 0),
+(100055, '101231636', '2022-07-13 21:34:49', 0, 'ICT10001', 'StuSubmission/ICT10001/Jun Wee/Jun Wee.1100.(Feedback)SEP-Software Requirement Specification S1 2022.pdf', 0),
+(100056, '101231636', '2022-07-13 21:34:54', 0, 'COS20001', 'StuSubmission/COS20001/Jun Wee/Jun Wee.1230.(Feedback)SEP-Software Requirement Specification S1 2022.pdf', 0),
+(100057, '101231636', '2022-07-13 21:34:58', 0, 'COS20016', 'StuSubmission/COS20016/Jun Wee/Jun Wee.1148.(Feedback)SEP-Software Requirement Specification S1 2022.pdf', 0),
+(100058, '101231636', '2022-07-13 21:35:02', 0, 'ICT10001', 'StuSubmission/ICT10001/Jun Wee/Jun Wee.1418.(Feedback)SEP-Software Requirement Specification S1 2022.pdf', 0),
+(100059, '101231636', '2022-07-13 21:35:05', 0, 'INF10002', 'StuSubmission/INF10002/Jun Wee/Jun Wee.1150.(Feedback)SEP-Software Requirement Specification S1 2022.pdf', 0),
+(100060, '101231636', '2022-07-13 21:35:15', 0, 'INF10002', 'StuSubmission/INF10002/Jun Wee/Jun Wee.1122.(Feedback) Software Design and Research Report.pdf', 0),
+(100061, '101231636', '2022-07-16 01:39:23', 3, 'COS20001', 'StuSubmission/COS20001/Jun Wee/Jun Wee.1169.[SEPA28]-Test Plan.pdf', 0),
+(100062, '102426323', '2022-07-13 21:35:40', 0, 'INF20003', 'StuSubmission/INF20003/Yovinma Konara/Yovinma Konara.1863.(Feedback)SEP-Project Plan S1 2022_v 1.2.pdf', 0),
+(100063, '102426323', '2022-07-13 21:35:48', 0, 'INF20003', 'StuSubmission/INF20003/Yovinma Konara/Yovinma Konara.1529.(Feedback) SQAP_v1.1.pdf', 0),
+(100064, '102426323', '2022-07-13 21:35:52', 0, 'INF20012', 'StuSubmission/INF20012/Yovinma Konara/Yovinma Konara.1504.(Feedback) SQAP_v1.1.pdf', 0),
+(100065, '102426323', '2022-07-13 21:35:57', 0, 'INF30001', 'StuSubmission/INF30001/Yovinma Konara/Yovinma Konara.1935.(Feedback) SQAP_v1.1.pdf', 0),
+(100066, '102426323', '2022-07-13 21:36:01', 0, 'TNE10005', 'StuSubmission/TNE10005/Yovinma Konara/Yovinma Konara.1387.(Feedback) SQAP_v1.1.pdf', 0),
+(100067, '101225244', '2022-07-14 22:32:43', 0, 'ACC20014', 'StuSubmission/ACC20014/Adrian Sim/Adrian Sim.1042.(DUE WK5) SEP-Project Plan S1 2022.pdf', 0),
+(100068, '101225244', '2022-07-18 15:10:23', 0, 'ACC20014', 'StuSubmission/ACC20014/Adrian Sim/Adrian Sim.1125.(DUE WK5) SEP-Project Plan S1 2022.pdf', 0),
+(100069, '101225244', '2022-07-23 13:17:14', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1001.(Feedback) SQAP_v1.1.pdf', 0),
+(100070, '101225244', '2022-07-23 13:44:46', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1463.(Feedback) SQAP_v1.1.pdf', 0),
+(100071, '101225244', '2022-07-23 15:22:07', 0, 'COS10005', 'StuSubmission/COS10005/Adrian Sim/Adrian Sim.1805.(Feedback) SQAP_v1.1.pdf', 0);
 
 -- --------------------------------------------------------
 
@@ -267,7 +273,7 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `submission`
 --
 ALTER TABLE `submission`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100069;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100072;
 
 --
 -- Constraints for dumped tables
