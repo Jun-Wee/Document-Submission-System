@@ -78,9 +78,10 @@ if (isset($_POST['submit'])) {
             echo $studentName;
             [$fileUploadErrorMsg, $path] = checkNewUploadedFile($file['name'], $file['tmp_name'], $file['error'], $file['size'], $studentName, $code[0]);
             if ($fileUploadErrorMsg == "") {
+                $server_root_directory = "/var/www/html";
                 // delete the existing file after successfully adding the new file as a replacement
-                if (file_exists($existing_submission->getfilepath())) {
-                    if (unlink($existing_submission->getfilepath())) {
+                if (file_exists($server_root_directory . $existing_submission->getfilepath())) {
+                    if (unlink($server_root_directory . $existing_submission->getfilepath())) {
                         $existing_submission->setfilepath($path);
                     }
                 }

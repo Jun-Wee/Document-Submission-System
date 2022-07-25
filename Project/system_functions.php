@@ -199,12 +199,13 @@ function checkNewUploadedFile($filename, $fileTmpName, $fileError, $fileSize, $s
             {
                 $fileNewName = $studentName . "." . rand(1000, 2000) . "." . $filename;  //file format: studentname.random number.filename
 
-                $file_directory = 'StuSubmission/' . $unitCode . '/' . $studentName;
-                if (!file_exists($file_directory)) {
-                    mkdir($file_directory, 0777, true);
-                }
+                $file_directory = '/StuSubmission/' . $unitCode . '/' . $studentName . '/';
+                $server_root_directory = '/var/www/html';
 
-                $fileDestination = $file_directory . '/' . $fileNewName;
+                if (!file_exists($server_root_directory . $file_directory)) {
+                    mkdir($server_root_directory . $file_directory, 0777, true);
+                }
+                $fileDestination = $server_root_directory . $file_directory . basename($fileNewName);
                 move_uploaded_file($fileTmpName, $fileDestination);
             } else {
                 $fileUploadErrorMsg = "Exceed file size limit!";
@@ -216,13 +217,13 @@ function checkNewUploadedFile($filename, $fileTmpName, $fileError, $fileSize, $s
         $fileUploadErrorMsg = "Error file type uploaded!";
     }
 
-    return [$fileUploadErrorMsg, $fileDestination];
+    return [$fileUploadErrorMsg, $file_directory . basename($fileNewName)];
 }
 
 function checkUploadedFile($file, $filename, $fileTmpName, $fileError, $fileSize, $student, $unitCode)
 {
-    // $file = $_FILES['file']; //gets all the info from the uploaded file
-    // //print_r($file); //testing for file superglobal
+    $file = $_FILES['file']; //gets all the info from the uploaded file
+    print_r($file); //testing for file superglobal
     // $filename = $_FILES['file']['name'];
     // $fileTmpName = $_FILES['file']['tmp_name'];
     // $fileError = $_FILES['file']['error'];
@@ -244,14 +245,25 @@ function checkUploadedFile($file, $filename, $fileTmpName, $fileError, $fileSize
             {
                 $fileNewName = $student->getName() . "." . rand(1000, 2000) . "." . $filename;  //file format: studentname.random number.filename
 
-                $file_directory = 'StuSubmission/' . $unitCode . '/' . $student->getName();
-                if (!file_exists($file_directory)) {
-                    mkdir($file_directory, 0777, true);
+                $file_directory = '/StuSubmission/' . $unitCode . '/' . $student->getName() . '/';
+                $server_root_directory = '/var/www/html';
+
+                echo $file_directory . "\n";
+
+                if (!file_exists($server_root_directory . $file_directory)) {
+                    mkdir($server_root_directory . $file_directory, 0777, true);
                 }
 
-                $fileDestination = $file_directory . '/' . $fileNewName;
-                move_uploaded_file($fileTmpName, $fileDestination);
-                header("Location: submission.php?uploadsuccess");  //success upload indicator
+                $fileDestination = $server_root_directory . $file_directory . basename($fileNewName);
+
+                echo $fileDestination . "\n";
+
+                if (move_uploaded_file($fileTmpName, $fileDestination)) {
+                    $fileUploadErrorMsg = "";
+                } else {
+                    $fileUploadErrorMsg = "There was an error uploading your file, Please try again!";
+                }
+                //header("Location: submission.php?uploadsuccess");  //success upload indicator
             } else {
                 $fileUploadErrorMsg = "Exceed file size limit!";
             }
@@ -262,7 +274,7 @@ function checkUploadedFile($file, $filename, $fileTmpName, $fileError, $fileSize
         $fileUploadErrorMsg = "Error file type uploaded!";
     }
 
-    return [$fileUploadErrorMsg, $fileDestination];
+    return [$fileUploadErrorMsg, $file_directory . basename($fileNewName)];
 }
 
 // PHP program to pop an alert

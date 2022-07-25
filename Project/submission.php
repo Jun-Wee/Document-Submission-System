@@ -33,8 +33,8 @@ if (!isset($_SESSION['student'])) {
 				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student, $code[0]);
 				if ($fileUploadErrorMsg == "") {
 					$student->submitDocument($db, $code[0], $path);
-					$_SESSION['student'] = serialize($student);
-					header('Location: question.php');
+					// $_SESSION['student'] = serialize($student);
+					// header('Location: question.php');
 				}
 			} else {
 				$unitSelected = false;
