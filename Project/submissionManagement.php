@@ -69,8 +69,9 @@ $submission_records_subset = array_slice($submission_records, $this_page_first_r
 <?php
 if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 	// If the user file in existing directory already exist, delete it
-	if (file_exists($_GET['filepath'])) {
-		if (unlink($_GET['filepath'])) {
+	$server_root_directory = "/var/www/html";
+	if (file_exists($server_root_directory . $_GET['filepath'])) {
+		if (unlink($server_root_directory . $_GET['filepath'])) {
 			if ($submissionTable->Delete($_GET['id']) == 1) {
 				header("Location: submissionManagement.php");
 			}
