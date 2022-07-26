@@ -10,11 +10,10 @@ class SubscribeManager
     }
 
     function subscribe($covenor){
-        array_push($subscriberlist,$covenor);
+        array_push($this->subscriberlist,$covenor);
     }
 
     function unsubscribe($covenor){
-        array_splice($subscriberlist,array_search($covenor,$subscriberlist),1);
+        array_splice($this->subscriberlist,array_search($covenor,$this->subscriberlist),1);
     }
 }
-?>
