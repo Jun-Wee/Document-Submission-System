@@ -84,19 +84,19 @@ class EntityTable {
         return $this->entity;
     }
 
-    function add($name, $salience, $link) {
+    function add($subId, $name, $salience, $link) {
         //Add a new record of the analysis to the database
 
         //Create connection to database
         $this->db->createConnection();
         
         //Insert the sentiment analysis value into the database
-        $sql = "INSERT INTO `entity`(`name`, `salience`, `link`) VALUES (?, ?, ?)";     //Add subId
+        $sql = "INSERT INTO `entity`(`subId`, `name`, `salience`, `link`) VALUES (?, ?, ?, ?)";
 
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
         //Bind input variables to prepared statement
-        $prepared_stmt->bind_param("sds", $name, $salience, $link);
+        $prepared_stmt->bind_param("isds", $subId, $name, $salience, $link);
 
         //Execute prepared statement
         $status = $prepared_stmt->execute();
