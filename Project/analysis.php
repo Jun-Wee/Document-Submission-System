@@ -15,7 +15,7 @@ if (!isset($_SESSION['student'])) {
 }
 else {
     try {
-        $language = new LanguageClient([    //ignore red underline on this line if exists
+        $language = new LanguageClient([
             'keyFilePath' => getcwd().'/src/library/GoogleNLP/psyched-hulling-355705-0568447d899e.json',
         ]);
 
@@ -26,17 +26,17 @@ else {
         //echo $subId;
 
         //Text extraction-------------------------------------------------------------------------------------------------
-        $text = $_SESSION['pdfText'];       //Issue: does not recognize images (� character)
+        $text = $_SESSION['pdfText'];                                   //Issue: does not recognize images (� character)
         $abstract = explode("Abstract", $text);
         $introduction = explode("Introduction", $text);
         $context = explode("Context", $text);
         $conclusion = explode("Conclusion", $text);
         $reference = explode('Reference', str_replace(array('References'), 'Reference', $text));
 
-        $keywords = "Keyword test";   //Temporary placeholders for database
+        $keywords = "Keyword test";                                     //Temporary placeholders for database
         $matches = "Matched titles test";
 
-        //Sentiment Analysis-------------------------------------------------------------------------------------------------
+        //Sentiment Analysis----------------------------------------------------------------------------------------------
         $extractedText = $abstract[2];
         $annotationS = $language->analyzeSentiment($extractedText);     //Analyze the sentiments
         // echo "Extracted text: " . $extractedText;
@@ -48,11 +48,11 @@ else {
         $sentimentAnalysis = new SentimentAnalysis();
         $emotion = $sentimentAnalysis->evaluate($annotationS);          //Call the sentiment evaluation function
 
-        //Entity Analysis----------------------------------------------------------------------------------------------------
+        //Entity Analysis-------------------------------------------------------------------------------------------------
 
         $annotationE = $language->analyzeEntities($extractedText);      //Analyze the entities
 
-        $myEntities = array_slice($annotationE->entities(), 0, 5);      //Limit the entities to top 5 based on salience score
+        $myEntities = array_slice($annotationE->entities(), 0, 5);      //Limit entities to top 5 based on salience score
 
         //echo "<pre>"; print_r($myEntities); echo "</pre>";
 
@@ -60,24 +60,43 @@ else {
             //echo $entity['name'];
             //echo $entity['salience'];
 
-            //Call entity table interface to store results----------------------------------------------------------
+            //Call entity table interface to store results---------------------------------------
             $db2 = new Database();
             $entityTable = new EntityTable($db2);
 
-            if (isset($entity['metadata']['wikipedia_url'])) {          //Store wikipedia url if exists
-                //echo $entity['metadata']['wikipedia_url'];
-                $entityTable->add($subId, $entity['name'], $entity['salience'], $entity['metadata']['wikipedia_url']);
+            //Check if submission ID already existing in database to prevent duplicate analysis result
+            if (!isset($subId)) {
+                if (isset($entity['metadata']['wikipedia_url'])) {          //Store wikipedia url if exists
+                    //echo $entity['metadata']['wikipedia_url'];
+                    $entityTable->add($subId, $entity['name'], $entity['salience'], $entity['metadata']['wikipedia_url']);
+                }
+
+                else {                                                      //Store only name and salience otherwise
+                    $entityTable->add($subId, $entity['name'], $entity['salience'], null);
+                }
             }
 
-            else {                                                      //Store only name and salience otherwise
-                $entityTable->add($subId, $entity['name'], $entity['salience'], null);
+            else {
+                header("Location: submission.php");                         //Redirect user back to submission page
+                echo "Error: Document already exist!";
+                echo "Submission ID: " . $subId;
             }
 
         }
 
-        //Call analysis table interface to store sentiment results-----------------------------------------------------------
+        //Call analysis table interface to store sentiment results--------------------------------------------------------
         $analysisTable = new AnalysisTable($db);
-        $analysisTable->add($subId, $emotion, $keywords, $matches, $score, $magnitude);              //Call the add function
+
+        //Check if submission ID already existing in database to prevent duplicate analysis result
+        if (!isset($subId)) {
+            $analysisTable->add($subId, $emotion, $keywords, $matches, $score, $magnitude);         //Call the add function
+        }
+
+        else {
+            header("Location: submission.php");                             //Redirect user back to submission page
+            echo "Error: Document already exist!";  
+            echo "Submission ID: " . $subId;
+        }
     }
 
     catch(Exception $e) {
@@ -108,8 +127,13 @@ else {
 </head>
 
 <body>
-    <div class="spinner-border text-success" role="status">
-        <span class="sr-only">Processing document...</span>
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+    <div class="text-center">
+        <div class="spinner-border text-success m-10" style="width: 5rem; height: 5rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <br><br>
+        <strong>Processing document...</strong>
     </div>
 </body>
 </html>
