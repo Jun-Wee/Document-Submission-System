@@ -32,6 +32,9 @@ else {
         $context = explode("Context", $text);
         $conclusion = explode("Conclusion", $text);
         $reference = explode('Reference', str_replace(array('References'), 'Reference', $text));
+        $title = explode('By', str_replace(array('By', 'by', 'Author'), 'By', $text));
+
+        echo $title[0];
 
         $keywords = "Keyword test";                                     //Temporary placeholders for database
         $matches = "Matched titles test";
@@ -64,39 +67,20 @@ else {
             $db2 = new Database();
             $entityTable = new EntityTable($db2);
 
-            //Check if submission ID already existing in database to prevent duplicate analysis result
-            if (!isset($subId)) {
-                if (isset($entity['metadata']['wikipedia_url'])) {          //Store wikipedia url if exists
-                    //echo $entity['metadata']['wikipedia_url'];
-                    $entityTable->add($subId, $entity['name'], $entity['salience'], $entity['metadata']['wikipedia_url']);
-                }
-
-                else {                                                      //Store only name and salience otherwise
-                    $entityTable->add($subId, $entity['name'], $entity['salience'], null);
-                }
+            if (isset($entity['metadata']['wikipedia_url'])) {          //Store wikipedia url if exists
+                //echo $entity['metadata']['wikipedia_url'];
+                $entityTable->add($subId, $entity['name'], $entity['salience'], $entity['metadata']['wikipedia_url']);
             }
 
-            else {
-                header("Location: submission.php");                         //Redirect user back to submission page
-                echo "Error: Document already exist!";
-                echo "Submission ID: " . $subId;
+            else {                                                      //Store only name and salience otherwise
+                $entityTable->add($subId, $entity['name'], $entity['salience'], null);
             }
 
         }
 
         //Call analysis table interface to store sentiment results--------------------------------------------------------
         $analysisTable = new AnalysisTable($db);
-
-        //Check if submission ID already existing in database to prevent duplicate analysis result
-        if (!isset($subId)) {
-            $analysisTable->add($subId, $emotion, $keywords, $matches, $score, $magnitude);         //Call the add function
-        }
-
-        else {
-            header("Location: submission.php");                             //Redirect user back to submission page
-            echo "Error: Document already exist!";  
-            echo "Submission ID: " . $subId;
-        }
+        $analysisTable->add($subId, $emotion, $keywords, $matches, $score, $magnitude);         //Call the add function
     }
 
     catch(Exception $e) {
