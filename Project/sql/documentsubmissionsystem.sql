@@ -47,6 +47,22 @@ INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`, `i
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `analysis`
+--
+
+CREATE TABLE `analysis` (
+  `analysisId` int(10) NOT NULL,
+  `subId` int(10) NOT NULL,
+  `summary` varchar(200) DEFAULT NULL,
+  `keywords` varchar(200) DEFAULT NULL,
+  `matchedTitles` varchar(200) DEFAULT NULL,
+  `sentimentScore` float DEFAULT NULL,
+  `sentimentMagnitude` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `convenors`
 --
 
@@ -110,6 +126,20 @@ INSERT INTO `enrolment` (`studentId`, `code`) VALUES
 ('103698851', 'INF20012'),
 ('103698851', 'INF30001'),
 ('103698851', 'TNE10005');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `entity`
+--
+
+CREATE TABLE `entity` (
+  `entityId` int(10) NOT NULL,
+  `subId` int(10) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `salience` double DEFAULT NULL,
+  `link` varchar(300) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -232,6 +262,13 @@ ALTER TABLE `admin`
   ADD PRIMARY KEY (`UserId`);
 
 --
+-- Indexes for table `analysis`
+--
+ALTER TABLE `analysis`
+  ADD PRIMARY KEY (`analysisId`),
+  ADD KEY `subId` (`subId`);
+
+--
 -- Indexes for table `convenors`
 --
 ALTER TABLE `convenors`
@@ -243,6 +280,13 @@ ALTER TABLE `convenors`
 ALTER TABLE `enrolment`
   ADD PRIMARY KEY (`studentId`,`code`),
   ADD KEY `code` (`code`);
+
+--
+-- Indexes for table `entity`
+--
+ALTER TABLE `entity`
+  ADD PRIMARY KEY (`entityId`),
+  ADD KEY `subId` (`subId`);
 
 --
 -- Indexes for table `students`
@@ -268,6 +312,18 @@ ALTER TABLE `unit`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `analysis`
+--
+ALTER TABLE `analysis`
+  MODIFY `analysisId` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `entity`
+--
+ALTER TABLE `entity`
+  MODIFY `entityId` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `submission`

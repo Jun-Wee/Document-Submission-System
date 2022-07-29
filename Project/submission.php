@@ -8,6 +8,7 @@
 include "classes/user.php";
 include "classes/database.php";
 include "system_functions.php";
+include "src/library/PDFParser/vendor2/autoload.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
@@ -32,9 +33,19 @@ if (!isset($_SESSION['student'])) {
 				//print_r($file); //testing for file superglobal
 				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student, $code[0]);
 				if ($fileUploadErrorMsg == "") {
-					$student->submitDocument($db, $code[0], $path);
-					// $_SESSION['student'] = serialize($student);
-					// header('Location: question.php');
+					[$status, $subId] = $student->submitDocument($db, $code[0], $path);
+					$_SESSION['student'] = serialize($student);
+					$parser = new \Smalot\PdfParser\Parser();
+					$file = $path;
+					$pdf = $parser->parseFile($file);
+					$text = $pdf->getText();
+					$pdfText = nl2br($text);
+
+					//Save and send the text and subject ID to analysis.php
+					$_SESSION['pdfText'] = $pdfText;
+					$_SESSION['subId'] = $subId;
+
+					header('Location: analysis.php');						//Redirect to analysis page
 				}
 			} else {
 				$unitSelected = false;
