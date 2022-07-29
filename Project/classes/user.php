@@ -181,10 +181,12 @@ class Student extends User
         //Execute prepared statement
         $status = $prepared_stmt->execute();
 
+        $subId = $db->getConnection()->insert_id;
+
         $prepared_stmt->close();
 
         $db->closeConnection();
 
-        return $status;
+        return [$status, $subId];
     }
 }
