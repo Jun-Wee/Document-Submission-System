@@ -57,6 +57,43 @@ class SubmissionTable
 
     function Get($subId)
     {
+        //Retrieve all analysis results based on the submission ID / specific parameter given
+
+        //Create connection to database
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM submission WHERE Id = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("i", $subId);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+         // Get resultset
+         $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+         or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+
+        // fetch the record from the server and then store them in an object
+        $this->submissions[$item_count] = new Submission($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
+        $row = mysqli_fetch_row($queryResult);
+        $item_count += 1;
+     }
+
+        //Close connection to database
+        $this->db->closeConnection();
+
+        return $this->submissions;
     }
 
     function Edit($subId, $submission)
