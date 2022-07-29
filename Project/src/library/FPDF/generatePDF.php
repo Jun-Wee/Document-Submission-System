@@ -43,7 +43,9 @@ $pdf->SetXY(10, 50);
 $pdf->SetFontSize(12);                          //Change font size
 
 //Document general information------------------------------------------------------------------------------
-$subId = 100011;                                                          //Placeholder ID for testing   
+$subId = 100011;                                                          //Placeholder ID for testing 
+//$subId = $_POST["subId"];
+
 $submission = $submissionTable->Get($subId);    //Obtain submission details
 $pdf->Cell(0, 10, 'Submission ID: ' . ($subId), 0, 1);
 $pdf->Cell(0, 10, 'Student ID: ' . ($submission[0]->getstuId()), 0, 1);
@@ -84,7 +86,8 @@ for ($i = 0; $i < count($entityOutput); $i++) {                             //Ea
         $link = $entityOutput[$i]->getLink();
         $pdf->Cell($width_cell[3], 12, "Available (Click here)", 0, 1, 'L', $fill, $link);
     }
-    if (empty($entityOutput[$i]->getLink())) {
+    
+    else {
         $pdf->Cell($width_cell[3], 12, "None", 0, 1, 'L', $fill);
     } 
     $fill = !$fill;
