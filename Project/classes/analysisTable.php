@@ -89,23 +89,20 @@ class AnalysisTable {
         return $this->analysis;
     }
 
-    /*function edit($id, $analysis) {
-        //Edit existing records of the analysis in the database
-    }*/ //Reserved for commenting during meeting
-
-    function add($emotion, $score, $magnitude) {
+    function add($subId, $emotion, $keywords, $matches, $score, $magnitude) {
         //Add a new record of the analysis to the database
 
         //Create connection to database
         $this->db->createConnection();
         
         //Insert the sentiment analysis value into the database
-        $sql = "INSERT INTO `analysis`(`summary`, `sentimentScore`, `sentimentMagnitude`) VALUES (?, ?, ?)";    //add subId
+        $sql = "INSERT INTO `analysis`(`subId`, `summary`, `keywords`, `matchedTitles`, `sentimentScore`, `sentimentMagnitude`) 
+        VALUES (?, ?, ?, ?, ?, ?)";
 
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
         //Bind input variables to prepared statement
-        $prepared_stmt->bind_param("sdd", $emotion, $score, $magnitude);
+        $prepared_stmt->bind_param("isssdd", $subId, $emotion, $keywords, $matches, $score, $magnitude);
 
         //Execute prepared statement
         $status = $prepared_stmt->execute();
