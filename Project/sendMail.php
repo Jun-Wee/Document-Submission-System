@@ -51,16 +51,16 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
         //Server settings
         $mail->SMTPDebug = 0;                                       //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.office365.com';                   //Set the SMTP server to send through
+        $mail->Host       = 'smtp.gmail.com';                   //Set the SMTP server to send through  smtp.office365.com
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'testingforswin@hotmail.com'; //SMTP username
-        $mail->Password   = 'qlrqamniuynvlstg';                     //SMTP password  / App Password
+        $mail->Username   = 'noreplyfordssystem@gmail.com'; //SMTP username
+        $mail->Password   = 'xaarmrenwohjeoze';                     //SMTP password  / App Password
         $mail->SMTPSecure = 'STARTTLS';                             //Enable implicit TLS encryption
         $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('testingforswin@hotmail.com', '(Noreply) Daily Summary Report');
-        $mail->addCC("101231636@student.swin.edu.au", $student_result_by_unit[$i]["name"]);     //Add a recipient
+        $mail->setFrom('noreplyfordssystem@gmail.com', '(Noreply) Daily Summary Report');
+        $mail->addAddress($student_result_by_unit[$i]["email"] , $student_result_by_unit[$i]["name"]);     //Add a recipient 
 
         
         //Content
@@ -105,8 +105,11 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 //Password
 // documentsubmissionsystem@hotmail.com  
 // mail pasword: swindocsub123456
-// App password: fpeyzqvfqcbioxgp
+// App password: hgtdiuwmulplfxcn
 
 // testingforswin@hotmail.com 
 // mail pasword: swindocsub123456
 // App password: qlrqamniuynvlstg
+
+//noreplyfordssystem@gmail.com
+// App password: xaarmrenwohjeoze
