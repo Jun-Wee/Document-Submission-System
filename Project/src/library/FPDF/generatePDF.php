@@ -76,7 +76,7 @@ $pdf->SetFont('Arial', '', 12);
 $pdf->SetFillColor(235, 236, 236);                                          //Header background colour;
 $fill = false;
 
-for ($i = 0; $i < count($entityOutput); $i++) {                             //Each record is one row
+for ($i = 0; $i < 5; $i++) {                             //Each record is one row
     $pdf->Cell($width_cell[0], 12, ($i+1), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[1], 12, ($entityOutput[$i]->getName()), 0, 0, 'L', $fill);
     $pdf->Cell($width_cell[2], 12, ($entityOutput[$i]->getSalience()), 0, 0, 'C', $fill);
