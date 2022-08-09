@@ -34,8 +34,6 @@ else {
         $reference = explode('Reference', str_replace(array('References'), 'Reference', $text));
         $title = explode('By', str_replace(array('By', 'by', 'Author'), 'By', $text));
 
-        echo $title[0];
-
         $keywords = "Keyword test";                                     //Temporary placeholders for database
         $matches = "Matched titles test";
 
