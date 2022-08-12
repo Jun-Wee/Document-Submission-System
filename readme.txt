@@ -36,6 +36,11 @@ GitHub Token Expires 21/August/2022
 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
 *******************************************************
 
+Install MySQL to EC2 instance
+*******************************************************
+yum install sql
+*******************************************************
+
 Connect RDS SQL from EC2 instance
 *******************************************************
 cmd: mysql -h documentsubmissionsystem.c2tnrfke8bpv.us-east-1.rds.amazonaws.com -P 3306 -u admin -p
@@ -62,3 +67,7 @@ sudo systemctl enable httpd.service
 Prevent Apache from loading when the system boots:
 sudo systemctl disable httpd.service
 *******************************************************
+
+install PHP and HTTP Apache
+*******************************************************
+https://yehiweb.com/install-php-7-4-7-3-or-7-2-on-aws-ec2-instance-guide/
