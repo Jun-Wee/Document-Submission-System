@@ -43,9 +43,10 @@ echo "<pre>";
 print_r( $student_result_by_unit);
 echo "</pre>";
 
-$mail = new PHPMailer(true);
+
 
 for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
+    $mail = new PHPMailer(true);
     try {
         echo 'start';
         //Server settings
@@ -60,7 +61,7 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 
         //Recipients
         $mail->setFrom('noreplyfordssystem@gmail.com', '(Noreply) Daily Summary Report');
-        $mail->addAddress($student_result_by_unit[$i]["email"] , $student_result_by_unit[$i]["name"]);     //Add a recipient 
+        $mail->addCC($student_result_by_unit[$i]["email"] , $student_result_by_unit[$i]["name"]);     //Add a recipient 
 
         
         //Content
@@ -90,9 +91,8 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         $mail->send();
-        echo 'Message has been sent';
+        echo 'Message has been sent';    
     } 
-
     catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         
@@ -101,6 +101,7 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
             print 'openssl extension loaded.';
         }
     }
+    $mail->SmtpClose();
 }
 //Password
 // documentsubmissionsystem@hotmail.com  
