@@ -1,4 +1,7 @@
 <?php
+
+namespace SystemFunction;
+
 class Database
 {
     // Properties

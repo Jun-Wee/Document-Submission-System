@@ -1,8 +1,6 @@
-<!-- Description: Send Mail function -->
-<!-- Author: Jun Wee Tan -->
-<!-- Date: 20th July 2022 -->
-<!-- Validated: =-->
 <?php
+namespace SystemFunction;
+
 class MailTable
 {
     private $db;
