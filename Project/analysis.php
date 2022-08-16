@@ -26,8 +26,6 @@ else {
 
         //Sentiment Analysis----------------------------------------------------------------------------------------------
         function sentiment($language, $extractedText, $subId, $type) {
-            //Image removal
-
 
             $db = new Database();
             $annotationS = $language->analyzeSentiment($extractedText);     //Analyze the sentiments
@@ -75,9 +73,9 @@ else {
         }
 
         //Text extraction-------------------------------------------------------------------------------------------------
-        $raw = $_SESSION['pdfText'];                                   //Issue: does not recognize images (� character)
+        $raw = $_SESSION['pdfText'];                                    //Issue: does not recognize images (� character)
 
-        //Ignore non UTF-8 characters
+        //Ignore non UTF-8 characters                                   //
         $text = iconv("UTF-8", "UTF-8//IGNORE", $raw);
 
         //Extract the abstract if exists
