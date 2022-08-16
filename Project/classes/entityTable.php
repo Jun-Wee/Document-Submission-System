@@ -96,7 +96,7 @@ class EntityTable {
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
         //Bind input variables to prepared statement
-        $prepared_stmt->bind_param("issds", $subId, $type, $name, $salience, $link);
+        $prepared_stmt->bind_param("isds", $subId, $name, $salience, $link);
 
         //Execute prepared statement
         $status = $prepared_stmt->execute();
