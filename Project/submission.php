@@ -50,7 +50,7 @@ if (!isset($_SESSION['student'])) {
 					$_SESSION['pdfText'] = $pdfText;
 					$_SESSION['subId'] = $subId;
 
-					header('Location: analysis.php');						//Redirect to analysis page
+					header('Location: extract.php');						//Redirect to analysis page
 				} 
 			}else{
 				$unitSelected = false;
