@@ -11,7 +11,7 @@
 	<meta name="description" content="Document Submission System">
 	<meta name="keywords" content="assignment, submission, document">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--<meta http-equiv="refresh" content = "5; url = question.php"/>-->
+    <meta http-equiv="refresh" content = "5; url = question.php"/>
 	<link rel="icon" href="src/images/logo.png">
 
 	
