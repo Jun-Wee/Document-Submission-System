@@ -53,6 +53,7 @@ $pdf->Cell(0, 10, 'Course Code: ' . ($submission[0]->getUnitCode()), 0, 1);
 $pdf->Cell(0, 10, 'Document: ' . ($submission[0]->getFilePath()), 0, 1);
 
 //Document analysis information-----------------------------------------------------------------------------
+$pdf->Cell(0, 10, '', 0, 1);
 $pdf->Cell(0, 10, 'Sentiment Analysis Details', 0, 1);
 $subId = $submission[0]->getId();               //Obtain submission ID
 $analysisOutput = $analysisTable->Get($subId);  //Obtain analysis details
@@ -82,14 +83,15 @@ for ($i = 0; $i < count($analysisOutput); $i++) {                               
     $fill = !$fill;
 }
 
-//Entity analysis information-------------------------------------------------------------------------------
+// //Entity analysis information-------------------------------------------------------------------------------
 $pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
 $pdf->Cell(0, 10, 'Entity Details', 0, 1);
 
 $entityOutput = $entityTable->get($subId);     //Obtain entity details
 
 //Create a PDF table for entity analysis-----------------------------------------------------------
-$width_cell = array(15, 45, 40, 70, 30);                                    //Array for column size
+$width_cell = array(15, 50, 40, 85, 30);                                    //Array for column size
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->SetFillColor(253, 30, 50);                                            //Set background colour
 
@@ -118,6 +120,14 @@ for ($i = 0; $i < count($entityOutput); $i++) {                                 
     } 
     $fill = !$fill;
 }
+
+//Add description of score, salience, magnitude-------------------------------------------------------------
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 2, 'Score - Indicates the emotional leaning of the message. Negative value for negative message, 0 for Neutral Message', 0, 1);
+$pdf->Cell(0, 10, 'Positive message are above 0.', 0, 1);
+$pdf->Cell(0, 10, 'Salience - Importance of the entity within the document. The higher the score, the more salient the entity.', 0, 1);
+$pdf->Cell(0, 10, 'Magnitude - The strength of the emotion, the higher the score the stronger the emotion.', 0, 1);
 
 //Return the generated output-------------------------------------------------------------------------------
 $pdf->Output();
