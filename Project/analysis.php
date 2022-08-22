@@ -17,6 +17,7 @@ if (!isset($_SESSION['student'])) {
 else {
     try {
         $language = new LanguageClient([
+            //Replace if needed (admin only)
             'keyFilePath' => getcwd().'/src/library/GoogleNLP/psyched-hulling-355705-0568447d899e.json',
         ]);
 
@@ -75,79 +76,159 @@ else {
         //Text extraction-------------------------------------------------------------------------------------------------
         $raw = $_SESSION['pdfText'];                                    //Issue: does not recognize images (� character)
 
-        //Ignore non UTF-8 characters                                   //
+        //Ignore non UTF-8 characters                                   //Works
         $text = iconv("UTF-8", "UTF-8//IGNORE", $raw);
 
-        //Extract the abstract if exists
-        if (strpos(strtolower($text), "abstract") !== false) {
-            $abstractInitial = explode("Abstract", $text);
-            $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[2]));
-            // echo "Abstract: " . $abstractFinal[0];
-            $type = "Abstract";
-            sentiment($language, $abstractFinal[0], $subId, $type);
-            entity($language, $abstractFinal[0], $subId);
+        if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000) {
+            //Extract the abstract if exists
+            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 500) {
+                $abstractInitial = explode("Abstract", $text);      
+                $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[2]));
+                // echo "Abstract: " . $abstractFinal[0];
+                $type = "Abstract";
+                sentiment($language, $abstractFinal[0], $subId, $type);
+                entity($language, $abstractInitial[2], $subId);
+            }
+
+            //Extract the introduction if exists
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 1000) {    
+                if (empty($abstractInitial[2])) {
+                    $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
+                }
+                $introductionInitial = explode("Introduction", $abstractInitial[2]);
+                $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[2]));
+                // echo "Introduction: " . $introductionFinal[0];
+                // echo "Introduction: " . $introductionInitial[2];
+                $type = "Introduction";
+                sentiment($language, $introductionFinal[0], $subId, $type);
+
+                if (empty($abstractFinal[0])) {
+                    entity($language, $introductionInitial[2], $subId);
+                }
+            }       //Note: Only takes either Abstract + Intro, Intro, Abstract, cannot Intro + Abstract
+
+            //Extract executive summary if exists
+            if (str_contains(strtolower($text), "executive summary")) {
+                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
+                    $abstractInitial[2] = $introductionInitial[2];
+                }
+                $esInitial = explode("Executive summary", $abstractInitial[2]);
+                $esFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($esInitial[2]));
+                $type = "Executive summary";
+                sentiment($language, $esFinal[0], $subId, $type);
+            }
+
+            //Extract conclusion if exists
+            if (str_contains(strtolower($text), "conclusion")) {
+                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
+                    $abstractInitial[2] = $introductionInitial[1];
+                }
+                $conclusionInitial = explode("Conclusion", $abstractInitial[2]);
+                $conclusionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($conclusionInitial[2]));
+                //echo "Conclusion: " . $conclusionFinal[0]; 
+                $type = "Conclusion";
+                sentiment($language, $conclusionFinal[2], $subId, $type);
+            }
+
+            //Extract discussion if exists
+            if (str_contains(strtolower($text), "discussion")) {
+                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
+                    $abstractInitial[2] = $introductionInitial[2];
+                }
+                $discussionInitial = explode("Discussion", $abstractInitial[2]);
+                $discussionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($discussionInitial[2]));
+                $type = "Discussion";
+                sentiment($language, $discussionFinal[0], $subId, $type);
+            }
+
+            //Extract references if exists
+            if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
+                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
+                    $abstractInitial[2] = $introductionInitial[2];
+                }
+                $referenceInitial = explode("References", $text);
+                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[2]));
+                //Store the reference in session for future usage
+                $_SESSION["reference"] = $referenceFinal[0];
+                // echo "References: " . $referenceFinal[0];
+            }
         }
 
-        //Extract the introduction if exists
-        if (strpos(strtolower($text), "introduction") !== false) {    
-            if (empty($abstractInitial[2])) {
-                $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
+        else {
+            // echo "No table of content found";
+            // echo strpos(strtolower($text), "contents");
+            //Extract the abstract if exists
+            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 500) {
+                $abstractInitial = explode("Abstract", $text);      
+                $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
+                // echo "Abstract: " . $abstractFinal[0];
+                $type = "Abstract";
+                sentiment($language, $abstractFinal[0], $subId, $type);
+                entity($language, $abstractFinal[0], $subId);
             }
-            $introductionInitial = explode("Introduction", $abstractInitial[2]);
-            $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[1]));
-            // echo "Introduction: " . $introductionFinal[0];
-            $type = "Introduction";
-            sentiment($language, $introductionFinal[0], $subId, $type);
 
-            if (empty($abstractFinal[0])) {
-                entity($language, $introductionFinal[0], $subId);
+            //Extract the introduction if exists
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 1000) {    
+                if (empty($abstractInitial[1])) {
+                    $abstractInitial[1] = $text;    //If abstract is not the first paragraph, replace with original text
+                }
+                $introductionInitial = explode("Introduction", $abstractInitial[1]);
+                $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[1]));
+                // echo "Introduction: " . $introductionFinal[0];
+                $type = "Introduction";
+                sentiment($language, $introductionFinal[0], $subId, $type);
+
+                if (empty($abstractFinal[0])) {
+                    entity($language, $introductionFinal[0], $subId);
+                }
+            }
+
+            //Extract executive summary if exists
+            if (str_contains(strtolower($text), "executive summary")) {
+                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with introduction
+                    $abstractInitial[1] = $introductionInitial[1];
+                }
+                $esInitial = explode("Executive summary", $abstractInitial[1]);
+                $esFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($esInitial[1]));
+                $type = "Executive summary";
+                sentiment($language, $esFinal[0], $subId, $type);
+            }
+
+            //Extract conclusion if exists
+            if (str_contains(strtolower($text), "conclusion")) {
+                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with introduction
+                    $abstractInitial[1] = $introductionInitial[1];
+                }
+                $conclusionInitial = explode("Conclusion", $abstractInitial[1]);
+                $conclusionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($conclusionInitial[1]));
+                //echo "Conclusion: " . $conclusionFinal[0]; 
+                $type = "Conclusion";
+                sentiment($language, $conclusionFinal[0], $subId, $type);
+            }
+
+            //Extract discussion if exists
+            if (str_contains(strtolower($text), "discussion")) {
+                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with introduction
+                    $abstractInitial[1] = $introductionInitial[1];
+                }
+                $discussionInitial = explode("Discussion", $abstractInitial[1]);
+                $discussionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($discussionInitial[1]));
+                $type = "Discussion";
+                sentiment($language, $discussionFinal[0], $subId, $type);
+            }
+
+            //Extract references if exists
+            if (str_contains(strtolower($text), "references") || str_contains(strtolower($text), "reference")) {
+                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with original text
+                    $abstractInitial[1] = $introductionInitial[1];
+                }
+                $referenceInitial = explode("References", $abstractInitial[1]);
+                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
+                // echo "References: " . $referenceFinal[0];
             }
         }
-
-        //Extract executive summary if exists
-        if (strpos(strtolower($text), "executive summary") !== false) {
-            if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                $abstractInitial[2] = $introductionInitial[1];
-            }
-            $esInitial = explode("Executive summary", $abstractInitial[2]);
-            $esFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($esInitial[1]));
-            $type = "Executive summary";
-            sentiment($language, $esFinal[0], $subId, $type);
-        }
-
-        //Extract conclusion if exists
-        if (strpos(strtolower($text), "conclusion") !== false) {
-            if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                $abstractInitial[2] = $introductionInitial[1];
-            }
-            $conclusionInitial = explode("Conclusion", $abstractInitial[2]);
-            $conclusionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($conclusionInitial[1]));
-            echo "Conclusion: " . $conclusionFinal[0]; 
-            $type = "Conclusion";
-            sentiment($language, $conclusionFinal[0], $subId, $type);
-        }
-
-        //Extract discussion if exists
-        if (strpos(strtolower($text), "discussion") !== false) {
-            if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                $abstractInitial[2] = $introductionInitial[1];
-            }
-            $discussionInitial = explode("Discussion", $abstractInitial[2]);
-            $discussionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($discussionInitial[1]));
-            $type = "Discussion";
-            sentiment($language, $discussionFinal[0], $subId, $type);
-        }
-
-        //Extract references if exists
-        if (strpos(strtolower($text), "references") !== false || strpos(strtolower($text), "reference") !== false) {
-            if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
-                $abstractInitial[2] = $introductionInitial[1];
-            }
-            $referenceInitial = explode("References", $abstractInitial[2]);
-            $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
-            // echo "References: " . $referenceFinal[0];
-        }
-
+        
+        //Legacy solution (Too ambiguous)-------------------------------------------------------------------------------
         //$introduction = explode("Introduction", $text);
         // $context = explode("Context", $text);
         // $conclusion = explode("Conclusion", $text);
@@ -165,8 +246,7 @@ else {
         //$pageCount = $pdf->getPages();
         //echo $pageCount;
         // $paragraph3 = $text[9] . $text[10] . $text[11] . $text[12] . $text[13] . $text[14];
-        // $paragraph4 = $text[30] . $text[31] . $text[32] . $text[33] . $text[34] . $text[35];
-        // $paragraph5 = $text[36] . $text[37] . $text[38] . $text[39] . $text[40] . $text[41];
+
 
         //Combine the paragraphs together
         //$extractedText = $paragraph1 . $paragraph2 . $paragraph3 . $paragraph4 . $paragraph5;
@@ -179,36 +259,3 @@ else {
 }
 
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>Analyzing... | Document Submission System</title>
-	<meta name="language" content="english" />
-	<meta charset="utf-8">
-	<meta name="author" content="Xin Zhe Chong">
-	<meta name="description" content="Document Submission System">
-	<meta name="keywords" content="assignment, submission, document">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--<meta http-equiv="refresh" content = "5; url = question.php"/>-->
-	<link rel="icon" href="src/images/logo.png">
-
-	
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-
-<body>
-    <br><br><br><br><br><br><br><br><br><br><br><br>
-    <div class="text-center">
-        <div class="spinner-border text-success m-10" style="width: 5rem; height: 5rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <br><br>
-        <strong>Processing document...</strong>
-    </div>
-</body>
-</html>
-
