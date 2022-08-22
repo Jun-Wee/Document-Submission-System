@@ -22,8 +22,8 @@ $mailtable = new MailTable($db);
 $subscriber = $mailtable->getSubscribeConvenor();  //retrieve convenor email
 
 $student_result_by_unit = array();
-$j =0;
-for ($i=0; $i < count($subscriber); $i++) {    //2
+$j = 0;
+for ($i = 0; $i < count($subscriber); $i++) {    //2
     $mailtable->getConvenorUnit($subscriber[$i]['Email']);
     $mailtable->getAllStudentSubmission();
 
@@ -32,7 +32,7 @@ for ($i=0; $i < count($subscriber); $i++) {    //2
             "name" => $subscriber[$j]['Name'],
             "email" => $subscriber[$j]['Email'],
             "table" => $mailtable->getFullTable()
-        ];    
+        ];
         $j++;
     }
     $mailtable->unsetFullTable();
@@ -40,12 +40,13 @@ for ($i=0; $i < count($subscriber); $i++) {    //2
 }
 
 echo "<pre>";
-print_r( $student_result_by_unit);
+print_r($student_result_by_unit);
 echo "</pre>";
 
-$mail = new PHPMailer(true);
 
-for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
+
+for ($i = 0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
+    $mail = new PHPMailer(true);
     try {
         echo 'start';
         //Server settings
@@ -60,15 +61,15 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 
         //Recipients
         $mail->setFrom('noreplyfordssystem@gmail.com', '(Noreply) Daily Summary Report');
-        $mail->addAddress($student_result_by_unit[$i]["email"] , $student_result_by_unit[$i]["name"]);     //Add a recipient 
+        $mail->addCC($student_result_by_unit[$i]["email"], $student_result_by_unit[$i]["name"]);     //Add a recipient 
 
-        
+
         //Content
         $mail->isHTML(true);  //Set email format to HTML
         $mail->Subject = 'Daily Summary Report';
-        
-        $mail->Body= 
-        'Dear Sir/Madam '. $student_result_by_unit[$i]["name"].',
+
+        $mail->Body =
+            'Dear Sir/Madam ' . $student_result_by_unit[$i]["name"] . ',
         <br>
         This is an auto generated response email. Please do not reply to this email as it will not be received. 
         <br>
@@ -78,7 +79,7 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
         Below is the daily summary of students MCQ results :
         <br>
         <br>
-        '.$student_result_by_unit[$i]["table"].'
+        ' . $student_result_by_unit[$i]["table"] . '
         
                
         Cheers,
@@ -86,21 +87,20 @@ for ($i=0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 
         [Document Submission System Team]
         ';
-        
+
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         $mail->send();
         echo 'Message has been sent';
-    } 
-
-    catch (Exception $e) {
+    } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        
+
         //check if the system support SSL
         if (extension_loaded('openssl')) {
             print 'openssl extension loaded.';
         }
     }
+    $mail->SmtpClose();
 }
 //Password
 // documentsubmissionsystem@hotmail.com  
