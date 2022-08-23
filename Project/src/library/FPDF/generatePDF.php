@@ -43,7 +43,7 @@ $pdf->SetXY(10, 50);
 $pdf->SetFontSize(12);                          //Change font size
 
 //Document general information------------------------------------------------------------------------------
-$subId = 100011;                                                          //Placeholder ID for testing 
+$subId = 100006;                                                          //Placeholder ID for testing 
 //$subId = $_POST["subId"];
 
 $submission = $submissionTable->Get($subId);    //Obtain submission details
@@ -53,18 +53,46 @@ $pdf->Cell(0, 10, 'Course Code: ' . ($submission[0]->getUnitCode()), 0, 1);
 $pdf->Cell(0, 10, 'Document: ' . ($submission[0]->getFilePath()), 0, 1);
 
 //Document analysis information-----------------------------------------------------------------------------
-$subId = $submission[0]->getId();                  //Obtain submission ID
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'Sentiment Analysis Details', 0, 1);
+$subId = $submission[0]->getId();               //Obtain submission ID
 $analysisOutput = $analysisTable->Get($subId);  //Obtain analysis details
-$pdf->Cell(0, 10, 'Sentiment summary: ' . ($analysisOutput[0]->getSummary()), 0, 1);
-$pdf->Cell(0, 10, 'Sentiment score: ' . ($analysisOutput[0]->getSentimentScore()), 0, 1);
-$pdf->Cell(0, 10, 'Sentiment magnitude: ' . ($analysisOutput[0]->getSentimentMagnitude()), 0, 1);
 
-$entityOutput = $entityTable->get($subId);     //Obtain entity details     //Make it a table
+//Create a PDF table for sentiment analysis--------------------------------------------------------
+$width_cell = array(15, 25, 40, 95, 30);                                    //Array for column size
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->SetFillColor(253, 30, 50);                                            //Set background colour
 
-//Create a PDF table for entity analysis-------------------------------------------------------------------
-$width_cell = array(15, 60, 40, 70);                                        //Array for column size
-$pdf->SetFont('Arial', 'B', 13);
+$pdf->Cell($width_cell[0], 10, 'No.', 1, 0, 'C', true);                     //Set header
+$pdf->Cell($width_cell[4], 10, 'Type', 1, 0, 'C', true);
+$pdf->Cell($width_cell[3], 10, 'Summary', 1, 0, 'C', true);
+$pdf->Cell($width_cell[1], 10, 'Score', 1, 0, 'C', true);
+$pdf->Cell($width_cell[1], 10, 'Magnitude', 1, 1, 'C', true);
 
+$pdf->SetFont('Arial', '', 10);
+$pdf->SetFillColor(235, 236, 236);                                          //Header background colour;
+$fill = false;
+
+for ($i = 0; $i < count($analysisOutput); $i++) {                                               //Each record is one row
+    $pdf->Cell($width_cell[0], 12, ($i+1), 0, 0, 'C', $fill);
+    $pdf->Cell($width_cell[4], 12, ($analysisOutput[$i]->getType()), 0, 0, 'C', $fill);
+    $pdf->Cell($width_cell[3], 12, ($analysisOutput[$i]->getSummary()), 0, 0, 'L', $fill);
+    $pdf->Cell($width_cell[1], 12, ($analysisOutput[$i]->getSentimentScore()), 0, 0, 'C', $fill);
+    $pdf->Cell($width_cell[1], 12, ($analysisOutput[$i]->getSentimentMagnitude()), 0, 1, 'C', $fill);
+
+    $fill = !$fill;
+}
+
+// //Entity analysis information-------------------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'Entity Details', 0, 1);
+
+$entityOutput = $entityTable->get($subId);     //Obtain entity details
+
+//Create a PDF table for entity analysis-----------------------------------------------------------
+$width_cell = array(15, 50, 40, 85, 30);                                    //Array for column size
+$pdf->SetFont('Arial', 'B', 12);
 $pdf->SetFillColor(253, 30, 50);                                            //Set background colour
 
 $pdf->Cell($width_cell[0], 10, 'No.', 1, 0, 'C', true);                     //Set header
@@ -72,11 +100,11 @@ $pdf->Cell($width_cell[1], 10, 'Entity name', 1, 0, 'C', true);
 $pdf->Cell($width_cell[2], 10, 'Salience score', 1, 0, 'C', true);
 $pdf->Cell($width_cell[3], 10, 'Wikipedia link', 1, 1, 'C', true);
 
-$pdf->SetFont('Arial', '', 12);
+$pdf->SetFont('Arial', '', 10);
 $pdf->SetFillColor(235, 236, 236);                                          //Header background colour;
 $fill = false;
 
-for ($i = 0; $i < count($entityOutput); $i++) {                             //Each record is one row
+for ($i = 0; $i < count($entityOutput); $i++) {                                               //Each record is one row
     $pdf->Cell($width_cell[0], 12, ($i+1), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[1], 12, ($entityOutput[$i]->getName()), 0, 0, 'L', $fill);
     $pdf->Cell($width_cell[2], 12, ($entityOutput[$i]->getSalience()), 0, 0, 'C', $fill);
@@ -92,6 +120,14 @@ for ($i = 0; $i < count($entityOutput); $i++) {                             //Ea
     } 
     $fill = !$fill;
 }
+
+//Add description of score, salience, magnitude-------------------------------------------------------------
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 2, 'Score - Indicates the emotional leaning of the message. Negative value for negative message, 0 for Neutral Message', 0, 1);
+$pdf->Cell(0, 10, 'Positive message are above 0.', 0, 1);
+$pdf->Cell(0, 10, 'Salience - Importance of the entity within the document. The higher the score, the more salient the entity.', 0, 1);
+$pdf->Cell(0, 10, 'Magnitude - The strength of the emotion, the higher the score the stronger the emotion.', 0, 1);
 
 //Return the generated output-------------------------------------------------------------------------------
 $pdf->Output();

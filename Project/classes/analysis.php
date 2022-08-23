@@ -3,19 +3,18 @@
 class Analysis {
     private $analysisId;
     private $subId;
+    private $type;
     private $summary;
-    private $keywords;
-    private $matchedTitles;
     private $sentimentScore;
     private $sentimentMagnitude;
 
     //Constructor
-    function __construct($analysisId, $subId, $summary, $keywords, $matchedTitles, $sentimentScore, $sentimentMagnitude) {
+    function __construct($analysisId, $subId, $type, $summary, $sentimentScore, $sentimentMagnitude) {
         $this->analysisId = $analysisId;
         $this->subId = $subId;
+        $this->type = $type;
         $this->summary = $summary;
-        $this->keywords = $keywords;
-        $this->matchedTitles = $matchedTitles;
+
         $this->sentimentScore = $sentimentScore;
         $this->sentimentMagnitude = $sentimentMagnitude;
     }
@@ -37,28 +36,20 @@ class Analysis {
         return $newSubId;
     }
 
+    function getType() {
+        return $this->type;
+    }
+
+    function setType($newType) {
+        return $newType;
+    }
+
     function getSummary() {
         return $this->summary;
     }
 
     function setSummary($newSummary) {
         return $newSummary;
-    }
-
-    function getKeywords() {
-        return $this->keywords;
-    }
-
-    function setKeywords($newKeywords) {
-        return $newKeywords;
-    }
-
-    function getMatchedTitles() {
-        return $this->matchedTitles;
-    }
-
-    function setMatchedTitles($newMatchedTitles) {
-        return $newMatchedTitles;
     }
 
     function getSentimentScore() {

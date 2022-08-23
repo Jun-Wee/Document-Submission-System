@@ -53,9 +53,8 @@ INSERT INTO `admin` (`UserId`, `Name`, `Email`, `Password`, `Role`, `Gender`, `i
 CREATE TABLE `analysis` (
   `analysisId` int(10) NOT NULL,
   `subId` int(10) NOT NULL,
+  `type` varchar(50) NOT NULL,
   `summary` varchar(200) DEFAULT NULL,
-  `keywords` varchar(200) DEFAULT NULL,
-  `matchedTitles` varchar(200) DEFAULT NULL,
   `sentimentScore` float DEFAULT NULL,
   `sentimentMagnitude` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

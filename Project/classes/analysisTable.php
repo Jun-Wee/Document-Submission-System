@@ -38,7 +38,7 @@ class AnalysisTable {
         while ($row) {
 
             // fetch the record from the server and then store them in an object
-            $this->analysis[$item_count] = new Analysis($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
+            $this->analysis[$item_count] = new Analysis($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
             $row = mysqli_fetch_row($queryResult);
             $item_count += 1;
         }
@@ -78,7 +78,7 @@ class AnalysisTable {
         while ($row) {
 
         // fetch the record from the server and then store them in an object
-        $this->analysis[$item_count] = new Analysis($row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
+        $this->analysis[$item_count] = new Analysis($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
         $row = mysqli_fetch_row($queryResult);
         $item_count += 1;
      }
@@ -89,20 +89,20 @@ class AnalysisTable {
         return $this->analysis;
     }
 
-    function add($subId, $emotion, $keywords, $matches, $score, $magnitude) {
+    function add($subId, $type, $emotion, $score, $magnitude) {
         //Add a new record of the analysis to the database
 
         //Create connection to database
         $this->db->createConnection();
         
         //Insert the sentiment analysis value into the database
-        $sql = "INSERT INTO `analysis`(`subId`, `summary`, `keywords`, `matchedTitles`, `sentimentScore`, `sentimentMagnitude`) 
-        VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `analysis`(`subId`, `type`, `summary`, `sentimentScore`, `sentimentMagnitude`) 
+        VALUES (?, ?, ?, ?, ?)";
 
         $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
         //Bind input variables to prepared statement
-        $prepared_stmt->bind_param("isssdd", $subId, $emotion, $keywords, $matches, $score, $magnitude);
+        $prepared_stmt->bind_param("issdd", $subId, $type, $emotion, $score, $magnitude);
 
         //Execute prepared statement
         $status = $prepared_stmt->execute();
