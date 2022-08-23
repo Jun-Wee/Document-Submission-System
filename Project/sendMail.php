@@ -43,10 +43,9 @@ echo "<pre>";
 print_r($student_result_by_unit);
 echo "</pre>";
 
-
+$mail = new PHPMailer(true);
 
 for ($i = 0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
-    $mail = new PHPMailer(true);
     try {
         echo 'start';
         //Server settings
@@ -61,7 +60,7 @@ for ($i = 0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 
         //Recipients
         $mail->setFrom('noreplyfordssystem@gmail.com', '(Noreply) Daily Summary Report');
-        $mail->addCC($student_result_by_unit[$i]["email"], $student_result_by_unit[$i]["name"]);     //Add a recipient 
+        $mail->addAddress($student_result_by_unit[$i]["email"], $student_result_by_unit[$i]["name"]);     //Add a recipient 
 
 
         //Content
