@@ -20,6 +20,10 @@ class ComposerStaticInitcf702f1f39e6adf079a27d7dee9bb747
         array (
             'Webmozart\\Assert\\' => 17,
         ),
+        'S' => 
+        array (
+            'SystemFunction\\' => 15,
+        ),
         'P' => 
         array (
             'Prophecy\\' => 9,
@@ -35,12 +39,16 @@ class ComposerStaticInitcf702f1f39e6adf079a27d7dee9bb747
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'SystemFunction\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/classes',
         ),
         'Prophecy\\' => 
         array (

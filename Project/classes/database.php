@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemFunction;
+//namespace SystemFunction;
 
 class Database
 {
