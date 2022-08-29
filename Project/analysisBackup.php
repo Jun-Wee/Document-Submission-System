@@ -81,7 +81,7 @@ else {
 
         if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000) {
             //Extract the abstract if exists
-            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 500) {
+            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
                 $abstractInitial = explode("Abstract", $text);      
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[2]));
                 // echo "Abstract: " . $abstractFinal[0];
@@ -91,7 +91,7 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 1000) {    
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
                 if (empty($abstractInitial[2])) {
                     $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
                 }
@@ -158,7 +158,7 @@ else {
             // echo "No table of content found";
             // echo strpos(strtolower($text), "contents");
             //Extract the abstract if exists
-            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 500) {
+            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
                 $abstractInitial = explode("Abstract", $text);      
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
                 // echo "Abstract: " . $abstractFinal[0];
@@ -168,7 +168,7 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 1000) {    
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
                 if (empty($abstractInitial[1])) {
                     $abstractInitial[1] = $text;    //If abstract is not the first paragraph, replace with original text
                 }

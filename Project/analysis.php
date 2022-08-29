@@ -79,9 +79,12 @@ else {
         //Ignore non UTF-8 characters                                   //Works
         $text = iconv("UTF-8", "UTF-8//IGNORE", $raw);
 
-        if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000) {
+        echo $text;
+
+        if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000 || 
+        str_contains(strtolower($text), "contents") && strpos(strtolower($text), "contents") < 5000) {
             //Extract the abstract if exists
-            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 500) {
+            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
                 $abstractInitial = explode("Abstract", $text);      
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[2]));
                 // echo "Abstract: " . $abstractFinal[0];
@@ -91,8 +94,8 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 1000) {    
-                if (empty($abstractInitial[2])) {
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
+                if (!isset($abstractInitial[2])) {
                     $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
                 }
                 $introductionInitial = explode("Introduction", $abstractInitial[2]);
@@ -102,14 +105,14 @@ else {
                 $type = "Introduction";
                 sentiment($language, $introductionInitial[2], $subId, $type);
 
-                if (empty($abstractFinal[0])) {
+                if (!isset($abstractFinal[0])) {
                     entity($language, $introductionInitial[2], $subId);
                 }
             }       //Note: Only takes either Abstract + Intro, Intro, Abstract, cannot Intro + Abstract
 
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
-                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
+                if (!isset($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
                     $abstractInitial[2] = $introductionInitial[2];
                 }
                 $referenceInitial = explode("References", $text);
@@ -124,7 +127,7 @@ else {
             // echo "No table of content found";
             // echo strpos(strtolower($text), "contents");
             //Extract the abstract if exists
-            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 500) {
+            if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
                 $abstractInitial = explode("Abstract", $text);      
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
                 // echo "Abstract: " . $abstractFinal[0];
@@ -134,8 +137,8 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 1000) {    
-                if (empty($abstractInitial[1])) {
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
+                if (!isset($abstractInitial[1])) {
                     $abstractInitial[1] = $text;    //If abstract is not the first paragraph, replace with original text
                 }
                 $introductionInitial = explode("Introduction", $abstractInitial[1]);
@@ -144,14 +147,14 @@ else {
                 $type = "Introduction";
                 sentiment($language, $introductionInitial[1], $subId, $type);
 
-                if (empty($abstractFinal[0])) {
+                if (!isset($abstractFinal[0])) {
                     entity($language, $introductionInitial[1], $subId);
                 }
             }
 
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || str_contains(strtolower($text), "reference")) {
-                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with original text
+                if (!isset($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with original text
                     $abstractInitial[1] = $introductionInitial[1];
                 }
                 $referenceInitial = explode("References", $abstractInitial[1]);
