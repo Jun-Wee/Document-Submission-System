@@ -121,7 +121,7 @@ else {
             //Extract conclusion if exists
             if (str_contains(strtolower($text), "conclusion")) {
                 if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[2] = $introductionInitial[1];
+                    $abstractInitial[2] = $introductionInitial[2];
                 }
                 $conclusionInitial = explode("Conclusion", $abstractInitial[2]);
                 $conclusionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($conclusionInitial[2]));
