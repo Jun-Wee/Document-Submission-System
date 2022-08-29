@@ -43,7 +43,7 @@ $pdf->SetXY(10, 50);
 $pdf->SetFontSize(12);                          //Change font size
 
 //Document general information------------------------------------------------------------------------------
-$subId = 100006;                                                          //Placeholder ID for testing 
+$subId = 100021;                                                          //Placeholder ID for testing 
 //$subId = $_POST["subId"];
 
 $submission = $submissionTable->Get($subId);    //Obtain submission details
@@ -59,12 +59,12 @@ $subId = $submission[0]->getId();               //Obtain submission ID
 $analysisOutput = $analysisTable->Get($subId);  //Obtain analysis details
 
 //Create a PDF table for sentiment analysis--------------------------------------------------------
-$width_cell = array(15, 25, 40, 95, 30);                                    //Array for column size
+$width_cell = array(15, 30, 40, 115, 30);                                    //Array for column size
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->SetFillColor(253, 30, 50);                                            //Set background colour
 
 $pdf->Cell($width_cell[0], 10, 'No.', 1, 0, 'C', true);                     //Set header
-$pdf->Cell($width_cell[4], 10, 'Type', 1, 0, 'C', true);
+//$pdf->Cell($width_cell[4], 10, 'Type', 1, 0, 'C', true);
 $pdf->Cell($width_cell[3], 10, 'Summary', 1, 0, 'C', true);
 $pdf->Cell($width_cell[1], 10, 'Score', 1, 0, 'C', true);
 $pdf->Cell($width_cell[1], 10, 'Magnitude', 1, 1, 'C', true);
@@ -75,7 +75,7 @@ $fill = false;
 
 for ($i = 0; $i < count($analysisOutput); $i++) {                                               //Each record is one row
     $pdf->Cell($width_cell[0], 12, ($i+1), 0, 0, 'C', $fill);
-    $pdf->Cell($width_cell[4], 12, ($analysisOutput[$i]->getType()), 0, 0, 'C', $fill);
+    //$pdf->Cell($width_cell[4], 12, ($analysisOutput[$i]->getType()), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[3], 12, ($analysisOutput[$i]->getSummary()), 0, 0, 'L', $fill);
     $pdf->Cell($width_cell[1], 12, ($analysisOutput[$i]->getSentimentScore()), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[1], 12, ($analysisOutput[$i]->getSentimentMagnitude()), 0, 1, 'C', $fill);

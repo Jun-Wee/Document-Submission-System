@@ -86,7 +86,7 @@ else {
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[2]));
                 // echo "Abstract: " . $abstractFinal[0];
                 $type = "Abstract";
-                sentiment($language, $abstractFinal[0], $subId, $type);
+                sentiment($language, $abstractInitial[2], $subId, $type);
                 entity($language, $abstractInitial[2], $subId);
             }
 
@@ -100,46 +100,12 @@ else {
                 // echo "Introduction: " . $introductionFinal[0];
                 // echo "Introduction: " . $introductionInitial[2];
                 $type = "Introduction";
-                sentiment($language, $introductionFinal[0], $subId, $type);
+                sentiment($language, $introductionInitial[2], $subId, $type);
 
                 if (empty($abstractFinal[0])) {
                     entity($language, $introductionInitial[2], $subId);
                 }
             }       //Note: Only takes either Abstract + Intro, Intro, Abstract, cannot Intro + Abstract
-
-            //Extract executive summary if exists
-            if (str_contains(strtolower($text), "executive summary")) {
-                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[2] = $introductionInitial[2];
-                }
-                $esInitial = explode("Executive summary", $abstractInitial[2]);
-                $esFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($esInitial[2]));
-                $type = "Executive summary";
-                sentiment($language, $esFinal[0], $subId, $type);
-            }
-
-            //Extract conclusion if exists
-            if (str_contains(strtolower($text), "conclusion")) {
-                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[2] = $introductionInitial[2];
-                }
-                $conclusionInitial = explode("Conclusion", $abstractInitial[2]);
-                $conclusionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($conclusionInitial[2]));
-                //echo "Conclusion: " . $conclusionFinal[0]; 
-                $type = "Conclusion";
-                sentiment($language, $conclusionFinal[2], $subId, $type);
-            }
-
-            //Extract discussion if exists
-            if (str_contains(strtolower($text), "discussion")) {
-                if (empty($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[2] = $introductionInitial[2];
-                }
-                $discussionInitial = explode("Discussion", $abstractInitial[2]);
-                $discussionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($discussionInitial[2]));
-                $type = "Discussion";
-                sentiment($language, $discussionFinal[0], $subId, $type);
-            }
 
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
@@ -163,8 +129,8 @@ else {
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
                 // echo "Abstract: " . $abstractFinal[0];
                 $type = "Abstract";
-                sentiment($language, $abstractFinal[0], $subId, $type);
-                entity($language, $abstractFinal[0], $subId);
+                sentiment($language, $abstractInitial[1], $subId, $type);
+                entity($language, $abstractInitial[1], $subId);
             }
 
             //Extract the introduction if exists
@@ -176,45 +142,11 @@ else {
                 $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[1]));
                 // echo "Introduction: " . $introductionFinal[0];
                 $type = "Introduction";
-                sentiment($language, $introductionFinal[0], $subId, $type);
+                sentiment($language, $introductionInitial[1], $subId, $type);
 
                 if (empty($abstractFinal[0])) {
-                    entity($language, $introductionFinal[0], $subId);
+                    entity($language, $introductionInitial[1], $subId);
                 }
-            }
-
-            //Extract executive summary if exists
-            if (str_contains(strtolower($text), "executive summary")) {
-                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[1] = $introductionInitial[1];
-                }
-                $esInitial = explode("Executive summary", $abstractInitial[1]);
-                $esFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($esInitial[1]));
-                $type = "Executive summary";
-                sentiment($language, $esFinal[0], $subId, $type);
-            }
-
-            //Extract conclusion if exists
-            if (str_contains(strtolower($text), "conclusion")) {
-                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[1] = $introductionInitial[1];
-                }
-                $conclusionInitial = explode("Conclusion", $abstractInitial[1]);
-                $conclusionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($conclusionInitial[1]));
-                //echo "Conclusion: " . $conclusionFinal[0]; 
-                $type = "Conclusion";
-                sentiment($language, $conclusionFinal[0], $subId, $type);
-            }
-
-            //Extract discussion if exists
-            if (str_contains(strtolower($text), "discussion")) {
-                if (empty($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with introduction
-                    $abstractInitial[1] = $introductionInitial[1];
-                }
-                $discussionInitial = explode("Discussion", $abstractInitial[1]);
-                $discussionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($discussionInitial[1]));
-                $type = "Discussion";
-                sentiment($language, $discussionFinal[0], $subId, $type);
             }
 
             //Extract references if exists
@@ -224,6 +156,7 @@ else {
                 }
                 $referenceInitial = explode("References", $abstractInitial[1]);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
+                $_SESSION["reference"] = $referenceFinal[0];
                 // echo "References: " . $referenceFinal[0];
             }
         }
