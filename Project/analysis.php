@@ -37,7 +37,7 @@ else {
             $magnitude = $annotationS->sentiment()['magnitude'];
 
             $sentimentAnalysis = new SentimentAnalysis();
-            $emotion = $sentimentAnalysis->evaluate($annotationS);          //Call the sentiment evaluation function
+            $emotion = $sentimentAnalysis->evaluate($score, $magnitude);          //Call the sentiment evaluation function
 
             //Call analysis table interface to store sentiment results--------------------------------------------------------
             $analysisTable = new AnalysisTable($db);
@@ -79,7 +79,7 @@ else {
         //Ignore non UTF-8 characters                                   //Works
         $text = iconv("UTF-8", "UTF-8//IGNORE", $raw);
 
-        echo $text;
+        // echo $text;
 
         if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000 || 
         str_contains(strtolower($text), "contents") && strpos(strtolower($text), "contents") < 5000) {
@@ -164,29 +164,29 @@ else {
             }
         }
         
-        //Legacy solution (Too ambiguous)-------------------------------------------------------------------------------
-        //$introduction = explode("Introduction", $text);
-        // $context = explode("Context", $text);
-        // $conclusion = explode("Conclusion", $text);
-        // $reference = explode('Reference', str_replace(array('References'), 'Reference', $text));
-        // $title = explode('By', str_replace(array('By', 'by', 'Author'), 'By', $text));
-        // $text = preg_split("/\.|\?|!/", $abstract[2]);
-        //print_r($extractedText);
+//         //Legacy solution (Too ambiguous)-------------------------------------------------------------------------------
+//         //$introduction = explode("Introduction", $text);
+//         // $context = explode("Context", $text);
+//         // $conclusion = explode("Conclusion", $text);
+//         // $reference = explode('Reference', str_replace(array('References'), 'Reference', $text));
+//         // $title = explode('By', str_replace(array('By', 'by', 'Author'), 'By', $text));
+//         // $text = preg_split("/\.|\?|!/", $abstract[2]);
+//         //print_r($extractedText);
 
-        //Choose the correct extracted sentences (guessing from paragraph)
-        //Grouping the sentences
-        // $paragraph1 = $text[1] . $text[2] . $text[3];                   //Abstract
-        // $paragraph2 = $text[5] . $text[6] . $text[7] . $text[8];        //Introduction
+//         //Choose the correct extracted sentences (guessing from paragraph)
+//         //Grouping the sentences
+//         // $paragraph1 = $text[1] . $text[2] . $text[3];                   //Abstract
+//         // $paragraph2 = $text[5] . $text[6] . $text[7] . $text[8];        //Introduction
 
-        //Make it if else loop depending on page length
-        //$pageCount = $pdf->getPages();
-        //echo $pageCount;
-        // $paragraph3 = $text[9] . $text[10] . $text[11] . $text[12] . $text[13] . $text[14];
+//         //Make it if else loop depending on page length
+//         //$pageCount = $pdf->getPages();
+//         //echo $pageCount;
+//         // $paragraph3 = $text[9] . $text[10] . $text[11] . $text[12] . $text[13] . $text[14];
 
 
-        //Combine the paragraphs together
-        //$extractedText = $paragraph1 . $paragraph2 . $paragraph3 . $paragraph4 . $paragraph5;
-        //$extractedText = $abstract[2];
+//         //Combine the paragraphs together
+//         //$extractedText = $paragraph1 . $paragraph2 . $paragraph3 . $paragraph4 . $paragraph5;
+//         //$extractedText = $abstract[2];
     }
 
     catch(Exception $e) {

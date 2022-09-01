@@ -1,17 +1,16 @@
 <?php 
-
 class SentimentAnalysis {
     private $emotion;
     private $score;
     private $magnitude;
 
-    function evaluate($annotationS) {               //Fill this spot with return values
+    function evaluate($score, $magnitude) {               //Fill this spot with return values
         //Determine the sentiment value from score and magnitude
         //Score = Positive/Negative statement
         //Magnitude = Severity of emotion put into the sentence
 
-        $score = $annotationS->sentiment()['score'];
-        $magnitude = $annotationS->sentiment()['magnitude'];
+        // $score = $annotationS->sentiment()['score'];
+        // $magnitude = $annotationS->sentiment()['magnitude'];
 
         if ($score > 0) {                   //Positive messages----------------------------
             if ($magnitude >= 3) {
