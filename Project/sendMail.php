@@ -1,7 +1,7 @@
 <!-- Description: Send Mail function -->
 <!-- Author: Jun Wee Tan -->
 <!-- Date: 20th July 2022 -->
-<!-- Validated: =-->
+<!-- Upadated: 26th Aug 2022: =-->
 
 <?php
 //Import PHPMailer classes into the global namespace
@@ -22,15 +22,18 @@ $mailtable = new MailTable($db);
 $subscriber = $mailtable->getSubscribeConvenor();  //retrieve convenor email
 
 $student_result_by_unit = array();
+
 $j = 0;
 for ($i = 0; $i < count($subscriber); $i++) {    //2
-    $mailtable->getConvenorUnit($subscriber[$i]['Email']);
+    $subscriberunit = $mailtable->getConvenorUnit($subscriber[$i]['Email']);
     $mailtable->getAllStudentSubmission();
 
-    if (!empty($mailtable->getFullTable())) {  //control only convenor that have student submission and result
+    $test = $mailtable->getFullTable();
+
+    if (!empty($test)) {  //control only convenor that have student submission and result
         $student_result_by_unit[$j] = [  //each convenor's unit table that content student results
-            "name" => $subscriber[$j]['Name'],
-            "email" => $subscriber[$j]['Email'],
+            "name" => $subscriberunit[0]['Name'],  //put 0 for always take the same convenor, once the conveor's units has been incresed, it will not affect the loop 
+            "email" => $subscriberunit[0]['ConvenorEmail'],
             "table" => $mailtable->getFullTable()
         ];
         $j++;
@@ -39,13 +42,13 @@ for ($i = 0; $i < count($subscriber); $i++) {    //2
     //function to update the isSend mail in submission
 }
 
-echo "<pre>";
-print_r($student_result_by_unit);
-echo "</pre>";
+// echo "<pre>";
+// print_r( $student_result_by_unit);
+// echo "</pre>";
 
-$mail = new PHPMailer(true);
 
 for ($i = 0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
+    $mail = new PHPMailer(true);
     try {
         echo 'start';
         //Server settings
@@ -60,7 +63,7 @@ for ($i = 0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop
 
         //Recipients
         $mail->setFrom('noreplyfordssystem@gmail.com', '(Noreply) Daily Summary Report');
-        $mail->addAddress($student_result_by_unit[$i]["email"], $student_result_by_unit[$i]["name"]);     //Add a recipient 
+        $mail->addCC($student_result_by_unit[$i]["email"], $student_result_by_unit[$i]["name"]);     //Add a recipient 
 
 
         //Content

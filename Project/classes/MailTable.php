@@ -1,8 +1,6 @@
-<!-- Description: Send Mail function -->
-<!-- Author: Jun Wee Tan -->
-<!-- Date: 20th July 2022 -->
-<!-- Validated: =-->
 <?php
+//namespace SystemFunction;
+
 class MailTable
 {
     private $db;
@@ -50,6 +48,45 @@ class MailTable
     }
 
 
+    function getConvenorUnit($convenoremail)
+    {
+        $this->db->createConnection();
+        $sql = "SELECT C.Name, C.Email, U.code
+        FROM UNIT U
+        INNER JOIN CONVENORS C
+        ON C.UserId = U.convenorID
+        WHERE C.isSubscribe = 1
+        AND C.Email = ?
+        ORDER BY U.code";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        $convenorEmail = $convenoremail;
+        $prepared_stmt->bind_param('s', $convenorEmail);
+
+        mysqli_stmt_execute($prepared_stmt);
+        $queryResult = mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        mysqli_stmt_close($prepared_stmt);
+        $i = 0;
+        while ($row = mysqli_fetch_row($queryResult)) {
+            $this->unitList[$i] = [
+                'Name' => $row[0],
+                'ConvenorEmail' => $row[1],
+                'UnitCode' => $row[2]
+            ];
+            $i++;
+        }
+        $this->db->closeConnection();
+        return $this->unitList;
+
+        // echo "<pre>";
+        //echo print_r($this->unitList);
+        //echo "<br><br>";
+        //echo "</pre>";
+    }
+
 
     //function for get student info to show in email content and save in array
     function getStudentInfo($convenoremail, $unitcode)
@@ -59,15 +96,15 @@ class MailTable
 
         $sql =
             "SELECT  S.userid, S.name, B.unitCode, B.Id, B.score
-        from students S
+        from STUDENTS S
         
-        INNER JOIN submission B
+        INNER JOIN SUBMISSION B
         ON S.UserId = B.stuId
         
-        INNER JOIN unit U
+        INNER JOIN UNIT U
         ON U.code = B.unitCode
         
-        INNER JOIN convenors C
+        INNER JOIN CONVENORS C
         ON C.UserId = U.convenorID
         
         WHERE B.isSendMail = 0
@@ -102,10 +139,10 @@ class MailTable
             ];
             $i++;
         }
-        echo "student List By unit";
-        echo "<pre>";
-        print_r($this->studentListByUnit);
-        echo "</pre>";
+        //print_r($this->studentListByUnit);
+        // echo "<pre>";
+        // print_r($this->studentListByUnit);
+        // echo "</pre>";
         $this->db->closeConnection();
 
         $this->updateSubmissionIsSend($convenorEmail, $unitCode);  //update units's student submission to sent
@@ -137,46 +174,9 @@ class MailTable
             $tableMsg .= "</tr>";
         }
         $tableMsg .= '</table>';
-        echo print_r($this->studentListByUnit);
+        //$this->studentListByUnit = array();  //reset the array
+        //print_r($tableMsg);
         return $tableMsg;
-    }
-
-    function getConvenorUnit($convenoremail)
-    {
-        $this->db->createConnection();
-        $sql = "SELECT C.Name, C.Email, U.code 
-        FROM convenors C 
-        INNER JOIN unit U
-        ON C.UserId = U.convenorID
-        WHERE C.isSubscribe = 1
-        AND C.Email = ?
-        ORDER BY U.code";
-
-        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
-
-        $convenorEmail = $convenoremail;
-        $prepared_stmt->bind_param('s', $convenorEmail);
-
-        mysqli_stmt_execute($prepared_stmt);
-        $queryResult = mysqli_stmt_get_result($prepared_stmt)
-            or die("<p>Unable to select from database table</p>");
-
-        mysqli_stmt_close($prepared_stmt);
-        $i = 0;
-        while ($row = mysqli_fetch_row($queryResult)) {
-            $this->unitList[$i] = [
-                'Name' => $row[0],
-                'ConvenorEmail' => $row[1],
-                'UnitCode' => $row[2]
-            ];
-            $i++;
-        }
-        $this->db->closeConnection();
-        //return $this->unitList;
-
-        echo "<pre>";
-        echo print_r($this->unitList);
-        echo "</pre>";
     }
 
     function getAllStudentSubmission()
@@ -188,8 +188,9 @@ class MailTable
                 $this->all_table_with_unitcode .= $this->printInfomation($this->unitList[$i]['UnitCode']);
             }
 
-            $this->studentListByUnit = array(); //reset the student result List
+            $this->studentListByUnit = array(); //reset the student result Lists (8) to all empty
         }
+
         $this->unitList = array(); //reset the unitList after the use of one convenor
     }
 
@@ -223,55 +224,4 @@ class MailTable
         mysqli_stmt_close($prepared_stmt);
         $this->db->closeConnection();
     }
-
-    ///abondon
-    // function getAllUnit()
-    // {
-    //     $this->db->createConnection();
-    //     $sql = "SELECT DISTINCT code, convenorID FROM UNIT";
-
-    //     $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
-
-    //     mysqli_stmt_execute($prepared_stmt);
-    //     $queryResult = mysqli_stmt_get_result($prepared_stmt)
-    //         or die("<p>Unable to select from database table</p>");
-
-    //     mysqli_stmt_close($prepared_stmt);
-
-    //     while ($row = mysqli_fetch_row($queryResult)) {
-    //         $this->unitList = [
-    //             'UnitCode' => $row[0],
-    //             'ConvenorId' => $row[1],
-    //         ];
-    //     }
-    //     $this->db->closeConnection();
-    //     return $this->unitList;
-    // }
-
-    // function updateMailInfo($mailernumber, $submissionid)
-    // {
-    //     // Update mail record in submission database
-
-    //     // Create connection
-    //     $this->db->createConnection();
-
-    //     $sql = "UPDATE submission SET isSendMail=1, mailerNo =? WHERE id=?";
-
-    //     $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
-
-    //     //Bind input variables to prepared statement
-    //     $prepared_stmt->bind_param('ii', $mailerNo, $id);
-
-    //     $mailerNo = $mailernumber;
-    //     $id = $submissionid;
-
-    //     //Execute prepared statement
-    //     $status = $prepared_stmt->execute();
-
-    //     mysqli_stmt_close($prepared_stmt);
-
-    //     $this->db->closeConnection();
-
-    //     return $status;
-    // }
 }
