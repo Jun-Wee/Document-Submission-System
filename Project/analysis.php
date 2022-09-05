@@ -113,7 +113,7 @@ else {
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
                 if (!isset($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
-                    $abstractInitial[2] = $introductionInitial[2];
+                    $abstractInitial[2] = $text;
                 }
                 $referenceInitial = explode("References", $text);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[2]));
@@ -155,7 +155,7 @@ else {
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || str_contains(strtolower($text), "reference")) {
                 if (!isset($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with original text
-                    $abstractInitial[1] = $introductionInitial[1];
+                    $abstractInitial[1] = $text;
                 }
                 $referenceInitial = explode("References", $abstractInitial[1]);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
