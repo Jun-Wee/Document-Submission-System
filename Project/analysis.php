@@ -73,6 +73,10 @@ else {
             }
         }
 
+        //Misc------------------------------------------------------------------------------------------------------------\
+        $webSearch = $_POST['webSearch'];
+        $_SESSION['webSearch'] = $webSearch;
+
         //Text extraction-------------------------------------------------------------------------------------------------
         $raw = $_SESSION['pdfText'];                                    //Issue: does not recognize images (� character)
 
