@@ -42,9 +42,9 @@ for ($i = 0; $i < count($subscriber); $i++) {    //2
     //function to update the isSend mail in submission
 }
 
-// echo "<pre>";
-// print_r( $student_result_by_unit);
-// echo "</pre>";
+echo "<pre>";
+print_r($student_result_by_unit);
+echo "</pre>";
 
 
 for ($i = 0; $i < count($student_result_by_unit); $i++) {  //2 ppl , 2loop

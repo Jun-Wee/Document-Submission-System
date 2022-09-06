@@ -52,8 +52,8 @@ class MailTable
     {
         $this->db->createConnection();
         $sql = "SELECT C.Name, C.Email, U.code
-        FROM UNIT U
-        INNER JOIN CONVENORS C
+        FROM unit U
+        INNER JOIN convenors C
         ON C.UserId = U.convenorID
         WHERE C.isSubscribe = 1
         AND C.Email = ?
@@ -79,12 +79,12 @@ class MailTable
             $i++;
         }
         $this->db->closeConnection();
-        return $this->unitList;
+        echo "<pre>";
+        echo print_r($this->unitList);
+        echo "<br><br>";
+        echo "</pre>";
 
-        // echo "<pre>";
-        //echo print_r($this->unitList);
-        //echo "<br><br>";
-        //echo "</pre>";
+        return $this->unitList;
     }
 
 
@@ -96,15 +96,15 @@ class MailTable
 
         $sql =
             "SELECT  S.userid, S.name, B.unitCode, B.Id, B.score
-        from STUDENTS S
+        from students S
         
-        INNER JOIN SUBMISSION B
+        INNER JOIN submission B
         ON S.UserId = B.stuId
         
-        INNER JOIN UNIT U
+        INNER JOIN unit U
         ON U.code = B.unitCode
         
-        INNER JOIN CONVENORS C
+        INNER JOIN convenors C
         ON C.UserId = U.convenorID
         
         WHERE B.isSendMail = 0
