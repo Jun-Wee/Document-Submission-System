@@ -8,6 +8,7 @@
 include "classes/user.php";
 include "classes/database.php";
 include "system_functions.php";
+include "websearch.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
@@ -127,7 +128,9 @@ if (!isset($_SESSION['student'])) {
 					<div class="col-8 mx-auto">
 						<form action="submission.php" method="POST" enctype="multipart/form-data">
 							<div class="mb-3">
-								<label for="formFile" class="form-label" ><strong>Upload Document</strong></label>
+								
+								<!--Submit file-->
+								<label for="formFile" class="form-label" ><strong>Upload Document: </strong></label>
 								<input class="form-control" type="file" name="file">
 								<br>
 
@@ -147,6 +150,11 @@ if (!isset($_SESSION['student'])) {
 										}
 									?>
 								</datalist>
+								<br>
+								
+								<!--input document title-->
+								<label for="title" class="form-label"><strong>Document Title: </strong></label><br>
+								<input type="text" class="form-control" id="title" name="title" placeholder="e.g. Benefit of Exercise" required="required"><br>
 
 								<?php
 									if (!$unitSelected && isset($_POST['submit'])) {
