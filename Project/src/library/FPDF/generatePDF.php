@@ -1,4 +1,4 @@
-<?php 
+<?php
 include "../../../classes/MyPDF.php";
 include "../../../classes/database.php";
 include "../../../classes/analysisTable.php";
@@ -8,17 +8,40 @@ include "../../../classes/submissionTable.php";
 include "../../../classes/analysis.php";
 include "../../../classes/submission.php";
 
+// start the session
+session_start();
+
+if (!isset($_SESSION['admin'])) {
+    if (!isset($_SESSION['convenor'])) {
+        header("Location: ../../../../adminLogin.php");
+    } else {
+        $convenor = unserialize($_SESSION['convenor']);
+    }
+} else {
+    $admin = unserialize($_SESSION['admin']);
+}
+
+// //Document general information------------------------------------------------------------------------------
+$subId = null;                                                          //Placeholder ID for testing 
+//$subId = $_POST["subId"];
+
+if (isset($_GET['subId'])) {
+    if (!empty($_GET['subId'])) {
+        $subId = $_GET['subId'];
+    }
+}
+
 //Connect to database
 $db = new Database();
 $submissionTable = new SubmissionTable($db);
 $analysisTable = new AnalysisTable($db);
 $entityTable = new EntityTable($db);
 
-//Instantiate and use the FPDF class
+// //Instantiate and use the FPDF class
 $pdf = new MyPDF();
 $pdf->AliasNbPages();
 
-//Add page title and author
+// //Add page title and author
 $pdf->SetAuthor('SEP=28');
 $pdf->SetTitle('Analysis Report | Document Submission System');
 
@@ -42,29 +65,24 @@ $pdf->Cell(100, 10, 'Analysis Report', 1, 0, 'C', 0);
 $pdf->SetXY(10, 50);
 $pdf->SetFontSize(12);                          //Change font size
 
-//Document general information------------------------------------------------------------------------------
-$subId = 100006;                                                          //Placeholder ID for testing 
-//$subId = $_POST["subId"];
-
 $submission = $submissionTable->Get($subId);    //Obtain submission details
 $pdf->Cell(0, 10, 'Submission ID: ' . ($subId), 0, 1);
-$pdf->Cell(0, 10, 'Student ID: ' . ($submission[0]->getstuId()), 0, 1);
-$pdf->Cell(0, 10, 'Course Code: ' . ($submission[0]->getUnitCode()), 0, 1);
-$pdf->Cell(0, 10, 'Document: ' . ($submission[0]->getFilePath()), 0, 1);
+$pdf->Cell(0, 10, 'Student ID: ' . ($submission->getstuId()), 0, 1);
+$pdf->Cell(0, 10, 'Course Code: ' . ($submission->getUnitCode()), 0, 1);
+$pdf->Cell(0, 10, 'Document: ' . ($submission->getFilePath()), 0, 1);
 
-//Document analysis information-----------------------------------------------------------------------------
+// //Document analysis information-----------------------------------------------------------------------------
 $pdf->Cell(0, 10, '', 0, 1);
 $pdf->Cell(0, 10, 'Sentiment Analysis Details', 0, 1);
-$subId = $submission[0]->getId();               //Obtain submission ID
 $analysisOutput = $analysisTable->Get($subId);  //Obtain analysis details
 
-//Create a PDF table for sentiment analysis--------------------------------------------------------
-$width_cell = array(15, 25, 40, 95, 30);                                    //Array for column size
+// //Create a PDF table for sentiment analysis--------------------------------------------------------
+$width_cell = array(15, 30, 40, 115, 30);                                    //Array for column size
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->SetFillColor(253, 30, 50);                                            //Set background colour
 
 $pdf->Cell($width_cell[0], 10, 'No.', 1, 0, 'C', true);                     //Set header
-$pdf->Cell($width_cell[4], 10, 'Type', 1, 0, 'C', true);
+// $pdf->Cell($width_cell[4], 10, 'Type', 1, 0, 'C', true);
 $pdf->Cell($width_cell[3], 10, 'Summary', 1, 0, 'C', true);
 $pdf->Cell($width_cell[1], 10, 'Score', 1, 0, 'C', true);
 $pdf->Cell($width_cell[1], 10, 'Magnitude', 1, 1, 'C', true);
@@ -74,8 +92,8 @@ $pdf->SetFillColor(235, 236, 236);                                          //He
 $fill = false;
 
 for ($i = 0; $i < count($analysisOutput); $i++) {                                               //Each record is one row
-    $pdf->Cell($width_cell[0], 12, ($i+1), 0, 0, 'C', $fill);
-    $pdf->Cell($width_cell[4], 12, ($analysisOutput[$i]->getType()), 0, 0, 'C', $fill);
+    $pdf->Cell($width_cell[0], 12, ($i + 1), 0, 0, 'C', $fill);
+    //$pdf->Cell($width_cell[4], 12, ($analysisOutput[$i]->getType()), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[3], 12, ($analysisOutput[$i]->getSummary()), 0, 0, 'L', $fill);
     $pdf->Cell($width_cell[1], 12, ($analysisOutput[$i]->getSentimentScore()), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[1], 12, ($analysisOutput[$i]->getSentimentMagnitude()), 0, 1, 'C', $fill);
@@ -105,7 +123,7 @@ $pdf->SetFillColor(235, 236, 236);                                          //He
 $fill = false;
 
 for ($i = 0; $i < count($entityOutput); $i++) {                                               //Each record is one row
-    $pdf->Cell($width_cell[0], 12, ($i+1), 0, 0, 'C', $fill);
+    $pdf->Cell($width_cell[0], 12, ($i + 1), 0, 0, 'C', $fill);
     $pdf->Cell($width_cell[1], 12, ($entityOutput[$i]->getName()), 0, 0, 'L', $fill);
     $pdf->Cell($width_cell[2], 12, ($entityOutput[$i]->getSalience()), 0, 0, 'C', $fill);
 
@@ -113,11 +131,9 @@ for ($i = 0; $i < count($entityOutput); $i++) {                                 
     if (!empty($entityOutput[$i]->getLink())) {
         $link = $entityOutput[$i]->getLink();
         $pdf->Cell($width_cell[3], 12, "Available (Click here)", 0, 1, 'L', $fill, $link);
-    }
-    
-    else {
+    } else {
         $pdf->Cell($width_cell[3], 12, "None", 0, 1, 'L', $fill);
-    } 
+    }
     $fill = !$fill;
 }
 
@@ -129,7 +145,5 @@ $pdf->Cell(0, 10, 'Positive message are above 0.', 0, 1);
 $pdf->Cell(0, 10, 'Salience - Importance of the entity within the document. The higher the score, the more salient the entity.', 0, 1);
 $pdf->Cell(0, 10, 'Magnitude - The strength of the emotion, the higher the score the stronger the emotion.', 0, 1);
 
-//Return the generated output-------------------------------------------------------------------------------
+// //Return the generated output-------------------------------------------------------------------------------
 $pdf->Output();
-
-?>

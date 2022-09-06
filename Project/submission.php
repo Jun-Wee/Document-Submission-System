@@ -34,13 +34,12 @@ if (!isset($_SESSION['student'])) {
 				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student, $code[0]);
 				if ($fileUploadErrorMsg == "") {
 					[$status, $subId] = $student->submitDocument($db, $code[0], $path);
-					$_SESSION['student'] = serialize($student);
 
 					$config = new \Smalot\PdfParser\Config();
 					$config->setHorizontalOffset('');
 
 					$parser = new \Smalot\PdfParser\Parser([], $config);
-					$file = $path;
+					$file = "/var/www/html" . $path;
 					$pdf = $parser->parseFile($file);
 					$text = $pdf->getText();
 					$pdfText = nl2br($text);
@@ -48,10 +47,11 @@ if (!isset($_SESSION['student'])) {
 
 
 					//Save and send the text and subject ID to analysis.php
+					$_SESSION['student'] = serialize($student);
 					$_SESSION['pdfText'] = $pdfText;
 					$_SESSION['subId'] = $subId;
 
-					header('Location: extract.php');						//Redirect to analysis page
+					header('Location: extract.php');						//Redirect to analysis page				
 				}
 			} else {
 				$unitSelected = false;

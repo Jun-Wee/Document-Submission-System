@@ -211,12 +211,7 @@ $analysis_records_subset = array_slice($analysis_records, $this_page_first_resul
                                 echo "<td> " . $analysis_records_subset[$i]->getSubId() . "</td>";
                                 echo "<td> " . $analysis_records_subset[$i]->getType() . "</td>";
                                 echo "<td> " . $analysis_records_subset[$i]->getSummary() . "</td>";
-                                echo "<td><a class='btn btn-secondary me-3' href=#>Generate Report</button></td>";
-                                if ($admin != null) {
-                                    echo "<td><a class='btn btn-secondary me-3' href='./studentEdit.php?stuId=" . $analysis_records_subset[$i]->getAnalyisId() . "'>Edit</button></td>
-                            		<td><a class='btn btn-danger' href='./studentManagement.php?delete=true&id=" . $analysis_records_subset[$i]->getAnalysisId() . "'>Delete</button></td>";
-                                    echo "</tr>";
-                                }
+                                echo "<td><a class='btn btn-danger me-3' href='./src/library/FPDF/generatePDF.php?subId=" . $analysis_records_subset[$i]->getSubId() . "' target='_blank'>Generate Report</button></td>";
                             }
                             ?>
                         </tbody>
