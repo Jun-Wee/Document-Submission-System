@@ -16,24 +16,22 @@ class webSearchTable
         return $data;
     }
 
-    // function updateWebSearchResult($data){
-    //     $this->db->createConnection();
-    //     $sql=
-    //     "UPDATE submission S, unit U, convenors C
-    //     SET S.isSendMail = 1
-    //     WHERE C.Email = ?
-    //     AND S.unitCode = ?
-    //     ";
-    //     $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+    function updateWebSearchResult($data){
+        $this->db->createConnection();
+        $sql=
+        "INSERT INTO websearch (websearchId, submissionId, title, description, authors, link, date)
+        VALUES (?,?,?,?,?,?,?)
+        ";
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
         
-    //     $convenoremail = $convenorEmail;
-    //     $unitcode = $unitCode;
+        $convenoremail = $convenorEmail;
+        $unitcode = $unitCode;
 
-    //     $prepared_stmt->bind_param('ss', $convenoremail, $unitcode);
-    //     mysqli_stmt_execute($prepared_stmt);
+        $prepared_stmt->bind_param('ss', $convenoremail, $unitcode);
+        mysqli_stmt_execute($prepared_stmt);
 
-    //     mysqli_stmt_close($prepared_stmt);
-    //     $this->db->closeConnection();
+        mysqli_stmt_close($prepared_stmt);
+        $this->db->closeConnection();
 
-    // }
+    }
 }

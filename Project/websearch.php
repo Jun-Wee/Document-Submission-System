@@ -8,7 +8,7 @@ include "classes/database.php";
 require "classes/webSearchTable.php";
 
 $db = new Database();
-$websearch = new webSearchTable();
+$websearch = new webSearchTable($db);
 
 $title = $_POST["title"];	
 $title = $websearch->sanitise_input($title);
@@ -25,6 +25,7 @@ else if (!preg_match("/^[a-zA-Z]$/",$title))
 
 if ($err_msg!=""){
   echo $err_msg;
+  $err_msg ="";
 }
 
 //perform search
