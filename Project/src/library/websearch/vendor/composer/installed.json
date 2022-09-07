@@ -1,0 +1,138 @@
+{
+    "packages": [
+        {
+            "name": "serpwow/google-search-results",
+            "version": "0.2.5",
+            "version_normalized": "0.2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serpwow/google-search-results-php.git",
+                "reference": "40dd0d284607056ea42ce7e0b7ddc8e327bba606"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serpwow/google-search-results-php/zipball/40dd0d284607056ea42ce7e0b7ddc8e327bba606",
+                "reference": "40dd0d284607056ea42ce7e0b7ddc8e327bba606",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.4.0",
+                "tcdent/php-restclient": "^0.1.7"
+            },
+            "require-dev": {
+                "php": ">=5.5.7",
+                "phpunit/phpunit": "^7.0"
+            },
+            "time": "2020-02-15T09:56:30+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "google-search-results.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SerpWow",
+                    "email": "hello@serpwow.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Google Search Results PHP package via SerpWow.com",
+            "homepage": "http://github.com/serpwow/google-search-results-php",
+            "keywords": [
+                "SERP",
+                "api",
+                "automated",
+                "google",
+                "html",
+                "image",
+                "json",
+                "localization",
+                "news",
+                "proxies",
+                "proxy",
+                "query",
+                "scrape",
+                "search",
+                "seo",
+                "serpapi",
+                "serpwow",
+                "shopping",
+                "videos"
+            ],
+            "support": {
+                "issues": "http://github.com/serpwow/google-search-results-php/issues",
+                "source": "https://github.com/serpwow/google-search-results-php/tree/master"
+            },
+            "install-path": "../serpwow/google-search-results"
+        },
+        {
+            "name": "tcdent/php-restclient",
+            "version": "0.1.8.1",
+            "version_normalized": "0.1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tcdent/php-restclient.git",
+                "reference": "3cd56917108a75ce058a6516f630f43179d7bb68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tcdent/php-restclient/zipball/3cd56917108a75ce058a6516f630f43179d7bb68",
+                "reference": "3cd56917108a75ce058a6516f630f43179d7bb68",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "php": ">=8.0",
+                "phpunit/phpunit": ">=9.5"
+            },
+            "time": "2022-06-15T01:04:35+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "restclient.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Travis Dent",
+                    "email": "tcdent@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A generic REST API client for PHP",
+            "homepage": "http://github.com/tcdent/php-restclient",
+            "keywords": [
+                "api",
+                "client",
+                "curl",
+                "json",
+                "rest",
+                "xml"
+            ],
+            "support": {
+                "issues": "http://github.com/tcdent/php-restclient/issues",
+                "source": "https://github.com/tcdent/php-restclient/tree/0.1.8.1"
+            },
+            "install-path": "../tcdent/php-restclient"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

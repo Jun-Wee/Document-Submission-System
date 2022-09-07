@@ -9,6 +9,7 @@ include "classes/user.php";
 include "classes/database.php";
 include "system_functions.php";
 include "src/library/PDFParser/vendor2/autoload.php";
+include "websearch.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
@@ -166,6 +167,12 @@ if (!isset($_SESSION['student'])) {
 									}
 									?>
 								</select>
+								</datalist>
+								<br>
+
+								<!--input document title-->
+								<label for="title" class="form-label"><strong>Document Title: </strong></label><br>
+								<input type="text" class="form-control" id="title" name="title" placeholder="e.g. Benefit of Exercise" required="required"><br>
 
 								<?php
 								if (!$unitSelected && isset($_POST['submit'])) {
