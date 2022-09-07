@@ -12,6 +12,15 @@ function checkNotEmpty($field)
     }
 }
 
+function validateAlphaCharacter($input)
+{
+    if (preg_match("/^[\w\-\s]+$/", $input)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 function chkEmail($input)
 {

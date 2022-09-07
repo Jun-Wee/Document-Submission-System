@@ -9,7 +9,6 @@ include "classes/user.php";
 include "classes/database.php";
 include "system_functions.php";
 include "src/library/PDFParser/vendor2/autoload.php";
-include "websearch.php";
 
 session_start();
 if (!isset($_SESSION['student'])) {
@@ -23,42 +22,53 @@ if (!isset($_SESSION['student'])) {
 	// }
 
 	$unitSelected = false;
+	$titleEntered = false;
 	$fileUploadErrorMsg = "";
 	if (isset($_POST['submit'])) {
 		if (isset($_POST['unitOptions'])) {
-			if (checkNotEmpty($_POST['unitOptions'])) {
-				$unitSelected = true;
-				$submission_unit = $_POST['unitOptions'];
-				$code = explode(" ", $submission_unit);
-				//gets all the info from the uploaded file
-				//print_r($file); //testing for file superglobal
-				[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student, $code[0]);
-				if ($fileUploadErrorMsg == "") {
-					[$status, $subId] = $student->submitDocument($db, $code[0], $path);
+			if (isset($_POST['title'])) {
+				if (validateAlphaCharacter($_POST['title'])) {
+					if (checkNotEmpty($_POST['unitOptions'])) {
+						$unitSelected = true;
+						$titleEntered = true;
+						$submission_unit = $_POST['unitOptions'];
+						$code = explode(" ", $submission_unit);
+						//gets all the info from the uploaded file
+						//print_r($file); //testing for file superglobal
+						[$fileUploadErrorMsg, $path] = checkUploadedFile($_FILES['file'], $_FILES['file']['name'], $_FILES['file']['tmp_name'], $_FILES['file']['error'], $_FILES['file']['size'], $student, $code[0]);
+						if ($fileUploadErrorMsg == "") {
+							[$status, $subId] = $student->submitDocument($db, $code[0], $path);
 
-					$config = new \Smalot\PdfParser\Config();
-					$config->setHorizontalOffset('');
+							$config = new \Smalot\PdfParser\Config();
+							$config->setHorizontalOffset('');
 
-					$parser = new \Smalot\PdfParser\Parser([], $config);
-					$file = "/var/www/html" . $path;
-					$pdf = $parser->parseFile($file);
-					$text = $pdf->getText();
-					$pdfText = nl2br($text);
+							$parser = new \Smalot\PdfParser\Parser([], $config);
+							$file = "/var/www/html" . $path;
+							$pdf = $parser->parseFile($file);
+							$text = $pdf->getText();
+							$pdfText = nl2br($text);
 
+							//Save and send the text and subject ID to analysis.php
+							$_SESSION['student'] = serialize($student);
+							$_SESSION['pdfText'] = $pdfText;
+							$_SESSION['subId'] = $subId;
 
-
-					//Save and send the text and subject ID to analysis.php
-					$_SESSION['student'] = serialize($student);
-					$_SESSION['pdfText'] = $pdfText;
-					$_SESSION['subId'] = $subId;
-
-					header('Location: extract.php');						//Redirect to analysis page				
+							header('Location: extract.php');						//Redirect to analysis page				
+						}
+					} else {
+						$unitSelected = false;
+					}
+				} else {
+					$titleEntered = false;
+					$unitSelected = true;
 				}
 			} else {
-				$unitSelected = false;
+				$titleEntered = false;
+				$unitSelected = true;
 			}
 		} else {
 			$unitSelected = false;
+			$titleEntered = false;
 		}
 	} else {
 		$fileUploadErrorMsg = "";
@@ -172,11 +182,13 @@ if (!isset($_SESSION['student'])) {
 
 								<!--input document title-->
 								<label for="title" class="form-label"><strong>Document Title: </strong></label><br>
-								<input type="text" class="form-control" id="title" name="title" placeholder="e.g. Benefit of Exercise" required="required"><br>
+								<input type="text" class="form-control" id="title" name="title" placeholder="e.g. Benefit of Exercise"><br>
 
 								<?php
 								if (!$unitSelected && isset($_POST['submit'])) {
 									echo "<div><p>Please indicate the unit of this submission!</p></div>";
+								} else if (!$titleEntered && isset($_POST['submit'])) {
+									echo "<div><p>Title can only contain alpha characters!</p></div>";
 								}
 								?>
 								<br>
