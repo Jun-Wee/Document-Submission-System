@@ -23,7 +23,9 @@ if (!isset($_SESSION['student'])) {
 
         //Retrieve the submission ID
         $subId = $_SESSION['subId'];
+        $title = $_SESSION['title'];
         echo $subId;
+        echo $title;
 
         // //Sentiment Analysis----------------------------------------------------------------------------------------------
         function sentiment($language, $extractedText, $subId, $type)
@@ -32,9 +34,9 @@ if (!isset($_SESSION['student'])) {
             $db = new Database();
             $annotationS = $language->analyzeSentiment($extractedText);     //Analyze the sentiments
             //echo "Extracted text: " . $extractedText;
-            echo "<pre>";
-            print_r($annotationS->sentiment());
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($annotationS->sentiment());
+            // echo "</pre>";
 
             $score = $annotationS->sentiment()['score'];                    //Converting the results array to variable
             $magnitude = $annotationS->sentiment()['magnitude'];
@@ -42,7 +44,7 @@ if (!isset($_SESSION['student'])) {
             $sentimentAnalysis = new SentimentAnalysis();
             $emotion = $sentimentAnalysis->evaluate($score, $magnitude);          //Call the sentiment evaluation function
 
-            echo $emotion;
+            // echo $emotion;
 
             //Call analysis table interface to store sentiment results--------------------------------------------------------
             $analysisTable = new AnalysisTable($db);
@@ -74,6 +76,8 @@ if (!isset($_SESSION['student'])) {
                     $entityTable->add($subId, $entity['name'], $entity['salience'], null);
                 }
             }
+
+            return $myEntities;
         }
 
         // //Misc------------------------------------------------------------------------------------------------------------\
@@ -87,7 +91,23 @@ if (!isset($_SESSION['student'])) {
         $text = iconv("UTF-8", "UTF-8//IGNORE", $raw);
 
         sentiment($language, $text, $subId, "Content");
-        entity($language, $text, $subId);
+        $myentities = entity($language, $text, $subId);
+
+        // echo "<pre>";
+        // print_r($myentities);
+        // echo "</pre>";
+
+        $entityString = "";
+
+        foreach ($myentities as $entity) {
+            $entityString = $entityString . " " . $entity['name'];
+        }
+
+        $title = $title . " " . $entityString;
+
+        $_SESSION['title'] = $title;
+
+        header("Location: websearch.php");
 
         // if (
         //     str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000 ||

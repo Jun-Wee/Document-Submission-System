@@ -52,8 +52,9 @@ if (!isset($_SESSION['student'])) {
 							$_SESSION['student'] = serialize($student);
 							$_SESSION['pdfText'] = $pdfText;
 							$_SESSION['subId'] = $subId;
+							$_SESSION['title'] = $_POST['title'];
 
-							header('Location: extract.php');						//Redirect to analysis page				
+							header('Location: analysis.php');						//Redirect to analysis page				
 						}
 					} else {
 						$unitSelected = false;
