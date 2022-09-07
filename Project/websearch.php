@@ -57,7 +57,10 @@ $data = json_decode($api_result);
 $data = json_decode($api_result);
 
 $results = $data->scholar_results;
-  
+
+//perform update web search result 
+//$websearch->updateWebSearchResult($results);
+
 print("THE RESULTS <br>");
 
 for( $x=0; $x< 5; $x++)
