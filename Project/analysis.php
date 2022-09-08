@@ -74,8 +74,8 @@ else {
         }
 
         //Misc------------------------------------------------------------------------------------------------------------\
-        $webSearch = $_POST['webSearch'];
-        $_SESSION['webSearch'] = $webSearch;
+        // $webSearch = $_POST['webSearch'];
+        // $_SESSION['webSearch'] = $webSearch;
 
         //Text extraction-------------------------------------------------------------------------------------------------
         $raw = $_SESSION['pdfText'];                                    //Issue: does not recognize images (� character)
@@ -87,6 +87,7 @@ else {
 
         if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000 || 
         str_contains(strtolower($text), "contents") && strpos(strtolower($text), "contents") < 5000) {
+            //echo "First option";
             //Extract the abstract if exists
             if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
                 $abstractInitial = explode("Abstract", $text);      
@@ -98,11 +99,8 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
-                if (!isset($abstractInitial[2])) {
-                    $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
-                }
-                $introductionInitial = explode("Introduction", $abstractInitial[2]);
+            elseif (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
+                $introductionInitial = explode("Introduction", $text);
                 $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[2]));
                 // echo "Introduction: " . $introductionFinal[0];
                 // echo "Introduction: " . $introductionInitial[2];
@@ -113,6 +111,13 @@ else {
                     entity($language, $introductionInitial[2], $subId);
                 }
             }       //Note: Only takes either Abstract + Intro, Intro, Abstract, cannot Intro + Abstract
+            
+            //Just extract whole document
+            else {
+                $type = "content";
+                sentiment($language, $text, $subId, $type);
+                entity($language, $text, $subId);
+            }
 
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
@@ -128,7 +133,7 @@ else {
         }
 
         else {
-            // echo "No table of content found";
+            // echo "2nd option";
             // echo strpos(strtolower($text), "contents");
             //Extract the abstract if exists
             if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
@@ -141,11 +146,8 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
-                if (!isset($abstractInitial[1])) {
-                    $abstractInitial[1] = $text;    //If abstract is not the first paragraph, replace with original text
-                }
-                $introductionInitial = explode("Introduction", $abstractInitial[1]);
+            elseif (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
+                $introductionInitial = explode("Introduction", $text);
                 $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[1]));
                 // echo "Introduction: " . $introductionFinal[0];
                 $type = "Introduction";
@@ -154,6 +156,12 @@ else {
                 if (!isset($abstractFinal[0])) {
                     entity($language, $introductionInitial[1], $subId);
                 }
+            }
+            //Just extract whole document
+            else {
+                $type = "content";
+                sentiment($language, $text, $subId, $type);
+                entity($language, $text, $subId);
             }
 
             //Extract references if exists
