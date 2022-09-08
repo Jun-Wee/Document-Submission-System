@@ -28,8 +28,6 @@ for page in pdf.pages:
     if 'Information' in page_text: #page_text.find('Information') for index position of Information
         information_pages.append(page_num)
 
-# Save pages to PDF
-
 # Create PdfFileReader object
 input_pdf = PdfFileReader('sample.pdf')
 
