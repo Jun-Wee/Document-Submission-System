@@ -7,6 +7,8 @@ include "../../../classes/entityTable.php";
 include "../../../classes/submissionTable.php";
 include "../../../classes/analysis.php";
 include "../../../classes/submission.php";
+// include "../../../classes/webSearch.php";
+// include "../../../classes/webSearchTable.php";
 
 //Connect to database
 $db = new Database();
@@ -128,6 +130,20 @@ $pdf->Cell(0, 2, 'Score - Indicates the emotional leaning of the message. Negati
 $pdf->Cell(0, 10, 'Positive message are above 0.', 0, 1);
 $pdf->Cell(0, 10, 'Salience - Importance of the entity within the document. The higher the score, the more salient the entity.', 0, 1);
 $pdf->Cell(0, 10, 'Magnitude - The strength of the emotion, the higher the score the stronger the emotion.', 0, 1);
+
+//Add the web search results-------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'Web search results', 0, 1);
+//$webSearchOutput = $webSearchTable->get($subId);    //obtain the subID for web search
+
+// for ($i = 0; $i < count($webSearchOutput); $i++) {
+//     $pdf->Cell(0, 2, $i . '. ' . $webSearchOutput[$i]->getTitle(), 0, 1);
+//     $pdf->Cell(0, 2, 'Description: ' . $webSearchOutput[$i]->getDescription(), 0, 1);
+//     $pdf->Cell(0, 2, 'Author(s): ' . $webSearchOutput[$i]->getAuthors(), 0, 1);
+//     $pdf->Cell(0, 2, 'Link: : ' . $webSearchOutput[$i]->getLink(), 0, 1);
+//     $pdf->Cell(0, 2, 'Date: : ' . $webSearchOutput[$i]->getDate(), 0, 1);
+// }
 
 //Return the generated output-------------------------------------------------------------------------------
 $pdf->Output();
