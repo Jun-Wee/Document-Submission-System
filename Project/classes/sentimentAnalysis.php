@@ -13,19 +13,19 @@ class SentimentAnalysis {
         // $magnitude = $annotationS->sentiment()['magnitude'];
 
         if ($score > 0) {                   //Positive messages----------------------------
-            if ($magnitude >= 3) {
+            if ($magnitude >= 18) {
                 $emotion = "The overall document contains extremely positive messages!";                  //Edit message
                 //echo $emotion;
                 return $emotion;
             }
 
-            if ($magnitude >= 1.5 && $magnitude < 3) {
+            if ($magnitude >= 9 && $magnitude < 18) {
                 $emotion = "The overall document contains very positive messages.";
                 //echo $emotion;
                 return $emotion;
             }
 
-            if ($magnitude< 1.5) {
+            if ($magnitude< 9) {
                 $emotion = "The overall document contains somewhat positive messages.";
                 //echo $emotion;
                 return $emotion;
@@ -33,19 +33,19 @@ class SentimentAnalysis {
         }
 
         if ($score < 0) {
-            if ($magnitude >= 3) {          //Negative messages---------------------------
+            if ($magnitude >= 18) {          //Negative messages---------------------------
                 $emotion =  "The overall document contains extremely negative messages!";
                 //echo $emotion;
                 return $emotion;
             }
 
-            if ($magnitude >= 1.5 && $magnitude < 3) {
+            if ($magnitude >= 9 && $magnitude < 18) {
                 $emotion = "The overall document contains very negative messages.";
                 //echo $emotion;
                 return $emotion;
             }
 
-            if ($magnitude < 1.5) {
+            if ($magnitude < 9) {
                 $emotion = "The overall document contains somewhat negative messages.";
                 //echo $emotion;
                 return $emotion;
@@ -53,19 +53,19 @@ class SentimentAnalysis {
         }
 
         if ($score == 0) {                  //Neutral messages--------------------------
-            if ($magnitude >= 3) {
+            if ($magnitude >= 18) {
                 $emotion = "The overall document contains extremely mixed emotions!";
                 //echo $emotion;
                 return $emotion;
             }
 
-            if ($magnitude >= 1.5 && $magnitude < 3) {
+            if ($magnitude >= 9 && $magnitude < 18) {
                 $emotion = "The message in the overall document is very mixed.";
                 //echo $emotion;
                 return $emotion;
             }
 
-            if ($magnitude < 1.5) {
+            if ($magnitude < 9) {
                 $emotion = "The overall document contains somewhat neutral message.";
                 //echo $emotion;
                 return $emotion;
