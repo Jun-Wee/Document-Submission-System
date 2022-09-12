@@ -44,7 +44,7 @@ if (!isset($_SESSION['student'])) {
 					$pdf = $parser->parseFile($file);
 					$text = $pdf->getText();
 					//$pdfText = nl2br($text);
-					$pdfText = $text;
+					$pdfText = $text;				//Reference can't remove nl2br tag
 
 					//Save and send the text and subject ID to analysis.php
 					$_SESSION['pdfText'] = $pdfText;
