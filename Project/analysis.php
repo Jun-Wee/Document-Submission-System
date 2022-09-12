@@ -20,7 +20,7 @@ else {
     try {
         $language = new LanguageClient([
             //Replace if needed (admin only)
-            'keyFilePath' => getcwd().'/src/library/GoogleNLP/psyched-hulling-355705-0568447d899e.json',
+            'keyFilePath' => getcwd().'/src/library/GoogleNLP/vigilant-design-362312-adb90a0fb461.json',
         ]);
 
         //Retrieve the submission ID
@@ -113,7 +113,7 @@ else {
                 $introductionInitial = explode("Introduction", $text);
                 $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[2]));
                 // echo "Introduction: " . $introductionFinal[0];
-                 echo "Introduction: " . $introductionInitial[2];
+                // echo "Introduction: " . $introductionInitial[2];
                 $type = "Introduction";
                 sentiment($language, $introductionInitial[2], $subId, $type);
 
