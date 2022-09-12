@@ -7,6 +7,8 @@ include "classes/analysisTable.php";
 include "classes/entityTable.php";
 include "classes/submission.php";
 include "classes/submissionTable.php";
+include "classes/reference.php";
+include "classes/referenceTable.php";
 include "src/library/PDFParser/vendor2/autoload.php";
 
 use Google\Cloud\Language\LanguageClient;   
@@ -73,7 +75,15 @@ else {
             }
         }
 
-        //Misc------------------------------------------------------------------------------------------------------------\
+        //Add reference to database----------------------------------------------------------------------------------------
+        function reference($reference, $subId) {
+            $db3 = new Database();
+            strip_tags($reference);
+            $referenceTable = new ReferenceTable($db3);
+            $referenceTable->add($subId, $reference);
+        }
+
+        //Misc------------------------------------------------------------------------------------------------------------
         // $webSearch = $_POST['webSearch'];
         // $_SESSION['webSearch'] = $webSearch;
 
@@ -103,7 +113,7 @@ else {
                 $introductionInitial = explode("Introduction", $text);
                 $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[2]));
                 // echo "Introduction: " . $introductionFinal[0];
-                // echo "Introduction: " . $introductionInitial[2];
+                 echo "Introduction: " . $introductionInitial[2];
                 $type = "Introduction";
                 sentiment($language, $introductionInitial[2], $subId, $type);
 
@@ -126,9 +136,8 @@ else {
                 }
                 $referenceInitial = explode("References", $text);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[2]));
-                //Store the reference in session for future usage
-                $_SESSION["reference"] = $referenceFinal[0];
                 // echo "References: " . $referenceFinal[0];
+                reference($referenceFinal[0], $subId);
             }
         }
 
@@ -149,7 +158,7 @@ else {
             elseif (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
                 $introductionInitial = explode("Introduction", $text);
                 $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[1]));
-                // echo "Introduction: " . $introductionFinal[0];
+                // echo "Introduction: " . $introductionInitial[1];
                 $type = "Introduction";
                 sentiment($language, $introductionInitial[1], $subId, $type);
 
@@ -171,8 +180,8 @@ else {
                 }
                 $referenceInitial = explode("References", $abstractInitial[1]);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
-                $_SESSION["reference"] = $referenceFinal[0];
                 // echo "References: " . $referenceFinal[0];
+                reference($referenceFinal[0], $subId);
             }
         }
         

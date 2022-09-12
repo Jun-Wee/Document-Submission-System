@@ -9,12 +9,16 @@ include "../../../classes/analysis.php";
 include "../../../classes/submission.php";
 // include "../../../classes/webSearch.php";
 // include "../../../classes/webSearchTable.php";
+include "../../../classes/reference.php";
+include "../../../classes/referenceTable.php";
 
 //Connect to database
 $db = new Database();
 $submissionTable = new SubmissionTable($db);
 $analysisTable = new AnalysisTable($db);
 $entityTable = new EntityTable($db);
+//$webSearchTable = new webSearchTable($db);
+$referenceTable = new ReferenceTable($db);
 
 //Instantiate and use the FPDF class
 $pdf = new MyPDF();
@@ -45,7 +49,7 @@ $pdf->SetXY(10, 50);
 $pdf->SetFontSize(12);                          //Change font size
 
 //Document general information------------------------------------------------------------------------------
-$subId = 100021;                                                          //Placeholder ID for testing 
+$subId = 100019;                                                          //Placeholder ID for testing 
 //$subId = $_POST["subId"];
 
 $submission = $submissionTable->Get($subId);    //Obtain submission details
@@ -144,6 +148,17 @@ $pdf->Cell(0, 10, 'Web search results', 0, 1);
 //     $pdf->Cell(0, 2, 'Link: : ' . $webSearchOutput[$i]->getLink(), 0, 1);
 //     $pdf->Cell(0, 2, 'Date: : ' . $webSearchOutput[$i]->getDate(), 0, 1);
 // }
+
+//Add reference list---------------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'Rerences: ', 0, 1);
+
+$pdf->SetFont('Arial', '', 12);                          //Change font size
+$referenceOutput = $referenceTable->get($subId);
+$result = $referenceOutput[0]->getText();
+$pdf->Write(5, $result);
+
 
 //Return the generated output-------------------------------------------------------------------------------
 $pdf->Output();

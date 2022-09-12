@@ -43,8 +43,8 @@ if (!isset($_SESSION['student'])) {
 					$file = $path;
 					$pdf = $parser->parseFile($file);
 					$text = $pdf->getText();
-					$pdfText = nl2br($text);
-					
+					//$pdfText = nl2br($text);
+					$pdfText = $text;
 
 					//Save and send the text and subject ID to analysis.php
 					$_SESSION['pdfText'] = $pdfText;
