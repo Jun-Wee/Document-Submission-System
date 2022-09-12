@@ -152,7 +152,7 @@ $pdf->Cell(0, 10, 'Web search results', 0, 1);
 //Add reference list---------------------------------------------------------------------------
 $pdf->SetFont('Arial', 'B', 12);                          //Change font size
 $pdf->Cell(0, 10, '', 0, 1);
-$pdf->Cell(0, 10, 'Rerences: ', 0, 1);
+$pdf->Cell(0, 10, 'References: ', 0, 1);
 
 $pdf->SetFont('Arial', '', 12);                          //Change font size
 $referenceOutput = $referenceTable->get($subId);
