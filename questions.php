@@ -5,7 +5,7 @@
 <!--NOT Validated: =-->
 
 <?php
-
+session_start();
 /*include "classes/user.php";
 
 session_start();
@@ -99,54 +99,123 @@ if (!isset($_SESSION['student'])) {
                             <div class="p-5 mb-0 bg-light opacity-75 bg-gradient rounded text-dark">
                                 <h1 class="navbar-brand"><small class="text-dark"><strong>Multiple-choice questions</strong></small></h1>
                                 <p>Please fill the details and answers the all questions:</p>
-                                <form action="questionsval.php" method="post">
+                                <form action="validationq.php" method="post">
                                     <ol>
                                             <?php
-                                            //for integration 
-                                            //file permissions to be changed 
-                                            putenv('PATH=/usr/local/bin'); //replace this with the file pathway of the directory containing our stuff
-                                            $command = escapeshellcmd("python3 execution.py"); //replace with name of the file 
-                                            $result = exec($command, $output, $return_var);
-
-                                            echo "<p>ANSWER ".var_dump($output)."</p>";    
+                                            $serverName = "127.0.0.1";
+                                            $username = "root";
+                                            $password = "root";
+                                            $dbName = "documentsubmissionsystem";
                                             
-                                            $result ='{"questions": [{"answer": "egyptians","extra_options": ["Jordanians", "Jews", "Berbers"],"id": 1,"options": ["Arabs", "Turks", "Egypt"],"options_algorithm": "sense2vec","question_statement": "Who believed that if a tomb was robbed,the person buried there could not have a happy afterlife?","question_type": "MCQ"},{"answer": "nile river",
-                                            "extra_options": ["Nile", "Inland Sea", "Headwaters", "Steppes","Marshlands", "Little Island"], "id": 2, "options": ["Himalayas", "Mountain Range", "Mediterranean"],   "options_algorithm": "sense2vec","question_statement": "What river fed Egyptian civilization for hundreds of years?",  "question_type": "MCQ"},{"answer": "pharaoh", "extra_options": ["Catacombs", "Temple","Ancient City", "Necropolis", "Cavern", "Priestess", "Yharnam"],"id": 4,"options": ["Shrine", "Mausoleum", "Crypt"],"options_algorithm": "sense2vec","question_statement": "What was the first ruler of Egypt buried in?", "question_type": "MCQ"}, {"answer": "priest", "id": 5, "options": ["Shaman", "Paladin", "Cleric"], "options_algorithm": "sense2vec", "question_statement": "What is one of the highest jobs in Egypt?", "question_type": "MCQ"},{"answer": "word",  "extra_options": [], "id": 6, "options": ["Phrase", "Actual Meaning", "Dictionary"], "options_algorithm": "sense2vec", "question_statement": "What is the Egyptian word for gold?", "question_type": "MCQ"}],"time_taken": 30.612271070480347}';
                                             
-                                            $q = json_decode($result); 
-                                            foreach ($q->questions as $qs) {
-                                               
-                                                echo '<li>';
-                                                echo '<h6>Question: '.$qs->question_statement.'</h6>';
-                                                echo '<div class="form-group"> <ul>';
+                                            $_SESSION["submissionid"] = "100072";
+                                            /*$serverName="documentsubmissionsystem.c2tnrfke8bpv.us-east-1.rds.amazonaws.com",
+                                            $username="admin",
+                                            $password="documentsubmissionsystem",
+                                            $dbName="documentsubmissionsystem"
+                                            */
 
-                                                $answerpos = rand(0,2);
-                                                $optionsarr =[];
-                                                $arrselect = ""; 
-                                                empty($qs->options) == FALSE ? $arrselect="options": $arrselect="extra_options";
-                                                for($x=0; $x<3;$x++){
-                                                    $x == $answerpos ?( array_push($optionsarr, ucfirst($qs->answer)) AND array_push($optionsarr,$qs->$arrselect[$x]))  : (array_push($optionsarr,$qs->$arrselect[$x]));
+                                            //create connection
+                                            $conn = new mysqli($serverName, $username, $password, $dbName);
+
+                                            if ($conn->connect_error) {
+                                                die("Connection failed: " . $conn->connect_error);
+                                              }
+                                            else {
+                                                #get file path of the submitted file
+                                                $getPathQuery = "SELECT filepath FROM submission WHERE Id = ".$_SESSION["submissionid"].";" ;
+                                                $result = $conn -> query($getPathQuery) or die("Something has gone wrong! ".$conn->errorno);
+                                                $row = $result -> fetch_row();
+
+                                                if($row!=NULL){
+                                                    #pass file as an argument for the python script
+                                                    //for integration 
+                                                    //file permissions to be changed 
+                                                    putenv('PATH=C:/xampp/htdocs/xampp/softwareproj'); //replace this with the file pathway of the directory containing our stuff
+                                                    $pythonCommand = "python myquestion.py ./".$row[0]."";//replace with name of the file 
+                                                    echo "<p> pathway". $pythonCommand."</p>";
+                                                    $command = escapeshellcmd($pythonCommand); 
+                                                    $result = exec($command, $output, $returnVar);
+
+                                                    echo "<p>ANSWER ".var_dump($result)."</p>";    
+                                                    
+                                                    $result ='{"questions": [{"answer": "egyptians", "extra_options": ["Jordanians", "Jews", "Berbers"],
+                                                        "id": 1,
+                                                        "options": ["Arabs", "Turks", "Egypt"],
+                                                        "options_algorithm": "sense2vec",
+                                                        "question_statement": "Who believed that if a tomb was robbed,the person buried there could not have a happy afterlife?",
+                                                        "question_type": "MCQ"},
+                                                        {"answer": "nile river","extra_options": ["Nile", "Inland Sea","Headwaters", "Steppes",  "Marshlands", "Little Island"],
+                                                        "id": 2,
+                                                        "options": ["Himalayas", "Mountain Range", "Mediterranean"],
+                                                        "options_algorithm": "sense2vec",
+                                                        "question_statement": "What river fed Egyptian civilization for hundreds of years?",
+                                                        "question_type": "MCQ"},
+                                                         {"answer": "pharaoh",
+                                                        "extra_options": ["Almighty", "Israelites"],
+                                                        "id": 3,
+                                                        "options": ["Moses", "High Priest", "Messiah"],
+                                                        "options_algorithm": "sense2vec",
+                                                        "question_statement": "Who was thought to be a god?",
+                                                        "question_type": "MCQ"},
+                                                        {"answer": "tomb",
+                                                        "extra_options": ["Catacombs","Temple", "Ancient City", "Necropolis","Cavern", "Priestess","Yharnam"],
+                                                        "id": 4,
+                                                        "options": ["Shrine", "Mausoleum", "Crypt"],
+                                                        "options_algorithm": "sense2vec",
+                                                        "question_statement": "What was the first ruler of Egypt buried in?",
+                                                        "question_type": "MCQ"},
+                                                        {"answer": "priest",
+                                                        "extra_options": ["Consecrate"],
+                                                        "id": 5,
+                                                        "options": ["Shaman", "Paladin", "Cleric"],
+                                                        "options_algorithm": "sense2vec",
+                                                        "question_statement": "What is one of the highest jobs in Egypt?",
+                                                        "question_type": "MCQ"}] }';
+
+                                                        $q = json_decode($result);
+                                                
+                                                        foreach ($q->questions as $qs) {
+                                                        
+                                                            echo '<li>';
+                                                            echo '<h6>Question: '.$qs->question_statement.'</h6>';
+                                                            echo '<div class="form-group"> <ul>';
+
+                                                            $answerPos = rand(0,2);
+                                                            $optionsArr =[];
+                                                            $arrSelect = ""; 
+                                                            empty($qs->options) == FALSE ? $arrSelect="options": $arrSelect="extra_options";
+                                                            for($x=0; $x<3;$x++){
+                                                                $x == $answerPos ?( array_push($optionsArr, ucfirst($qs->answer)) AND array_push($optionsArr,$qs->$arrSelect[$x]))  : (array_push($optionsArr,$qs->$arrSelect[$x]));
+                                                            }
+                                                            
+
+                                                            $pos =0; //to keep track of the number of options and integrate it to their HTML tags for proper MCQ selection
+                                                        
+                                                            $extraOptions= array("All of the above", "none of the above");
+                                                            $x=0;
+                                                            while (count($optionsArr) < 4){
+                                                                array_push($optionsArr,$extraOptions[$x]);
+                                                            } 
+
+                                                            foreach ($optionsArr as $op) {
+                                                            
+                                                                echo '<div class="form-check form-check-inline">';
+                                                                $qName ='q'.($qs->id);
+                                                            
+                                                                $rdName ='inlineRadio'.($pos+=1);
+                                                                echo '<input class="form-check-input" type="radio" name="'.$qName.'" id="'.$rdName.'" value="'.$op.'">';
+                                                                echo '<label class="form-check-label" for="'.$rdName.'">'.$op.'</label></div><br/>';
+                                                            }
+                                                            echo '</ul></div></li><br/>';
+                                                        }
+                                                
+                                                }
+                                                else {
+                                                    die("Please check submission ID; no file pathway returned");
                                                 }
                                                 
-
-                                                $pos =0; //to keep track of the number of options and integrate it to their HTML tags for proper MCQ selection
                                                
-                                                $extraoptions= array("All of the above", "none of the above");
-                                                $x=0;
-                                                while (count($optionsarr) < 4){
-                                                    array_push($optionsarr,$extraoptions[$x]);
-                                                } 
-
-
-                                                foreach ($optionsarr as $op) {
-                                                  
-                                                    echo '<div class="form-check form-check-inline">';
-                                                    $qname ='q'.($qs->id);
-                                                    $rdname ='inlineRadio'.($pos+=1);
-                                                    echo '<input class="form-check-input" type="radio" name="'.$qname.'" id="'.$rdname.'" value="'.$op.'">';
-                                                    echo '<label class="form-check-label" for="'.$rdname.'">'.$op.'</label></div><br/>';
-                                                }
-                                                echo '</ul></div></li><br/>';
                                             }
                                             
                                             ?>
