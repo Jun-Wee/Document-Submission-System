@@ -131,11 +131,8 @@ else {
 
             //Extract references if exists
             if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
-                if (!isset($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
-                    $abstractInitial[2] = $text;
-                }
                 $referenceInitial = explode("References", $text);
-                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[2]));
+                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial)-1]));
                 // echo "References: " . $referenceFinal[0];
                 reference($referenceFinal[0], $subId);
             }
@@ -174,12 +171,9 @@ else {
             }
 
             //Extract references if exists
-            if (str_contains(strtolower($text), "references") || str_contains(strtolower($text), "reference")) {
-                if (!isset($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with original text
-                    $abstractInitial[1] = $text;
-                }
-                $referenceInitial = explode("References", $abstractInitial[1]);
-                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
+            if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
+                $referenceInitial = explode("References", $text);
+                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial)-1]));
                 // echo "References: " . $referenceFinal[0];
                 reference($referenceFinal[0], $subId);
             }
