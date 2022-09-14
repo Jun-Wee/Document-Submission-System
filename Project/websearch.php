@@ -18,7 +18,7 @@ echo $title;
 
 //perform search
 $queryString = http_build_query([
-  'api_key' => '45D285BCD4564CA89DB02392F607A231',
+  'api_key' => '2ECC7111A5E2433FA0E469AA32986920',
   'engine' => 'google',
   'search_type' => 'scholar',
   'q' => $title,
@@ -46,12 +46,6 @@ $data = json_decode($api_result);
 
 $results = $data->scholar_results;
 
-<<<<<<< HEAD
-=======
-//perform update web search result 
-//$websearch->updateWebSearchResult($results);
-
->>>>>>> ff90510bedb6a7fb216d1031ab69e6f06903536d
 print("THE RESULTS <br>");
 
 for ($x = 0; $x < 5; $x++) {
