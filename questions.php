@@ -136,8 +136,13 @@ if (!isset($_SESSION['student'])) {
                                                     echo "<p> pathway". $pythonCommand."</p>";
                                                     $command = escapeshellcmd($pythonCommand); 
                                                     $result = exec($command, $output, $returnVar);
-
+                                                    
+                                                    #the echo below is for web integration testing purposes 
                                                     echo "<p>ANSWER ".var_dump($result)."</p>";    
+
+                                                    #the single quotes need to be replaced with double quotes to be decoded as a json object
+                                                    $result = str_replace('\'','"',$result);
+                                                   
                                                     
                                                     $result ='{"questions": [{"answer": "egyptians", "extra_options": ["Jordanians", "Jews", "Berbers"],
                                                         "id": 1,
@@ -172,7 +177,7 @@ if (!isset($_SESSION['student'])) {
                                                         "options_algorithm": "sense2vec",
                                                         "question_statement": "What is one of the highest jobs in Egypt?",
                                                         "question_type": "MCQ"}] }';
-
+                                                        
                                                         $q = json_decode($result);
                                                 
                                                         foreach ($q->questions as $qs) {
