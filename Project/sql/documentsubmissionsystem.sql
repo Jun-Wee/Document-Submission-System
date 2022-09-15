@@ -143,6 +143,18 @@ CREATE TABLE `entity` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reference`
+--
+
+CREATE TABLE `reference` (
+  `referenceId` int(10) NOT NULL,
+  `subId` int(10) NOT NULL,
+  `text` varchar(750) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `students`
 --
 
@@ -288,6 +300,13 @@ ALTER TABLE `entity`
   ADD KEY `subId` (`subId`);
 
 --
+-- Indexes for table `reference`
+--
+ALTER TABLE `reference`
+  ADD PRIMARY KEY (`referenceId`),
+  ADD KEY `subId` (`subId`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
@@ -323,6 +342,12 @@ ALTER TABLE `analysis`
 --
 ALTER TABLE `entity`
   MODIFY `entityId` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `reference`
+--
+ALTER TABLE `reference`
+  MODIFY `referenceId` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `submission`

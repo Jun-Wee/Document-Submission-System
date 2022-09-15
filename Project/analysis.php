@@ -7,6 +7,8 @@ include "classes/analysisTable.php";
 include "classes/entityTable.php";
 include "classes/submission.php";
 include "classes/submissionTable.php";
+include "classes/reference.php";
+include "classes/referenceTable.php";
 include "src/library/PDFParser/vendor2/autoload.php";
 
 use Google\Cloud\Language\LanguageClient;
@@ -18,7 +20,7 @@ if (!isset($_SESSION['student'])) {
     try {
         $language = new LanguageClient([
             //Replace if needed (admin only)
-            'keyFilePath' => getcwd() . '/src/library/GoogleNLP/psyched-hulling-355705-0568447d899e.json',
+            'keyFilePath' => getcwd() . '/src/library/GoogleNLP/vigilant-design-362312-adb90a0fb461.json',
         ]);
 
         //Retrieve the submission ID
@@ -81,6 +83,19 @@ if (!isset($_SESSION['student'])) {
         }
 
         // //Misc------------------------------------------------------------------------------------------------------------\
+        // $webSearch = $_POST['webSearch'];
+        // $_SESSION['webSearch'] = $webSearch;
+
+        //Add reference to database----------------------------------------------------------------------------------------
+        function reference($reference, $subId)
+        {
+            $db3 = new Database();
+            strip_tags($reference);
+            $referenceTable = new ReferenceTable($db3);
+            $referenceTable->add($subId, $reference);
+        }
+
+        //Misc------------------------------------------------------------------------------------------------------------
         // $webSearch = $_POST['webSearch'];
         // $_SESSION['webSearch'] = $webSearch;
 

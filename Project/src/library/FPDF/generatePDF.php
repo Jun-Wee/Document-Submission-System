@@ -7,6 +7,33 @@ include "../../../classes/entityTable.php";
 include "../../../classes/submissionTable.php";
 include "../../../classes/analysis.php";
 include "../../../classes/submission.php";
+// include "../../../classes/webSearch.php";
+// include "../../../classes/webSearchTable.php";
+include "../../../classes/reference.php";
+include "../../../classes/referenceTable.php";
+
+// start the session
+session_start();
+
+if (!isset($_SESSION['admin'])) {
+    if (!isset($_SESSION['convenor'])) {
+        header("Location: ../../../../adminLogin.php");
+    } else {
+        $convenor = unserialize($_SESSION['convenor']);
+    }
+} else {
+    $admin = unserialize($_SESSION['admin']);
+}
+
+// //Document general information------------------------------------------------------------------------------
+$subId = null;                                                          //Placeholder ID for testing 
+//$subId = $_POST["subId"];
+
+if (isset($_GET['subId'])) {
+    if (!empty($_GET['subId'])) {
+        $subId = $_GET['subId'];
+    }
+}
 
 // start the session
 session_start();
@@ -36,6 +63,8 @@ $db = new Database();
 $submissionTable = new SubmissionTable($db);
 $analysisTable = new AnalysisTable($db);
 $entityTable = new EntityTable($db);
+//$webSearchTable = new webSearchTable($db);
+$referenceTable = new ReferenceTable($db);
 
 // //Instantiate and use the FPDF class
 $pdf = new MyPDF();
@@ -145,5 +174,30 @@ $pdf->Cell(0, 10, 'Positive message are above 0.', 0, 1);
 $pdf->Cell(0, 10, 'Salience - Importance of the entity within the document. The higher the score, the more salient the entity.', 0, 1);
 $pdf->Cell(0, 10, 'Magnitude - The strength of the emotion, the higher the score the stronger the emotion.', 0, 1);
 
-// //Return the generated output-------------------------------------------------------------------------------
+//Add the web search results-------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'Web search results', 0, 1);
+//$webSearchOutput = $webSearchTable->get($subId);    //obtain the subID for web search
+
+// for ($i = 0; $i < count($webSearchOutput); $i++) {
+//     $pdf->Cell(0, 2, $i . '. ' . $webSearchOutput[$i]->getTitle(), 0, 1);
+//     $pdf->Cell(0, 2, 'Description: ' . $webSearchOutput[$i]->getDescription(), 0, 1);
+//     $pdf->Cell(0, 2, 'Author(s): ' . $webSearchOutput[$i]->getAuthors(), 0, 1);
+//     $pdf->Cell(0, 2, 'Link: : ' . $webSearchOutput[$i]->getLink(), 0, 1);
+//     $pdf->Cell(0, 2, 'Date: : ' . $webSearchOutput[$i]->getDate(), 0, 1);
+// }
+
+//Add reference list---------------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'References: ', 0, 1);
+
+$pdf->SetFont('Arial', '', 12);                          //Change font size
+$referenceOutput = $referenceTable->get($subId);
+$result = $referenceOutput[0]->getText();
+$pdf->Write(5, $result);
+
+
+//Return the generated output-------------------------------------------------------------------------------
 $pdf->Output();
