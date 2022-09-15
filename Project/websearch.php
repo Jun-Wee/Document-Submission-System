@@ -1,6 +1,7 @@
 <?php
 //Load Composer's autoloader
-require "src/library/websearch/vendor/autoload.php";
+require 'src/library/websearch/google-search-results.php';
+require 'src/library/websearch/restclient.php';
 
 //include
 include "classes/database.php";
@@ -9,54 +10,27 @@ require "classes/webSearchTable.php";
 session_start();
 
 $db = new Database();
-$websearch = new webSearchTable($db);
+$websearch = new WebSearchTable($db);
 
 $title = $_SESSION['title'];
 $subId = $_SESSION['subId'];
+$secret_api_key = '697836773f8cb07bad07947da490499d1900d2df73c183ee405c2d112e95cc18';
 
 echo $title;
 
-//perform search
-$queryString = http_build_query([
-  'api_key' => '2ECC7111A5E2433FA0E469AA32986920',
-  'engine' => 'google',
-  'search_type' => 'scholar',
-  'q' => $title,
-  'page' => '1'
-]);
+$query = [
+  "engine" => "google_scholar",
+  "q" => $title,
+];
 
-# make the http GET request
-$ch = curl_init(sprintf('%s?%s', 'https://api.serpwow.com/live/search', $queryString));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-# the following options are required if you're using an outdated OpenSSL version
-# more details: https://www.openssl.org/blog/blog/2021/09/13/LetsEncryptRootCertExpire/
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_TIMEOUT, 180);
+$search = new GoogleSearchResults($secret_api_key);
+$result = $search->get_json($query);
+$organic_results = $result->organic_results;
 
-$api_result = curl_exec($ch);
-curl_close($ch);
-
-# print the JSON response
-$data = json_decode($api_result);
-
-# print the JSON response from SerpWow
-$data = json_decode($api_result);
-
-$results = $data->scholar_results;
-
-print("THE RESULTS <br>");
-
-for ($x = 0; $x < 5; $x++) {
-  $search = $results[$x];
-
+for ($i = 0; $i < 5; $i++) {
   #explode function is used to seperate the authors from the rest of the filler content in the displayed link which is seperated by a hyphen
-  $splarr = explode("-", $search->displayed_link);
-  print_r("Search result: title - " . $search->title . ",<br> description - " . $search->snippet . ",<br> authors - " . $splarr[0] . ",<br> link - " . $search->link . "<br><br>");
+  $summary_arr = explode("-", ($organic_results[$i]->publication_info)->summary);
+  print_r("Search result: title - " . $organic_results[$i]->title . ",<br> description - " . $organic_results[$i]->snippet . ",<br> authors - " . $summary_arr[0] . ",<br> link - " . $organic_results[$i]->link . "<br><br>");
 };
-#explore the below link to understand web search results 
-#https://www.serpwow.com/docs/search-api/results/google/search
 
-
-// $websearch->insertWebSearchResult($results, $subId);
+echo $websearch->Add($organic_results, $subId);

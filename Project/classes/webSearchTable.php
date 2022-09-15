@@ -1,5 +1,5 @@
 <?php
-class webSearchTable
+class WebSearchTable
 {
     private $db;
 
@@ -9,39 +9,39 @@ class webSearchTable
         $this->db = $db;
     }
 
-    function sanitise_input($data)
+    function Add($organic_results, $subId)
     {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
+        // Add web search result to database record
 
-    function insertWebSearchResult($results, $subId)
-    {  //$results content 5 web search results
+        // Create connection
         $this->db->createConnection();
+
+        // loop through the organic_result and insert each result iteratively
         for ($i = 0; $i < 5; $i++) {
-            $search = $results[$i];
 
-            #explode function is used to seperate the authors from the rest of the filler content in the displayed link which is seperated by a hyphen
-            $splarr = explode("-", $search->displayed_link);
+            $sql = "INSERT INTO `websearch`(`websearchNum`, `submissionId`, `title`, `description`, `authors`, `link`) VALUES (?,?,?,?,?,?)";
 
-            $sql = "INSERT INTO websearch (websearchId, submissionId, title, description, authors, link) VALUES (?,?,?,?,?,?,?)";
             $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
 
-            $prepared_stmt->bind_param('sssssss', $i, $subId, $search->title, $search->snippet, $splarr[0], $search->link);
-            mysqli_stmt_execute($prepared_stmt);
-            mysqli_stmt_close($prepared_stmt);
-        };
+            //Bind input variables to prepared statement
+            $prepared_stmt->bind_param("ssssss", $websearchNo, $submissionId, $title, $description, $authors, $link);
 
-        // for ($i = 0; $i < 5; $i++) { //loop each web search result
-        //     $search = $results[$i];
-        //     $splarr = explode("-", $search->displayed_link);
-        //     $title = $search->title;
-        //     $snippet = $search->snippet;
-        //     $author = $splarr[0];
-        //     $link = $search->link;
-        // }
+            $websearchNo = $i + 1;
+            $submissionId = $subId;
+            $title = $organic_results[$i]->title;
+            $description = $organic_results[$i]->snippet;
+            $summary_arr = explode("-", ($organic_results[$i]->publication_info)->summary);
+            $authors = $summary_arr[0];
+            $link = $organic_results[$i]->link;
+
+            //Execute prepared statement
+            $status = $prepared_stmt->execute();
+
+            $prepared_stmt->close();
+        }
+
         $this->db->closeConnection();
+
+        return $status;
     }
 }
