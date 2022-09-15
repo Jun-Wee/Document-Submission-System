@@ -9,16 +9,16 @@ include "classes/submission.php";
 include "classes/submissionTable.php";
 include "src/library/PDFParser/vendor2/autoload.php";
 
-use Google\Cloud\Language\LanguageClient;   
+use Google\Cloud\Language\LanguageClient;
+
 session_start();
 if (!isset($_SESSION['student'])) {
     header("Location: studentLogin.php");
-}
-else {
+} else {
     try {
         $language = new LanguageClient([
             //Replace if needed (admin only)
-            'keyFilePath' => getcwd().'/src/library/GoogleNLP/psyched-hulling-355705-0568447d899e.json',
+            'keyFilePath' => getcwd() . '/src/library/GoogleNLP/psyched-hulling-355705-0568447d899e.json',
         ]);
 
         //Retrieve the submission ID
@@ -26,7 +26,8 @@ else {
         //echo $subId;
 
         //Sentiment Analysis----------------------------------------------------------------------------------------------
-        function sentiment($language, $extractedText, $subId, $type) {
+        function sentiment($language, $extractedText, $subId, $type)
+        {
 
             $db = new Database();
             $annotationS = $language->analyzeSentiment($extractedText);     //Analyze the sentiments
@@ -37,23 +38,24 @@ else {
             $magnitude = $annotationS->sentiment()['magnitude'];
 
             $sentimentAnalysis = new SentimentAnalysis();
-            $emotion = $sentimentAnalysis->evaluate($annotationS);          //Call the sentiment evaluation function
+            //$emotion = $sentimentAnalysis->evaluate($annotationS);          //Call the sentiment evaluation function
 
             //Call analysis table interface to store sentiment results--------------------------------------------------------
             $analysisTable = new AnalysisTable($db);
 
-            $analysisTable->add($subId, $type, $emotion, $score, $magnitude);  //Call the add function
+            //$analysisTable->add($subId, $type, $emotion, $score, $magnitude);  //Call the add function
         }
 
         //Entity Analysis-------------------------------------------------------------------------------------------------
-        function entity($language, $extractedText, $subId) {
+        function entity($language, $extractedText, $subId)
+        {
             $annotationE = $language->analyzeEntities($extractedText);      //Analyze the entities
 
             $myEntities = array_slice($annotationE->entities(), 0, 5);      //Limit entities to top 5 based on salience score
 
             //echo "<pre>"; print_r($myEntities); echo "</pre>";
 
-            foreach ($myEntities as $entity) {   
+            foreach ($myEntities as $entity) {
                 //echo $entity['name'];
                 //echo $entity['salience'];
 
@@ -64,12 +66,9 @@ else {
                 if (isset($entity['metadata']['wikipedia_url'])) {          //Store wikipedia url if exists
                     //echo $entity['metadata']['wikipedia_url'];
                     $entityTable->add($subId, $entity['name'], $entity['salience'], $entity['metadata']['wikipedia_url']);
-                }
-
-                else {                                                      //Store only name and salience otherwise
+                } else {                                                      //Store only name and salience otherwise
                     $entityTable->add($subId, $entity['name'], $entity['salience'], null);
                 }
-
             }
         }
 
@@ -82,7 +81,7 @@ else {
         if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000) {
             //Extract the abstract if exists
             if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
-                $abstractInitial = explode("Abstract", $text);      
+                $abstractInitial = explode("Abstract", $text);
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[2]));
                 // echo "Abstract: " . $abstractFinal[0];
                 $type = "Abstract";
@@ -91,7 +90,7 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {
                 if (empty($abstractInitial[2])) {
                     $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
                 }
@@ -152,14 +151,12 @@ else {
                 $_SESSION["reference"] = $referenceFinal[0];
                 // echo "References: " . $referenceFinal[0];
             }
-        }
-
-        else {
+        } else {
             // echo "No table of content found";
             // echo strpos(strtolower($text), "contents");
             //Extract the abstract if exists
             if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
-                $abstractInitial = explode("Abstract", $text);      
+                $abstractInitial = explode("Abstract", $text);
                 $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
                 // echo "Abstract: " . $abstractFinal[0];
                 $type = "Abstract";
@@ -168,7 +165,7 @@ else {
             }
 
             //Extract the introduction if exists
-            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {    
+            if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {
                 if (empty($abstractInitial[1])) {
                     $abstractInitial[1] = $text;    //If abstract is not the first paragraph, replace with original text
                 }
@@ -227,7 +224,7 @@ else {
                 // echo "References: " . $referenceFinal[0];
             }
         }
-        
+
         //Legacy solution (Too ambiguous)-------------------------------------------------------------------------------
         //$introduction = explode("Introduction", $text);
         // $context = explode("Context", $text);
@@ -251,11 +248,7 @@ else {
         //Combine the paragraphs together
         //$extractedText = $paragraph1 . $paragraph2 . $paragraph3 . $paragraph4 . $paragraph5;
         //$extractedText = $abstract[2];
-    }
-
-    catch(Exception $e) {
+    } catch (Exception $e) {
         echo $e->getMessage();
     }
 }
-
-?>
