@@ -33,7 +33,7 @@ if (!isset($_SESSION['student'])) {
     <script src="script/script.js"></script>
 </head>
 
-<body onload="startTIME();">
+<body onload="startTIME();"  style= "background-image: url('src/images/questionsval-image.jpg');">
 
     <!--Title-->
     <div class="jumbotron text-center" style="color:white;">
@@ -178,6 +178,7 @@ if (!isset($_SESSION['student'])) {
                                     $setTallyQuery = 'UPDATE submission SET score = '.$tally.' WHERE Id='.$_SESSION["submissionid"].';';
                                     $result = $conn -> query($setTallyQuery)or die("Something has gone wrong! ".$conn->errorno);;
                                     
+                                    echo '<h3><img src="src/images/tick.png" width="150" height="150" title="correct submission"/> Your submission was successful!</h3>';
                                     echo '<p>Congratulations! Your submission is complete! Please click <a href="index.php">here</a> to return to the homepage</p>';
                                     
                                 }
@@ -187,6 +188,8 @@ if (!isset($_SESSION['student'])) {
 
                                 }
                                 else {
+                                   
+                                    echo '<h3><img src="src/images/cross.png" width="100" height="100" title="incorrect submission"/> Sorry your submission didnt go through!</h3>';
                                     echo "<h6>You have not answered all the MCQ questions! Please go back to the previous page to access your answers and resubmit your answers to finalize your submission. </h6>";
                                 
                                 }

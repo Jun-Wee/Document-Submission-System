@@ -30,10 +30,11 @@ if (!isset($_SESSION['student'])) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="icon" href="src/images/logo.png">
     <link rel="stylesheet" href="style/studentIndexStyle.css">
+
     <script src="script/script.js"></script>
 </head>
 
-<body onload="startTIME();">
+<body onload="startTIME();"  style= "background-image: url('src/images/birmingham.jpg');">
 
     <!--Title-->
     <div class="jumbotron text-center" style="color:white;">
@@ -92,7 +93,7 @@ if (!isset($_SESSION['student'])) {
             </div>
 
             <!--multiple-choice question form-->
-            <div class="col py-3">
+            <div class="col py-3" >
                 <div class="row">
                     <div class="col-10 mx-auto">
                         <div class="container">
