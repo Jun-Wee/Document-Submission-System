@@ -1,4 +1,17 @@
+<!-- Description: Websearch Result Page in PHP -->
+<!-- Author: Yovinma Konara and Sandali Jayasinghe -->
+<!-- Date: 10th September 2022 -->
+
 <?php
+
+//session_start();
+/*include "classes/user.php";
+session_start();
+if (!isset($_SESSION['student'])) {
+    header("Location: studentLogin.php");
+} else {
+    $student = unserialize($_SESSION['student']);
+}*/
 
 
 #require_once( 'C:/xampp/htdocs/xampp/softwareproj/vendor/autoload.php');
@@ -55,7 +68,28 @@ $search = new GoogleSearchResults('697836773f8cb07bad07947da490499d1900d2df73c18
 $result = $search->get_json($query);
 $organic_results = $result->organic_results;
 
-  
+$serverName = "localhost";
+$username = "root";
+$password = "";
+$dbName = "documentsubmissionsystem";
+
+/*
+$serverName="documentsubmissionsystem.c2tnrfke8bpv.us-east-1.rds.amazonaws.com",
+$username="admin",
+$password="documentsubmissionsystem",
+$dbName="documentsubmissionsystem"
+*/
+
+//create connection
+$dbConnect = @mysqli_connect($serverName, $username, $password)
+            or die("<p>Unable to connect to the database server.</p>". "<p>Error code " . mysqli_connect_errno()
+                                  . ": " . mysqli_connect_error()) . "</p>";
+      @mysqli_select_db($dbConnect, $dbName)
+            or die("<p>Unable to select the database.</p>" . "<p>Error code " . mysqli_errno($dbConnect). ": " . mysqli_error($dbConnect) . "</p>");
+      
+
+
+//printing the results of the websearch and store the results in the database  
 print("THE RESULTS <br>");
 
 for( $x=0; $x< 5; $x++)
@@ -64,9 +98,13 @@ for( $x=0; $x< 5; $x++)
 
   #explode function is used to seperate the authors from the rest of the filler content in the displayed link which is seperated by a hyphen
   $splarr = explode("-",$search->publication_info->summary);
-    print_r("Search result: title - ".$search->title.",<br> description - ". $search->snippet .",<br> authors - ".$splarr[0].",<br> link - ". $search->link."<br><br>");
+  print_r("Search result: title - ".$search->title.",<br> description - ". $search->snippet .",<br> authors - ".$splarr[0].",<br> link - ". $search->link."<br><br>");
+  $sqlquery = "INSERT INTO websearchresults (title,description,author,link) VALUES ('".$search->title."','".$search->snippet."','".$search->publication_info->summary."','".$search->link."');";
+  $queryresult = mysqli_query($dbConnect, $sqlquery);
   
 };
+
+
 
 
 
