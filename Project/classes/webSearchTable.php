@@ -44,4 +44,43 @@ class WebSearchTable
 
         return $status;
     }
+
+    function GetAll($submissionId)
+    {
+        // Create connection
+        $this->db->createConnection();
+
+        $results = array();
+
+        $sql = "SELECT * FROM websearch WHERE `submissionId` = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("i", $submissionId);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+            // fetch the record from the server and then store them in an array object
+            array_push($results, array("websearchNum" => $row[0], "title" => $row[2], "description" => $row[3], "authors" => $row[4], "link" => $row[5]));
+            $row = mysqli_fetch_row($queryResult);
+            $item_count += 1;
+        }
+
+        $this->db->closeConnection();
+
+        return $results;
+    }
 }
