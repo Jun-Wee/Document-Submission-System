@@ -34,6 +34,29 @@ if (isset($_GET['subId'])) {
     }
 }
 
+function stringFormat($string, $string_maxlength)
+{
+    $str_array = explode(" ", $string);
+    $new_str_array = array();
+    $str_maxlength = $string_maxlength;
+    $str_length = 0;
+    for ($j = 0; $j < count($str_array); $j++) {
+        if ($str_length < $str_maxlength) {
+            if (preg_match("/^[A-Za-z0-9-:,_.() \'\"]+$/D", $str_array[$j])) {
+                array_push($new_str_array, $str_array[$j]);
+            } else {
+                array_push($new_str_array, "...");
+            }
+            $str_length = strlen(implode(" ", $new_str_array));
+        } else {
+            array_push($new_str_array, "...");
+            break;
+        }
+    }
+    $new_string = implode(" ", $new_str_array);
+    return $new_string;
+}
+
 //Connect to database
 $db = new Database();
 $submissionTable = new SubmissionTable($db);
@@ -64,7 +87,7 @@ $pdf->SetFont('Arial', 'B', '18');
 
 //Add page heading
 $pdf->SetXY(55, 20);
-$pdf->Cell(100, 10, 'Analysis Report', 1, 0, 'C', 0);
+$pdf->Cell(100, 10, 'Analysis Report', 0, 0, 'C', 0);
 
 //Add content-----------------------------------Change this last
 $pdf->SetXY(10, 50);
@@ -153,24 +176,39 @@ $pdf->Cell(0, 10, 'Positive message are above 0.', 0, 1);
 $pdf->Cell(0, 10, 'Salience - Importance of the entity within the document. The higher the score, the more salient the entity.', 0, 1);
 $pdf->Cell(0, 10, 'Magnitude - The strength of the emotion, the higher the score the stronger the emotion.', 0, 1);
 
-// //Add the web search results-------------------------------------------------------------------
-// $pdf->SetFont('Arial', 'B', 12);                          //Change font size
-// $pdf->Cell(0, 10, '', 0, 1);
-// $pdf->Cell(0, 10, 'Web search results', 0, 1);
-// //$webSearchOutput = $webSearchTable->get($subId);    //obtain the subID for web search
+//Add a new page
+$pdf->AddPage();
 
-// // for ($i = 0; $i < count($webSearchOutput); $i++) {
-// //     $pdf->Cell(0, 2, $i . '. ' . $webSearchOutput[$i]->getTitle(), 0, 1);
-// //     $pdf->Cell(0, 2, 'Description: ' . $webSearchOutput[$i]->getDescription(), 0, 1);
-// //     $pdf->Cell(0, 2, 'Author(s): ' . $webSearchOutput[$i]->getAuthors(), 0, 1);
-// //     $pdf->Cell(0, 2, 'Link: : ' . $webSearchOutput[$i]->getLink(), 0, 1);
-// //     $pdf->Cell(0, 2, 'Date: : ' . $webSearchOutput[$i]->getDate(), 0, 1);
-// // }
+//Add reference list---------------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, '', 0, 1);
+$pdf->Cell(0, 10, 'References ', 0, 1);
 
-// //Add reference list---------------------------------------------------------------------------
-// $pdf->SetFont('Arial', 'B', 12);                          //Change font size
-// $pdf->Cell(0, 10, '', 0, 1);
-// $pdf->Cell(0, 10, 'References: ', 0, 1);
+//Add a new page
+$pdf->AddPage();
+
+//Add the web search results-------------------------------------------------------------------
+$pdf->SetFont('Arial', 'B', 12);                          //Change font size
+$pdf->Cell(0, 10, 'Web search results', 0, 1);
+$webSearchOutput = $webSearchTable->GetAll($subId);
+
+$pdf->SetFont('Arial', '', 10);                          //Change font size
+
+// for ($i = 0; $i < count($webSearchOutput); $i++) {
+//     echo "<p>" . stringFormat($webSearchOutput[$i]['description']) . "</p>";
+// }
+
+$strlength = "";
+for ($i = 0; $i < 100; $i++) {
+    $strlength = $strlength . "a";
+}
+
+for ($i = 0; $i < count($webSearchOutput); $i++) {
+    $pdf->Cell(0, 10, $i + 1 . '. ' . stringFormat($webSearchOutput[$i]['title'], 105), 0, 1, 'L', $fill);
+    $pdf->Cell(0, 10, 'Description: ' . stringFormat($webSearchOutput[$i]['description'], 100), 0, 1);
+    $pdf->Cell(0, 10, 'Author(s): ' . stringFormat($webSearchOutput[$i]['authors'], 100), 0, 1);
+    $pdf->Cell(0, 10, "Link: Available (Click here)", 0, 1, '', false, $webSearchOutput[$i]['link']);
+}
 
 // $pdf->SetFont('Arial', '', 12);                          //Change font size
 // $referenceOutput = $referenceTable->get($subId);
