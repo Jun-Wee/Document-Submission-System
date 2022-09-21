@@ -34,7 +34,7 @@ if (!isset($_SESSION['student'])) {
     <script src="script/script.js"></script>
 </head>
 
-<body onload="startTIME();"  style= "background-image: url('src/images/birmingham.jpg');">
+<body onload="startTIME();"  style= "background-image: url('src/images/questions-image.jpg');">
 
     <!--Title-->
     <div class="jumbotron text-center" style="color:white;">
