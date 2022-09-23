@@ -83,9 +83,34 @@ else {
             $referenceTable->add($subId, $reference);
         }
 
-        //Misc------------------------------------------------------------------------------------------------------------
+        //Web Search------------------------------------------------------------------------------------------------------
         // $webSearch = $_POST['webSearch'];
         // $_SESSION['webSearch'] = $webSearch;
+
+        //Limit text for question generation------------------------------------------------------------------------------
+        function substrWords($text, $maxchar, $end="...") {
+            if (strlen($text) > $maxchar || $text == '') {
+                $words = preg_split('/\s/', $text);
+                $output = '';
+                $i = 0;
+
+                while (1) {
+                    $length = strlen($output) + strlen($words[$i]);
+                    if ($length > $maxchar) {
+                        break;
+                    }
+                    else {
+                        $output .= " " . $words[$i];
+                        ++$i;
+                    }
+                }
+                $output .= $end;
+            }
+            else {
+                $output = $text;
+            }
+            return $output;
+        }
 
         //Text extraction-------------------------------------------------------------------------------------------------
         $raw = $_SESSION['pdfText'];                                    //Issue: does not recognize images (� character)
@@ -95,6 +120,12 @@ else {
 
         // echo $text;
 
+        $limitedText = substrWords($text, 510000);                      //Limit words to 512kb
+        //echo strlen($limitedText);
+        //echo $limitedText;
+        $_SESSION['questGen'] = $limitedText;
+
+        //Paragraph separation---------------------------------------------------------------------
         if (str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000 || 
         str_contains(strtolower($text), "contents") && strpos(strtolower($text), "contents") < 5000) {
             //echo "First option";
