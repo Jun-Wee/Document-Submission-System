@@ -127,59 +127,21 @@ if (!isset($_SESSION['student'])) {
                                                 $getPathQuery = "SELECT filepath FROM submission WHERE Id = ".$_SESSION["submissionid"].";" ;
                                                 $result = $conn -> query($getPathQuery) or die("Something has gone wrong! ".$conn->errorno);
                                                 $row = $result -> fetch_row();
+                                                
 
                                                 if($row!=NULL){
-                                                    #pass file as an argument for the python script
-                                                    //for integration 
-                                                    //file permissions to be changed 
-                                                    putenv('PATH=C:/xampp/htdocs/xampp/softwareproj'); //replace this with the file pathway of the directory containing our stuff
-                                                    $pythonCommand = "python myquestion.py ./".$row[0]."";//replace with name of the file 
-                                                    echo "<p> pathway". $pythonCommand."</p>";
-                                                    $command = escapeshellcmd($pythonCommand); 
-                                                    $result = exec($command, $output, $returnVar);
+                                                    #seperate all the subfolders in the filepath and pass into an array 
+                                                    $fileComponents  = explode("/",$row[0]);
+                                            
+                                                    #execute python script only once for each submission
+                                                    if(empty($_SESSION["result"])){
+                                                        #creating Faqstapi link with the correct query parameters 
+                                                        $result = json_decode(file_get_contents("http://127.0.0.1:8000/questiongen/".$fileComponents[0]."/".$fileComponents[1]."/".$fileComponents[2]."/".$fileComponents[3].""));
+                                                        $_SESSION["result"] = $result->generation;
+                                                    }
                                                     
-                                                    #the echo below is for web integration testing purposes 
-                                                    echo "<p>ANSWER ".var_dump($result)."</p>";    
-
-                                                    #the single quotes need to be replaced with double quotes to be decoded as a json object
-                                                    $result = str_replace('\'','"',$result);
-                                                   
-                                                    
-                                                    $result ='{"questions": [{"answer": "egyptians", "extra_options": ["Jordanians", "Jews", "Berbers"],
-                                                        "id": 1,
-                                                        "options": ["Arabs", "Turks", "Egypt"],
-                                                        "options_algorithm": "sense2vec",
-                                                        "question_statement": "Who believed that if a tomb was robbed,the person buried there could not have a happy afterlife?",
-                                                        "question_type": "MCQ"},
-                                                        {"answer": "nile river","extra_options": ["Nile", "Inland Sea","Headwaters", "Steppes",  "Marshlands", "Little Island"],
-                                                        "id": 2,
-                                                        "options": ["Himalayas", "Mountain Range", "Mediterranean"],
-                                                        "options_algorithm": "sense2vec",
-                                                        "question_statement": "What river fed Egyptian civilization for hundreds of years?",
-                                                        "question_type": "MCQ"},
-                                                         {"answer": "pharaoh",
-                                                        "extra_options": ["Almighty", "Israelites"],
-                                                        "id": 3,
-                                                        "options": ["Moses", "High Priest", "Messiah"],
-                                                        "options_algorithm": "sense2vec",
-                                                        "question_statement": "Who was thought to be a god?",
-                                                        "question_type": "MCQ"},
-                                                        {"answer": "tomb",
-                                                        "extra_options": ["Catacombs","Temple", "Ancient City", "Necropolis","Cavern", "Priestess","Yharnam"],
-                                                        "id": 4,
-                                                        "options": ["Shrine", "Mausoleum", "Crypt"],
-                                                        "options_algorithm": "sense2vec",
-                                                        "question_statement": "What was the first ruler of Egypt buried in?",
-                                                        "question_type": "MCQ"},
-                                                        {"answer": "priest",
-                                                        "extra_options": ["Consecrate"],
-                                                        "id": 5,
-                                                        "options": ["Shaman", "Paladin", "Cleric"],
-                                                        "options_algorithm": "sense2vec",
-                                                        "question_statement": "What is one of the highest jobs in Egypt?",
-                                                        "question_type": "MCQ"}] }';
-                                                        
-                                                        $q = json_decode($result);
+                                                    #pass the JSON result for formatting and displaying the questions
+                                                    $q = $_SESSION["result"];
                                                 
                                                         foreach ($q->questions as $qs) {
                                                         

@@ -204,7 +204,9 @@ if (!isset($_SESSION['student'])) {
 
                                 }else { echo "<h6>erroneous access</h6>";}
 
+                                #unset variables
                                 unset($_SESSION["submissionid"])
+                                unset($_SESSION["result"])
 
                                 ?>
                             </div>
