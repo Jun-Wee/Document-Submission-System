@@ -26,8 +26,47 @@ class QuestionTable
         return $this->questions;
     }
 
-    function CalculateTotalScore()
+    function GetTotalNumofQues()
     {
+        // Create connection;
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM question WHERE submissionId = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param(
+            "i",
+            $this->submissionId
+        );
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_num_rows($queryResult);
+
+        return $row;
+    }
+
+    function CalculateTotalScore($actual_answers, $stud_answers)
+    {
+        $score = 0;
+        for ($i = 0; $i < count($stud_answers); $i++) {
+            if (in_array($stud_answers[$i], $actual_answers)) {
+                $score = $score + 1;
+            } else {
+                continue;
+            }
+        }
+        return $score;
     }
 
     function SortQuestions()
@@ -36,9 +75,59 @@ class QuestionTable
 
     function Get($questionNum)
     {
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM question WHERE `submissionId` = ? AND `questionNum` = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("ii", $this->submissionId, $questionNum);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $this->db->closeConnection();
+
+        // $submissionId, $stuAnswer, $quesNum, $answer, $context, $options, $statement
+        return new Question($row[0], $row[2], $row[1], $row[3], $row[4], $row[5], $row[6]);
     }
 
-    function Edit($questionNum)
+    function Edit($question)
     {
+        // Edit question record from database
+
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "UPDATE `question` SET `stuAnswer`=? WHERE `submissionId`=? AND `questionNum`=?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("sii", $stuAnswer, $subId, $quesNum);
+
+        $stuAnswer = $question->getStuAnswer();
+        $subId = $question->getSubmissionId();
+        $quesNum =  $question->getQuesNum();
+
+        //Execute prepared statement
+        $status = $prepared_stmt->execute();
+
+        $prepared_stmt->close();
+
+        $this->db->closeConnection();
+
+        return $status;
     }
 }
