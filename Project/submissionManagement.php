@@ -122,7 +122,7 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="#" class="nav-link align-middle px-0">
+							<a href="questionManagement.php" class="nav-link align-middle px-0">
 								<i class="fs-2 bi bi-clipboard-check" id="navicon"></i>
 								<span class="ms-1 d-none d-sm-inline" id="navtext">Question</span>
 							</a>

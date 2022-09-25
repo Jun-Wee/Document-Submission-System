@@ -8,6 +8,8 @@
 include "classes/user.php";
 include "classes/submission.php";
 include "classes/submissionTable.php";
+include "classes/question.php";
+include "classes/questionTable.php";
 include "classes/studentTable.php";
 include "classes/database.php";
 include "system_functions.php";
@@ -19,6 +21,7 @@ session_start();
 $admin = null;
 $convenor = null;
 $db = new Database();
+$questionTable = new QuestionTable($db, null);
 $studentTable = new StudentTable($db);
 $submissionTable = new SubmissionTable($db);
 
@@ -36,15 +39,18 @@ if (!isset($_SESSION['admin'])) {
     $student_records = $studentTable->GetAll();
     $submission_records = $submissionTable->GetAll();
 }
+
+$question_records = $questionTable->GetAll();
+
 ?>
 
 <!-- create a pagination for submission records -------------------------------------->
 <?php
 // define how many results you want per page
-$results_per_page = 6;
+$results_per_page = 10;
 
 // find out the number of results stored in database
-$number_of_results = count($student_records);
+$number_of_results = count($question_records);
 
 // determine number of total pages available
 $number_of_pages = ceil($number_of_results / $results_per_page);
@@ -60,20 +66,10 @@ if (!isset($_GET['page'])) {
 $this_page_first_result = ($current_page - 1) * $results_per_page;
 
 // slice the selected results from database
-$student_records_subset = array_slice($student_records, $this_page_first_result, $results_per_page);
+$question_records_subset = array_slice($question_records, $this_page_first_result, $results_per_page);
 ?>
 
 <!----------------------------------------------------------------------------------------->
-
-<!-- delete a student record -->
-<?php
-if (isset($_GET['id']) && isset($_GET['delete'])) {
-    // return to Student Management page if delete success
-    if ($studentTable->Delete($_GET['id'])) {
-        header("Location: studentManagement.php");
-    }
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -112,14 +108,14 @@ if (isset($_GET['id']) && isset($_GET['delete'])) {
                         </li>
                         <li class="nav-item">
                             <a href="studentManagement.php" class="nav-link align-middle px-0">
-                                <i class="fs-2 bi bi-people-fill" id="navicon-active"></i>
-                                <span class="ms-1 d-none d-sm-inline" id="navtext-active">Student</span>
+                                <i class="fs-2 bi bi-people-fill" id="navicon"></i>
+                                <span class="ms-1 d-none d-sm-inline" id="navtext">Student</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="questionManagement.php" class="nav-link align-middle px-0">
-                                <i class="fs-2 bi bi-clipboard-check" id="navicon"></i>
-                                <span class="ms-1 d-none d-sm-inline" id="navtext">Question</span>
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-2 bi bi-clipboard-check" id="navicon-active"></i>
+                                <span class="ms-1 d-none d-sm-inline" id="navtext-active">Question</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -191,27 +187,22 @@ if (isset($_GET['id']) && isset($_GET['delete'])) {
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>Student Id</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Gender</th>
+                                <th>Submission Id</th>
+                                <th>Number</th>
+                                <th>Student Answer</th>
+                                <th>Answer</th>
+                                <th>Statement</th>
                             <tr>
                         </thead>
                         <tbody>
                             <?php
-                            for ($i = 0; $i < count($student_records_subset); $i++) {
+                            for ($i = 0; $i < count($question_records_subset); $i++) {
                                 echo "<tr>";
-                                echo "<td> " . $student_records_subset[$i]->getId() . "</td>";
-                                echo "<td> " . $student_records_subset[$i]->getName() . "</td>";
-                                echo "<td> " . $student_records_subset[$i]->getEmail() . "</td>";
-                                echo "<td>Student</td>";
-                                echo "<td> " . $student_records_subset[$i]->getGender() . "</td>";
-                                if ($admin != null) {
-                                    echo "<td><a class='btn btn-secondary me-3' href='./studentEdit.php?stuId=" . $student_records_subset[$i]->getId() . "'>Edit</button></td>
-									<td><a class='btn btn-danger' href='./studentManagement.php?delete=true&id=" . $student_records_subset[$i]->getId() . "'>Delete</button></td>";
-                                    echo "</tr>";
-                                }
+                                echo "<td> " . $question_records_subset[$i]->getSubmissionId() . "</td>";
+                                echo "<td> " . $question_records_subset[$i]->getQuesNum() . "</td>";
+                                echo "<td> " . $question_records_subset[$i]->getStuAnswer() . "</td>";
+                                echo "<td> " . ucfirst($question_records_subset[$i]->getAnswer()) . "</td>";
+                                echo "<td> " . $question_records_subset[$i]->getStatement() . "</td>";
                             }
                             ?>
                         </tbody>
@@ -222,9 +213,9 @@ if (isset($_GET['id']) && isset($_GET['delete'])) {
                 // display the links to the pages
                 for ($page = 1; $page <= $number_of_pages; $page++) {
                     if ($current_page == $page) {
-                        echo "<a class='btn btn-dark' id='navtext-active' href='studentManagement.php?page=" . $page . "'>" . $page . "</a> ";
+                        echo "<a class='btn btn-dark' id='navtext-active' href='questionManagement.php?page=" . $page . "'>" . $page . "</a> ";
                     } else {
-                        echo "<a class='btn btn-dark' href='studentManagement.php?page=" . $page . "'>" . $page . "</a> ";
+                        echo "<a class='btn btn-dark' href='questionManagement.php?page=" . $page . "'>" . $page . "</a> ";
                     }
                 }
                 // pagination page links --------------------------------------------------------------------------------------------------------------------

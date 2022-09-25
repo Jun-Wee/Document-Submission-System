@@ -19,9 +19,39 @@ class QuestionTable
 
 
     # retrieve questions based on the submission Id
-    function GetAll($submissionId)
+    function GetAll()
     {
+        // retrieve all question records from database using database object -->
 
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "SELECT * FROM question";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Execute prepared statement
+        mysqli_stmt_execute($prepared_stmt);
+
+        // Get resultset
+        $queryResult =  mysqli_stmt_get_result($prepared_stmt)
+            or die("<p>Unable to select from database table</p>");
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $row = mysqli_fetch_row($queryResult);
+
+        $item_count = 0;
+        while ($row) {
+            // fetch the record from the server and then store them in an object
+            // $id, $name, $email, $password, $gender
+            $this->questions[$item_count] = new Question($row[0], $row[2], $row[1], $row[3], $row[4], $row[5], $row[6]);
+            $row = mysqli_fetch_row($queryResult);
+            $item_count += 1;
+        }
+
+        $this->db->closeConnection();
 
         return $this->questions;
     }
