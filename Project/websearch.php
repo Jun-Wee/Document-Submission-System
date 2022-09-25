@@ -13,6 +13,7 @@ $db = new Database();
 $websearch = new WebSearchTable($db);
 
 $title = $_SESSION['title'];
+$limitedText = $_SESSION['questGen'];
 $subId = $_SESSION['subId'];
 $secret_api_key = '697836773f8cb07bad07947da490499d1900d2df73c183ee405c2d112e95cc18';
 
@@ -34,3 +35,7 @@ for ($i = 0; $i < 5; $i++) {
 };
 
 echo $websearch->Add($organic_results, $subId);
+
+$_SESSION['questGen'] = $limitedText;
+$_SESSION['subId'] = $subId;
+header("Location: generateQuestions.php");
