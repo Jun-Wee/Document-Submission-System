@@ -82,9 +82,29 @@ if (!isset($_SESSION['student'])) {
             return $myEntities;
         }
 
-        // //Misc------------------------------------------------------------------------------------------------------------\
-        // $webSearch = $_POST['webSearch'];
-        // $_SESSION['webSearch'] = $webSearch;
+        //Limit text for question generation------------------------------------------------------------------------------
+        function substrWords($text, $maxchar, $end = "...")
+        {
+            if (strlen($text) > $maxchar || $text == '') {
+                $words = preg_split('/\s/', $text);
+                $output = '';
+                $i = 0;
+
+                while (1) {
+                    $length = strlen($output) + strlen($words[$i]);
+                    if ($length > $maxchar) {
+                        break;
+                    } else {
+                        $output .= " " . $words[$i];
+                        ++$i;
+                    }
+                }
+                $output .= $end;
+            } else {
+                $output = $text;
+            }
+            return $output;
+        }
 
         //Add reference to database----------------------------------------------------------------------------------------
         function reference($reference, $subId)
@@ -94,10 +114,6 @@ if (!isset($_SESSION['student'])) {
             $referenceTable = new ReferenceTable($db3);
             $referenceTable->add($subId, $reference);
         }
-
-        //Misc------------------------------------------------------------------------------------------------------------
-        // $webSearch = $_POST['webSearch'];
-        // $_SESSION['webSearch'] = $webSearch;
 
         //Text extraction-------------------------------------------------------------------------------------------------
         $raw = $_SESSION['pdfText'];                                    //Issue: does not recognize images (� character)
@@ -120,92 +136,27 @@ if (!isset($_SESSION['student'])) {
 
         $title = $title . " " . $entityString;
 
+        // if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "references") >= 1) {
+        //     $referenceInitial = explode("References", $text);
+        //     $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial) - 1]));
+        //     // echo "References: " . $referenceFinal[0];
+        //     reference($referenceFinal[0], $subId);
+        // } elseif (str_contains(strtolower($text), "reference") || strpos(strtolower($text), "reference") >= 1) {
+        //     $referenceInitial = explode("Reference", $text);
+        //     $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial) - 1]));
+        //     // echo "References: " . $referenceFinal[0];
+        //     reference($referenceFinal[0], $subId);
+        // }
+
+
+        $limitedText = substrWords($text, 510000);                      //Limit words to <=~512kb
+        //echo strlen($limitedText);
+        //echo $limitedText;
+
+        $_SESSION['questGen'] = $limitedText;
         $_SESSION['title'] = $title;
 
         header("Location: websearch.php");
-
-        // if (
-        //     str_contains(strtolower($text), "content") && strpos(strtolower($text), "content") < 5000 ||
-        //     str_contains(strtolower($text), "contents") && strpos(strtolower($text), "contents") < 5000
-        // ) {
-        //Extract the abstract if exists
-        // if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
-        //     $abstractInitial = explode("Abstract", $text);
-        //     $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
-        //     echo "Abstract: " . $abstractFinal[0];
-        //     $type = "Abstract";
-        //     // sentiment($language, $abstractInitial[2], $subId, $type);
-        //     // entity($language, $abstractInitial[2], $subId);
-        // }
-
-        //     //Extract the introduction if exists
-        //     if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {
-        //         if (!isset($abstractInitial[2])) {
-        //             $abstractInitial[2] = $text;    //If abstract is not the first paragraph, replace with original text
-        //         }
-        //         $introductionInitial = explode("Introduction", $abstractInitial[2]);
-        //         $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[2]));
-        //         // echo "Introduction: " . $introductionFinal[0];
-        //         // echo "Introduction: " . $introductionInitial[2];
-        //         $type = "Introduction";
-        //         sentiment($language, $introductionInitial[2], $subId, $type);
-
-        //         if (!isset($abstractFinal[0])) {
-        //             entity($language, $introductionInitial[2], $subId);
-        //         }
-        //     }       //Note: Only takes either Abstract + Intro, Intro, Abstract, cannot Intro + Abstract
-
-        //     //Extract references if exists
-        //     if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
-        //         if (!isset($abstractInitial[2])) {   //If abstract is not the first paragraph, replace with original text
-        //             $abstractInitial[2] = $text;
-        //         }
-        //         $referenceInitial = explode("References", $text);
-        //         $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[2]));
-        //         //Store the reference in session for future usage
-        //         $_SESSION["reference"] = $referenceFinal[0];
-        //         // echo "References: " . $referenceFinal[0];
-        //     }
-        // } else {
-        //     // echo "No table of content found";
-        //     // echo strpos(strtolower($text), "contents");
-        //     //Extract the abstract if exists
-        //     if (str_contains(strtolower($text), "abstract") && strpos(strtolower($text), "abstract") < 5000) {
-        //         $abstractInitial = explode("Abstract", $text);
-        //         $abstractFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($abstractInitial[1]));
-        //         // echo "Abstract: " . $abstractFinal[0];
-        //         $type = "Abstract";
-        //         sentiment($language, $abstractInitial[1], $subId, $type);
-        //         entity($language, $abstractInitial[1], $subId);
-        //     }
-
-        //     //Extract the introduction if exists
-        //     if (str_contains(strtolower($text), "introduction") && strpos(strtolower($text), "introduction") < 10000) {
-        //         if (!isset($abstractInitial[1])) {
-        //             $abstractInitial[1] = $text;    //If abstract is not the first paragraph, replace with original text
-        //         }
-        //         $introductionInitial = explode("Introduction", $abstractInitial[1]);
-        //         $introductionFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($introductionInitial[1]));
-        //         // echo "Introduction: " . $introductionFinal[0];
-        //         $type = "Introduction";
-        //         sentiment($language, $introductionInitial[1], $subId, $type);
-
-        //         if (!isset($abstractFinal[0])) {
-        //             entity($language, $introductionInitial[1], $subId);
-        //         }
-        //     }
-
-        //Extract references if exists
-        // if (str_contains(strtolower($text), "references") || str_contains(strtolower($text), "reference")) {
-        //     if (!isset($abstractInitial[1])) {   //If abstract is not the first paragraph, replace with original text
-        //         $abstractInitial[1] = $text;
-        //     }
-        //     $referenceInitial = explode("References", $abstractInitial[1]);
-        //     $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[1]));
-        //     $_SESSION["reference"] = $referenceFinal[0];
-        //     echo "References: " . $referenceFinal[0];
-        // }
-        // }
 
         //         //Legacy solution (Too ambiguous)-------------------------------------------------------------------------------
         //         //$introduction = explode("Introduction", $text);
