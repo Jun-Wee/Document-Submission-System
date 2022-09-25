@@ -120,7 +120,7 @@ else {
 
         // echo $text;
 
-        $limitedText = substrWords($text, 510000);                      //Limit words to 512kb
+        $limitedText = substrWords($text, 510000);                      //Limit words to <=~512kb
         //echo strlen($limitedText);
         //echo $limitedText;
         $_SESSION['questGen'] = $limitedText;
@@ -161,12 +161,19 @@ else {
             }
 
             //Extract references if exists
-            if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
+            if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "references") >= 1) {
                 $referenceInitial = explode("References", $text);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial)-1]));
                 // echo "References: " . $referenceFinal[0];
                 reference($referenceFinal[0], $subId);
             }
+
+            elseif (str_contains(strtolower($text), "reference") || strpos(strtolower($text), "reference") >= 1) {
+                $referenceInitial = explode("Reference", $text);
+                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial)-1]));
+                // echo "References: " . $referenceFinal[0];
+                reference($referenceFinal[0], $subId);
+            } 
         }
 
         else {
@@ -202,8 +209,15 @@ else {
             }
 
             //Extract references if exists
-            if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "reference") >= 1) {
+            if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "references") >= 1) {
                 $referenceInitial = explode("References", $text);
+                $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial)-1]));
+                // echo "References: " . $referenceFinal[0];
+                reference($referenceFinal[0], $subId);
+            }
+
+            elseif (str_contains(strtolower($text), "reference") || strpos(strtolower($text), "reference") >= 1) {
+                $referenceInitial = explode("Reference", $text);
                 $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial)-1]));
                 // echo "References: " . $referenceFinal[0];
                 reference($referenceFinal[0], $subId);
