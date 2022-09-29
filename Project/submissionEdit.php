@@ -68,26 +68,26 @@ if (isset($_POST['submit'])) {
     $existing_submission->setMCQscore($_POST['mcqScore']);
     $existing_submission->setdatetime($_POST['submissionDatetime']);
 
-    $file = $_FILES['newfile']; //gets all the info from the uploaded file
-    if (isset($file)) {
-        if (!empty($file['name'])) {
-            $filepath_arr = explode("/", $existing_submission->getfilepath());
-            $filename = end($filepath_arr);
-            $filename_arr = explode(".", $filename);
-            $studentName = $filename_arr[0];
-            echo $studentName;
-            [$fileUploadErrorMsg, $path] = checkNewUploadedFile($file['name'], $file['tmp_name'], $file['error'], $file['size'], $studentName, $code[0]);
-            if ($fileUploadErrorMsg == "") {
-                $server_root_directory = "/var/www/html";
-                // delete the existing file after successfully adding the new file as a replacement
-                if (file_exists($server_root_directory . $existing_submission->getfilepath())) {
-                    if (unlink($server_root_directory . $existing_submission->getfilepath())) {
-                        $existing_submission->setfilepath($path);
-                    }
-                }
-            }
-        }
-    }
+    // $file = $_FILES['newfile']; //gets all the info from the uploaded file
+    // if (isset($file)) {
+    //     if (!empty($file['name'])) {
+    //         $filepath_arr = explode("/", $existing_submission->getfilepath());
+    //         $filename = end($filepath_arr);
+    //         $filename_arr = explode(".", $filename);
+    //         $studentName = $filename_arr[0];
+    //         echo $studentName;
+    //         [$fileUploadErrorMsg, $path] = checkNewUploadedFile($file['name'], $file['tmp_name'], $file['error'], $file['size'], $studentName, $code[0]);
+    //         if ($fileUploadErrorMsg == "") {
+    //             $server_root_directory = "/var/www/html";
+    //             // delete the existing file after successfully adding the new file as a replacement
+    //             if (file_exists($server_root_directory . $existing_submission->getfilepath())) {
+    //                 if (unlink($server_root_directory . $existing_submission->getfilepath())) {
+    //                     $existing_submission->setfilepath($path);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     // Delegate the edit task to SubmissionTable class
     if ($submissionTable->Edit($submissionId, $existing_submission) == 1) {
         header("Location: submissionManagement.php");
@@ -258,17 +258,19 @@ if (isset($_POST['submit'])) {
                             <input name="submissionDatetime" type="datetime-local" step="any" class="form-control form-control-md" id="subtime" name="subtime" value="<?php echo $existing_submission->getdatetime() ?>">
                         </div>
 
-                        <div class="form-group col-md-10">
+                        <!-- <div class="form-group col-md-10">
                             <label for="formFile" class="col-sm-2 col-form-label col-form-label-md"><em>Submit new Document</em></label>
                             <?php
-                            $filepath_array = explode("/", $existing_submission->getfilepath());
-                            $filename = end($filepath_array);
+                            // $filepath_array = explode("/", $existing_submission->getfilepath());
+                            // $filename = end($filepath_array);
                             ?>
-                            <a class='text-decoration-none col-form-label-md' href="<?php echo $existing_submission->getfilepath() ?>" target='_blank'><?php echo $filename ?><span class='bi bi-file-pdf red-color'></span></a>
+                            <a class='text-decoration-none col-form-label-md' href="<?php // echo $existing_submission->getfilepath() 
+                                                                                    ?>" target='_blank'><?php // echo $filename 
+                                                                                                        ?><span class='bi bi-file-pdf red-color'></span></a>
                         </div>
                         <div class="form-group col-md-8">
                             <input class="form-control form-control-md" type="file" name="newfile">
-                        </div>
+                        </div> -->
                         <br>
 
                         <?php

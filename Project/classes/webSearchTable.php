@@ -83,4 +83,27 @@ class WebSearchTable
 
         return $results;
     }
+
+    function Delete($subId)
+    {
+        // Create connection
+        $this->db->createConnection();
+
+        $sql = "DELETE FROM `websearch` WHERE `submissionId` = ?";
+
+        $prepared_stmt = mysqli_prepare($this->db->getConnection(), $sql);
+
+        //Bind input variables to prepared statement
+        $prepared_stmt->bind_param("s", $subId);
+
+        //Execute prepared statement
+        $queryResult = mysqli_stmt_execute($prepared_stmt);
+
+        // Close the prepared statement
+        @mysqli_stmt_close($prepared_stmt);
+
+        $this->db->closeConnection();
+
+        return $queryResult;
+    }
 }

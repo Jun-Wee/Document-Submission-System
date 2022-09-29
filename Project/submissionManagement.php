@@ -9,6 +9,10 @@ include "classes/user.php";
 include "classes/submission.php";
 include "classes/submissionTable.php";
 include "classes/studentTable.php";
+include "classes/analysisTable.php";
+include "classes/entityTable.php";
+include "classes/questionTable.php";
+include "classes/webSearchTable.php";
 include "classes/database.php";
 include "system_functions.php";
 
@@ -72,8 +76,15 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 	$server_root_directory = "/var/www/html";
 	if (file_exists($server_root_directory . $_GET['filepath'])) {
 		if (unlink($server_root_directory . $_GET['filepath'])) {
-			if ($submissionTable->Delete($_GET['id']) == 1) {
-				header("Location: submissionManagement.php");
+			$analysisTable = new AnalysisTable($db);
+			$entityTable = new EntityTable($db);
+			$questionTable = new QuestionTable($db, $_GET['id']);
+			$webSearchTable = new WebSearchTable($db);
+
+			if ($analysisTable->delete($_GET['id']) && $entityTable->delete($_GET['id']) && $webSearchTable->delete($_GET['id']) && $questionTable->delete($_GET['id'])) {
+				if ($submissionTable->Delete($_GET['id']) == 1) {
+					header("Location: submissionManagement.php");
+				}
 			}
 		}
 	}
