@@ -13,6 +13,7 @@ include "classes/analysisTable.php";
 include "classes/entityTable.php";
 include "classes/questionTable.php";
 include "classes/webSearchTable.php";
+include "classes/referenceTable.php";
 include "classes/database.php";
 include "system_functions.php";
 
@@ -80,8 +81,9 @@ if (isset($_GET['id']) && isset($_GET['delete']) && isset($_GET['filepath'])) {
 			$entityTable = new EntityTable($db);
 			$questionTable = new QuestionTable($db, $_GET['id']);
 			$webSearchTable = new WebSearchTable($db);
+			$referenceTable = new ReferenceTable($db);
 
-			if ($analysisTable->delete($_GET['id']) && $entityTable->delete($_GET['id']) && $webSearchTable->delete($_GET['id']) && $questionTable->delete($_GET['id'])) {
+			if ($analysisTable->delete($_GET['id']) && $entityTable->delete($_GET['id']) && $webSearchTable->delete($_GET['id']) && $questionTable->delete($_GET['id']) && $referenceTable->delete($_GET['id'])) {
 				if ($submissionTable->Delete($_GET['id']) == 1) {
 					header("Location: submissionManagement.php");
 				}

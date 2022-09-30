@@ -136,18 +136,41 @@ if (!isset($_SESSION['student'])) {
 
         $title = $title . " " . $entityString;
 
-        // if (str_contains(strtolower($text), "references") || strpos(strtolower($text), "references") >= 1) {
-        //     $referenceInitial = explode("References", $text);
-        //     $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial) - 1]));
-        //     // echo "References: " . $referenceFinal[0];
-        //     reference($referenceFinal[0], $subId);
-        // } elseif (str_contains(strtolower($text), "reference") || strpos(strtolower($text), "reference") >= 1) {
-        //     $referenceInitial = explode("Reference", $text);
-        //     $referenceFinal = preg_split("/\s*\n(\s*\n)*\s/", trim($referenceInitial[count($referenceInitial) - 1]));
-        //     // echo "References: " . $referenceFinal[0];
-        //     reference($referenceFinal[0], $subId);
-        // }
+        //Extract references if exists
+        if (strpos(strtolower($text), "references") >= 1) {
+            $referenceInitial = explode("references", strtolower($text));
+            //Stop at the word "Appendix", capture rest if none
+            $referenceFinal = preg_split("/Appendix/", trim($referenceInitial[count($referenceInitial) - 1]));
+            // echo "References: " . $referenceFinal[0];
+            reference($referenceFinal[0], $subId);
+        }
 
+        //Extract reference without the S if exists
+        elseif (strpos(strtolower($text), "reference") >= 1) {
+            $referenceInitial = explode("reference", strtolower($text));
+            //Stop at the word "Appendix", capture rest if none
+            $referenceFinal = preg_split("/Appendix/", trim($referenceInitial[count($referenceInitial) - 1]));
+            // echo "Reference: " . $referenceFinal[0];
+            reference($referenceFinal[0], $subId);
+        }
+
+        //Extract bibliography if exists
+        elseif (strpos(strtolower($text), "bibliography") >= 1) {
+            $referenceInitial = explode("bibliography", strtolower($text));
+            //Stop at the word "Appendix", capture rest if none
+            $referenceFinal = preg_split("/Appendix/", trim($referenceInitial[count($referenceInitial) - 1]));
+            // echo "Bibliography: " . $referenceFinal[0];
+            reference($referenceFinal[0], $subId);
+        }
+
+        //Extract literature cited if exists
+        elseif (strpos(strtolower($text), "reference") >= 1) {
+            $referenceInitial = explode("literature cited", strtolower($text));
+            //Stop at the word "Appendix", capture rest if none
+            $referenceFinal = preg_split("/Appendix/", trim($referenceInitial[count($referenceInitial) - 1]));
+            // echo "Literature: " . $referenceFinal[0];
+            reference($referenceFinal[0], $subId);
+        }
 
         $limitedText = substrWords($text, 510000);                      //Limit words to <=~512kb
         //echo strlen($limitedText);

@@ -184,6 +184,13 @@ $pdf->SetFont('Arial', 'B', 12);                          //Change font size
 $pdf->Cell(0, 10, '', 0, 1);
 $pdf->Cell(0, 10, 'References ', 0, 1);
 
+$pdf->SetFont('Arial', '', 10);                          //Change font size
+$referenceOutput = $referenceTable->get($subId);
+
+$result = $referenceOutput[0]->getText();
+$formatted_result = str_replace("<br />", "", $result);
+$pdf->Write(5, $formatted_result);
+
 //Add a new page
 $pdf->AddPage();
 
@@ -209,11 +216,6 @@ for ($i = 0; $i < count($webSearchOutput); $i++) {
     $pdf->Cell(0, 10, 'Author(s): ' . stringFormat($webSearchOutput[$i]['authors'], 100), 0, 1);
     $pdf->Cell(0, 10, "Link: Available (Click here)", 0, 1, '', false, $webSearchOutput[$i]['link']);
 }
-
-// $pdf->SetFont('Arial', '', 12);                          //Change font size
-// $referenceOutput = $referenceTable->get($subId);
-// $result = $referenceOutput[0]->getText();
-// $pdf->Write(5, $result);
 
 
 //Return the generated output-------------------------------------------------------------------------------
