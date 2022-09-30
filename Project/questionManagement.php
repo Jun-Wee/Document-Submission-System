@@ -1,4 +1,4 @@
-<!-- Description: Student Management Page in PHP -->
+<!-- Description: Question Management Page in PHP -->
 <!-- Author: Adrian Sim Huan Tze -->
 <!-- Contributor: Adrian Sim Huan Tze -->
 <!-- Date: 17th July 2022 -->
@@ -202,7 +202,10 @@ $question_records_subset = array_slice($question_records, $this_page_first_resul
                                 echo "<td> " . $question_records_subset[$i]->getQuesNum() . "</td>";
                                 echo "<td> " . $question_records_subset[$i]->getStuAnswer() . "</td>";
                                 echo "<td> " . ucfirst($question_records_subset[$i]->getAnswer()) . "</td>";
-                                echo "<td> " . $question_records_subset[$i]->getStatement() . "</td>";
+                                $statement = str_replace("br />", "", $question_records_subset[$i]->getStatement());
+                                $statement = str_replace("<", "", $statement);
+                                echo "<td> " . $statement
+                                    . "</td>";
                             }
                             ?>
                         </tbody>
