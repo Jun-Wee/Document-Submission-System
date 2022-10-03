@@ -24,7 +24,7 @@ for ($i=0; $i < count($subscriber); $i++) {    //2
         $j++;
     }
     $mailtable->unsetFullTable();
-
-    print_r($student_result_by_unit);
     //function to update the isSend mail in submission
 }
+
+print_r($student_result_by_unit);
