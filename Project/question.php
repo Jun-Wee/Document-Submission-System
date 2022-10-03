@@ -225,6 +225,56 @@ if (!isset($_SESSION['student'])) {
                                         </li>
                                         <br />
                                         <br />
+                                        <li>
+                                            <h6>Which version of PHP introduced the instanceof keyword?</h6>
+                                            <div class="form-group">
+                                                <ul>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio1" value="PHP 4">
+                                                        <label class="form-check-label" for="inlineRadio1">PHP 4</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio2" value="PHP 5">
+                                                        <label class="form-check-label" for="inlineRadio2">PHP 5</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio3" value="PHP 6">
+                                                        <label class="form-check-label" for="inlineRadio3">PHP 6</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio3" value="PHP 6">
+                                                        <label class="form-check-label" for="inlineRadio3">PHP 6</label>
+                                                    </div>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <br />
+                                        <br />
+                                        <li>
+                                            <h6>Which version of PHP introduced the instanceof keyword?</h6>
+                                            <div class="form-group">
+                                                <ul>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio1" value="PHP 4">
+                                                        <label class="form-check-label" for="inlineRadio1">PHP 4</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio2" value="PHP 5">
+                                                        <label class="form-check-label" for="inlineRadio2">PHP 5</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio3" value="PHP 6">
+                                                        <label class="form-check-label" for="inlineRadio3">PHP 6</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="q5" id="inlineRadio3" value="PHP 6">
+                                                        <label class="form-check-label" for="inlineRadio3">PHP 6</label>
+                                                    </div>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <br />
+                                        <br />
                                     </ol>
                                     <div class="form-group justify-content-end">
                                         <input type="submit" value="Submit Answers" name="submit" class="btn btn-primary float-right" />
