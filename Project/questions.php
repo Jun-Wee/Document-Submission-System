@@ -43,11 +43,17 @@ $q->questions = array_slice($q->questions, 0, 5); // limits the number of questi
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="icon" href="src/images/logo.png">
     <link rel="stylesheet" href="style/studentIndexStyle.css">
+    <link rel="stylesheet" type="text/css" href="style/loaderStyle.css" />
 
     <script src="script/script.js"></script>
 </head>
+
+<div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+</div>
 
 <body onload="startTIME();" style="background-image: url('src/images/questions-image.jpg');">
 
@@ -180,6 +186,11 @@ $q->questions = array_slice($q->questions, 0, 5); // limits the number of questi
         </div>
     </div>
 
+    <script>
+        $(window).on("load", function() {
+            $(".loader-wrapper").fadeOut("slow");
+        });
+    </script>
 
 </body>
 
