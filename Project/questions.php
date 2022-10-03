@@ -81,7 +81,9 @@ $q->questions = array_slice($q->questions, 0, 5); // limits the number of questi
     <div class="container-fluid">
         <div class="row">
             <!--side bars-->
-            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <?php
+            if (count($q->questions) < 5) {
+                echo '<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
                 <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
                         <li class="nav-item">
@@ -101,8 +103,7 @@ $q->questions = array_slice($q->questions, 0, 5); // limits the number of questi
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fs-2 bi bi-person"></i>
-                            <span class="d-none d-sm-inline mx-2"><?php echo $student->getName()
-                                                                    ?></span>
+                            <span class="d-none d-sm-inline mx-2">' . $student->getName() . '</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
                             <li><a class="dropdown-item" href="#">Profile</a></li>
@@ -113,7 +114,43 @@ $q->questions = array_slice($q->questions, 0, 5); // limits the number of questi
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>';
+            } else {
+                echo '<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex flex-column justify-content-between">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
+                        <li class="nav-item">
+                            <a href="submission.php" class="nav-link align-middle px-0" id="active">
+                                <i class="fs-2 bi bi-file-earmark-pdf" id="navicon-active"></i>
+                                <span class="ms-1 d-none d-sm-inline" id="navtext-active">Submission</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link align-middle px-0">
+                                <i class="fs-2 bi bi-question-circle" id="navicon"></i>
+                                <span class="ms-1 d-none d-sm-inline" id="navtext">FAQ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fs-2 bi bi-person"></i>
+                            <span class="d-none d-sm-inline mx-2">' . $student->getName() . '</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="studentLogout.php">Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>';
+            }
+            ?>
 
             <!--multiple-choice question form-->
             <div class="col py-3">
