@@ -57,8 +57,8 @@ if (!isset($_SESSION['student'])) {
     <div class="container-fluid">
         <div class="row">
             <!--side bars-->
-            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex flex-column justify-content-between">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebar">
                         <li class="nav-item">
                             <a href="submission.php" class="nav-link align-middle px-0" id="active">
@@ -73,7 +73,8 @@ if (!isset($_SESSION['student'])) {
                             </a>
                         </li>
                     </ul>
-
+                </div>
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fs-2 bi bi-person"></i>
