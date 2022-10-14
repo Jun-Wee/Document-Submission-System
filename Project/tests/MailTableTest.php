@@ -25,7 +25,7 @@ class MailTableTest extends \PHPUnit\Framework\TestCase
 
         $studentListByUnit = $mailtable->getStudentInfo("documentsubmissionsystem@hotmail.com", "COS20001");
 
-        $expected= array(array( "UserId" => "101231636", "Name" => "Jun Wee", "unitCode" => "COS20001" , "SubmissionId" => "100020", "score" => "0"));
+        $expected= array(array( "UserId" => "101231636", "Name" => "Jun Wee", "unitCode" => "COS20001" , "SubmissionId" => "100056", "score" => "0"));
 
         print_r($expected);
         $this->assertEquals($expected, $studentListByUnit);
@@ -66,7 +66,7 @@ class MailTableTest extends \PHPUnit\Framework\TestCase
         <th> Submission Id </th>
         <th> Score </th>
         </tr>
-        <tr><td style="padding: 15px;"> 101231636</td><td style="padding: 15px;"> Jun Wee</td><td style="padding: 15px;"> COS20001</td><td style="padding: 15px;"> 100020</td><td style="padding: 15px;"> 0</td></tr></table>';
+        <tr><td style="padding: 15px;"> 101231636</td><td style="padding: 15px;"> Jun Wee</td><td style="padding: 15px;"> COS20001</td><td style="padding: 15px;"> 100056</td><td style="padding: 15px;"> 0</td></tr></table>';
 
         print_r($tableMsg);
 
