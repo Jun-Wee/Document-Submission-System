@@ -1,5 +1,3 @@
-from asyncio.windows_events import NULL
-from ctypes import sizeof
 from itertools import count
 import re
 import mysql.connector
@@ -24,12 +22,12 @@ def utf_decoding(item):
     
     convert = "".join([x for x in item if ord(x) < 127])
 
-
+    convert = re.sub('-', ' ', convert)
     convert = re.sub('\s+', ' ', convert)
-
-    convert = re.sub('-', '-', convert)
-    #convert = "".join([x for x in convert if not x.isdigit()])
     
+    #convert = "".join([x for x in convert if not x.isdigit()])
+
+    #to attempt to contain the maximal input si
     payload = {
         "input_text": convert, "max_questions": 25
     }
@@ -69,7 +67,15 @@ def questGen(item):
     payload = utf_decoding(item.extractedText)
     qg = main.QGen()
     output = qg.predict_mcq(payload)
-    return output
+
+    if len(output['questions']) < 5:
+        text = payload["input_text"] 
+        payload["input_text"] = text[-511:]
+        qg = main.QGen()
+        output = qg.predict_mcq(payload)
+        return output
+    else :
+        return output
 
 @app.post("/question/")
 async def create_item(item: ExtractedText):
