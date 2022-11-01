@@ -1,0 +1,17 @@
+
+h2{
+    padding-left: 25%;
+}
+
+.faq-item{
+    background-color: rgb(187, 212, 236);
+    margin-right: 45%;   
+}
+
+.answer{
+    max-height: 1;
+    background-color: whitesmoke;
+}
+
+
+
