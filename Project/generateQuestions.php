@@ -7,7 +7,7 @@ if (!isset($_SESSION['student'])) {
     $extractedLimitedText = $_SESSION["questGen"];
     $submissionId = $_SESSION["subId"];
 
-    $url = "http://44.210.182.133/question/";
+    $url = "http://18.213.73.237/question/";
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
