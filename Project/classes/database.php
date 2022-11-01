@@ -12,10 +12,10 @@ class Database
     function __construct()
     {
         // set the servername,username,password and database name
-        $this->servername = "localhost";
-        $this->username = "root";
-        $this->password = "";
-        $this->dbname = "DocumentSubmissionSystem";
+        $this->servername = "dss.c9ffxxbebyrl.us-east-1.rds.amazonaws.com";
+        $this->username = "admin";
+        $this->password = "documentsubmissionsystem";
+        $this->dbname = "documentsubmissionsystem";
     }
 
     // Methods
@@ -29,7 +29,7 @@ class Database
         }
 
         // change default database to 'DocumentSubmissionSystem' database
-        $dbSelect = @mysqli_select_db($this->conn, 'DocumentSubmissionSystem');
+        $dbSelect = @mysqli_select_db($this->conn, $this->dbname);
 
         if (!$dbSelect) {
             die("<p>The database is not available.</p>");
