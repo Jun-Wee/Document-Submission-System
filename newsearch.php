@@ -1,0 +1,36 @@
+<?php
+
+
+#require_once( 'C:/xampp/htdocs/xampp/softwareproj/vendor/autoload.php');
+
+require_once('C:/xampp/htdocs/xampp/softwareproj/vendor/serpapi/google-search-results-php/google-search-results.php') ;
+require_once('C:/xampp/htdocs/xampp/softwareproj/vendor/serpapi/google-search-results-php/restclient.php'); 
+
+$query = [
+    "engine" => "google_scholar",
+    "q" => "mental health",
+    "hl" => "en",
+    "start" => "0",
+    "num" => "5"
+   ];
+
+$search = new GoogleSearchResults('697836773f8cb07bad07947da490499d1900d2df73c183ee405c2d112e95cc18');
+$result = $search->get_json($query);
+$organic_results = $result->organic_results;
+
+  
+print("THE RESULTS <br>");
+
+for( $x=0; $x< 5; $x++)
+{
+  $search = $organic_results[$x];
+
+  #explode function is used to seperate the authors from the rest of the filler content in the displayed link which is seperated by a hyphen
+  $splarr = explode("-",$search->publication_info->summary);
+    print_r("Search result: title - ".$search->title.",<br> description - ". $search->snippet .",<br> authors - ".$splarr[0].",<br> link - ". $search->link."<br><br>");
+  
+};
+
+
+
+ ?>
