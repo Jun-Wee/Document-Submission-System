@@ -80,7 +80,7 @@ if (!isset($_SESSION['student'])) {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link align-middle px-0">
+                            <a href="studentfaq.php" class="nav-link align-middle px-0">
                                 <i class="fs-2 bi bi-question-circle" id="navicon"></i>
                                 <span class="ms-1 d-none d-sm-inline" id="navtext">FAQ</span>
                             </a>
